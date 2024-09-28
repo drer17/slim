@@ -1,0 +1,407 @@
+// schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Model definitions
+
+model User {
+  id String @id @default(uuid())
+
+  name     String
+  email    String @unique
+  password String
+
+  currency String @default("AUD")
+
+  AssetLiabilityType  AssetLiabilityType[]
+  TransactionCategory TransactionCategory[]
+  AssetLiability      AssetLiability[]
+  Obligation          Obligation[]
+  Entity              Entity[]
+  Occurrence          Occurrence[]
+  Note                Note[]
+  Tag                 Tag[]
+  Attribute           Attribute[]
+  Document            Document[]
+}
+
+// Level 1
+
+model AssetLiabilityType {
+  id     String @id @default(uuid())
+  userId String
+
+  icon  String?
+  color String?
+
+  label String
+  asset Boolean
+
+  user User @relation(fields: [userId], references: [id])
+
+  AssetLiability AssetLiability[]
+  AttributeLink  AttributeLink[]
+}
+
+model TransactionCategory {
+  id       String  @id @default(uuid())
+  userId   String
+  parentId String?
+
+  // applies to certain assets
+  assetId String?
+
+  icon  String?
+  color String?
+
+  label   String
+  expense Boolean @default(true)
+
+  user   User                 @relation(fields: [userId], references: [id])
+  asset  AssetLiability?      @relation(fields: [assetId], references: [id])
+  parent TransactionCategory? @relation("TransactionCategoryToParent", fields: [parentId], references: [id])
+
+  children     TransactionCategory[] @relation("TransactionCategoryToParent")
+  transactions Transaction[]
+}
+
+// Level 2
+
+model AssetLiability {
+  id          String @id @default(uuid())
+  userId      String
+  assetTypeId String
+
+  parentId String?
+
+  starred Boolean @default(false)
+  icon    String?
+  color   String?
+
+  label       String
+  description String?
+
+  // future work - add tax profiles that apply to assets
+  taxProfileId String?
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
+
+  user      User               @relation(fields: [userId], references: [id])
+  assetType AssetLiabilityType @relation(fields: [assetTypeId], references: [id])
+  parent    AssetLiability?    @relation("AssetLiabilityToParent", fields: [parentId], references: [id])
+  children  AssetLiability[]   @relation("AssetLiabilityToParent")
+
+  transactionCategories TransactionCategory[]
+  obligations           Obligation[]
+  transactions          Transaction[]
+  valuations            Valuation[]
+  attributes            AttributeLink[]
+  NoteLink              NoteLink[]
+  TagLink               TagLink[]
+  DocumentLink          DocumentLink[]
+  Entity                Entity[]
+}
+
+// Level 3
+
+model Obligation {
+  id     String @id @default(uuid())
+  userId String
+
+  // to an entity
+  entityId String?
+
+  // belonging to an asset or liability, an asset or liability owns the obligation
+  assetLiabilityId String?
+
+  starred Boolean @default(false)
+  icon    String?
+  color   String?
+
+  label       String
+  description String?
+  date        DateTime?
+
+  frequency     Int?
+  frequencyUnit String?
+  amount        Float   @default(0)
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
+
+  user           User            @relation(fields: [userId], references: [id])
+  assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
+  entity         Entity?         @relation(fields: [entityId], references: [id])
+
+  AttributeLink AttributeLink[]
+  NoteLink      NoteLink[]
+  TagLink       TagLink[]
+  DocumentLink  DocumentLink[]
+  Occurrence    Occurrence[]
+}
+
+model Entity {
+  id     String @id @default(uuid())
+  userId String
+
+  // belonging to an asset or liability, an asset or liability knows the entity
+  assetLiabilityId String?
+
+  starred Boolean @default(false)
+  icon    String?
+  color   String?
+
+  name        String
+  description String?
+
+  isCompany Boolean @default(false)
+  phone     Int?
+  email     String?
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
+
+  user           User            @relation(fields: [userId], references: [id])
+  assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
+
+  Obligation    Obligation[]
+  AttributeLink AttributeLink[]
+  NoteLink      NoteLink[]
+  TagLink       TagLink[]
+  DocumentLink  DocumentLink[]
+}
+
+// Level 4
+
+model Transaction {
+  id String @id @default(uuid())
+
+  // transaction made from 
+  assetLiabilityId String
+
+  label       String
+  description String?
+  date        DateTime
+  amount      Float
+
+  // can select categories belonging to asset or undefined
+  categoryId String?
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
+
+  assetLiability AssetLiability       @relation(fields: [assetLiabilityId], references: [id])
+  category       TransactionCategory? @relation(fields: [categoryId], references: [id])
+
+  NoteLink     NoteLink[]
+  TagLink      TagLink[]
+  DocumentLink DocumentLink[]
+  Occurrence   Occurrence[]
+}
+
+// Level 5
+
+model Valuation {
+  id String @id @default(uuid())
+
+  // valuation of
+  assetLiabilityId String
+
+  value Float
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
+
+  assetLiability AssetLiability @relation(fields: [assetLiabilityId], references: [id])
+
+  NoteLink     NoteLink[]
+  TagLink      TagLink[]
+  DocumentLink DocumentLink[]
+}
+
+model Occurrence {
+  id     String  @id @default(uuid())
+  userId String?
+
+  // an occurrence of an obligation
+  obligationId String?
+
+  // is occurence obligation satisfying?
+  obligationSatisfying Boolean @default(false)
+  transactionId        String?
+
+  color String?
+
+  // calendar requirements
+
+  subject     String?
+  description String?
+
+  startDate DateTime
+  endDate   DateTime
+  startTime DateTime
+  endTime   DateTime
+  location  String?
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
+
+  user        User?        @relation(fields: [userId], references: [id])
+  obligation  Obligation?  @relation(fields: [obligationId], references: [id])
+  transaction Transaction? @relation(fields: [transactionId], references: [id])
+
+  NoteLink     NoteLink[]
+  TagLink      TagLink[]
+  DocumentLink DocumentLink[]
+}
+
+// Level 6
+
+model Attribute {
+  id     String @id @default(uuid())
+  userId String
+
+  label String
+  value String
+  type  String
+
+  tooltip String?
+
+  user          User            @relation(fields: [userId], references: [id])
+  AttributeLink AttributeLink[]
+}
+
+// Level 7
+
+model Note {
+  id     String @id @default(uuid())
+  userId String
+
+  text      String
+  createdAt DateTime @default(now())
+
+  user     User       @relation(fields: [userId], references: [id])
+  NoteLink NoteLink[]
+  TagLink  TagLink[]
+}
+
+model Tag {
+  id     String @id @default(uuid())
+  userId String
+
+  label String
+  color String?
+
+  user    User      @relation(fields: [userId], references: [id])
+  TagLink TagLink[]
+}
+
+model Document {
+  id     String @id @default(uuid())
+  userId String
+
+  starred Boolean @default(false)
+
+  label    String
+  tooltip  String?
+  location String
+
+  createdAt DateTime @default(now())
+
+  user         User           @relation(fields: [userId], references: [id])
+  DocumentLink DocumentLink[]
+  TagLink      TagLink[]
+}
+
+// Linking Tables
+
+model AttributeLink {
+  id          String @id @default(uuid())
+  attributeId String
+
+  // attributes applied to types
+  assetLiabilityTypeId String?
+
+  // attributes applied to 
+  assetLiabilityId String?
+  entityId         String?
+  obligationId     String?
+
+  attribute          Attribute           @relation(fields: [attributeId], references: [id])
+  assetLiability     AssetLiability?     @relation(fields: [assetLiabilityId], references: [id])
+  assetLiabilityType AssetLiabilityType? @relation(fields: [assetLiabilityTypeId], references: [id])
+  entity             Entity?             @relation(fields: [entityId], references: [id])
+  obligation         Obligation?         @relation(fields: [obligationId], references: [id])
+}
+
+model NoteLink {
+  id     String @id @default(uuid())
+  noteId String
+
+  assetLiabilityId String?
+  entityId         String?
+  obligationId     String?
+  transactionId    String?
+  occurrenceId     String?
+  valuationId      String?
+
+  note           Note            @relation(fields: [noteId], references: [id])
+  assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
+  entity         Entity?         @relation(fields: [entityId], references: [id])
+  obligation     Obligation?     @relation(fields: [obligationId], references: [id])
+  transaction    Transaction?    @relation(fields: [transactionId], references: [id])
+  occurrence     Occurrence?     @relation(fields: [occurrenceId], references: [id])
+  valuation      Valuation?      @relation(fields: [valuationId], references: [id])
+}
+
+model DocumentLink {
+  id         String @id @default(uuid())
+  documentId String
+
+  assetLiabilityId String?
+  entityId         String?
+  obligationId     String?
+  transactionId    String?
+  occurrenceId     String?
+  valuationId      String?
+
+  document       Document        @relation(fields: [documentId], references: [id])
+  assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
+  entity         Entity?         @relation(fields: [entityId], references: [id])
+  obligation     Obligation?     @relation(fields: [obligationId], references: [id])
+  transaction    Transaction?    @relation(fields: [transactionId], references: [id])
+  occurrence     Occurrence?     @relation(fields: [occurrenceId], references: [id])
+  valuation      Valuation?      @relation(fields: [valuationId], references: [id])
+}
+
+model TagLink {
+  id    String @id @default(uuid())
+  tagId String
+
+  assetLiabilityId String?
+  entityId         String?
+  obligationId     String?
+  transactionId    String?
+  occurrenceId     String?
+  valuationId      String?
+  documentId       String?
+  noteId           String?
+
+  tag            Tag             @relation(fields: [tagId], references: [id])
+  assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
+  entity         Entity?         @relation(fields: [entityId], references: [id])
+  obligation     Obligation?     @relation(fields: [obligationId], references: [id])
+  transaction    Transaction?    @relation(fields: [transactionId], references: [id])
+  occurrence     Occurrence?     @relation(fields: [occurrenceId], references: [id])
+  valuation      Valuation?      @relation(fields: [valuationId], references: [id])
+  document       Document?       @relation(fields: [documentId], references: [id])
+  note           Note?           @relation(fields: [noteId], references: [id])
+}
