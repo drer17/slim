@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Simple Ledger & Investment Management (SLIM)
 
-## Getting Started
+A simple NextJS, typescript, serverless application for finance and investment management.
 
-First, run the development server:
+A work in progress.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## High Level Requirements
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Simple
+- Cheap
+- Scalable
+- Secure
+- Private
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Application Requirements
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Overview
+  - User / Asset
+    - Profit / Loss
+    - Budget Table
+    - Pie Chart
+    - History Chart
+  - _Graph View_
+    - Obsidian like graph view
+- Tracking / Managing
+  - Transaction
+    - _Auto Categorisation_
+  - Obligation Tracking / Ledgering
+- Exporting
+  - Reporting
+  - Export to CSV
+- Notes / Comments
+  - Log like note taking
+  - Apply to (0:many to one)
+    - Docs
+    - Asset
+    - Transaction
+    - Entity
+    - Obligation
+    - Occurrence
+- Attributes
+  - Key, Values <String,String>
+  - Apply to (0:many to one)
+    - Docs
+    - Asset
+    - Transaction
+    - Entity
+    - Obligation
+    - Occurrence
+- Tags
+  - Unique searchable tags
+  - Apply to (0:many to many)
+    - Docs
+    - Asset
+    - Transaction
+    - Entity
+    - Obligation
+    - Note
+    - Occurrence
+- Pre Configuration
+  - Default user sets up
+    - Default Asset Types
+    - Default Transaction Categories
+    - Default Document Types
+- **User**
+  - **Create**
+    - Assets
+      - Value Assets
+      - _Apply tags_
+      - Add attributes
+    - Obligations (+tags +attributes)
+      - Bills
+      - Mortgage Repayments
+      - Salary
+      - Rent
+    - Transactions for an Account
+      - Auto Categorized
+      - _Apply tags_
+      - Apply transaction towards an obligation
+    - Logs or notes to Nodes
+    - Documents to Nodes
+    - Entities
+  - **Read**
+    - Obligations for Entities
+      - Past / Present
+      - Fulfilled / Outstanding
+    - Asset Value History
+    - Asset Profit / Loss
+    - Account Profit / Loss
+    - Budget Table
+    - Transaction Split
+    - Nodes Linked by tags
+      - Graph
+    - Search
