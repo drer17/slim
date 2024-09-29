@@ -141,11 +141,12 @@ model Obligation {
   assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
   entity         Entity?         @relation(fields: [entityId], references: [id])
 
-  AttributeLink AttributeLink[]
-  NoteLink      NoteLink[]
-  TagLink       TagLink[]
-  DocumentLink  DocumentLink[]
-  Occurrence    Occurrence[]
+  AttributeLink  AttributeLink[]
+  NoteLink       NoteLink[]
+  TagLink        TagLink[]
+  DocumentLink   DocumentLink[]
+  Occurrence     Occurrence[]
+  ObligationRule ObligationRule[]
 }
 
 model Entity {
@@ -228,11 +229,11 @@ model Valuation {
 }
 
 model Occurrence {
-  id     String  @id @default(uuid())
-  userId String?
+  id String @id @default(uuid())
 
   // an occurrence of an obligation
-  obligationId String?
+  obligationId String
+  amount       Float
 
   // is occurence obligation satisfying?
   obligationSatisfying Boolean @default(false)
@@ -254,13 +255,14 @@ model Occurrence {
   createdAt  DateTime  @default(now())
   archivedAt DateTime?
 
-  user        User?        @relation(fields: [userId], references: [id])
-  obligation  Obligation?  @relation(fields: [obligationId], references: [id])
+  obligation  Obligation   @relation(fields: [obligationId], references: [id])
   transaction Transaction? @relation(fields: [transactionId], references: [id])
 
   NoteLink     NoteLink[]
   TagLink      TagLink[]
   DocumentLink DocumentLink[]
+  User         User?          @relation(fields: [userId], references: [id])
+  userId       String?
 }
 
 // Level 6
@@ -319,6 +321,22 @@ model Document {
   user         User           @relation(fields: [userId], references: [id])
   DocumentLink DocumentLink[]
   TagLink      TagLink[]
+}
+
+// Bespoke
+
+model ObligationRule {
+  // obligation rule helps to automatically create occurrences
+  id           String @id @default(uuid())
+  obligationId String
+
+  amount         Float
+  frequency      Int
+  frequencyUnits String
+  startDate      DateTime
+  endDate        DateTime?
+
+  obligation Obligation? @relation(fields: [obligationId], references: [id])
 }
 
 // Linking Tables
