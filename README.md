@@ -92,3 +92,7 @@ A work in progress.
     - Nodes Linked by tags
       - Graph
     - Search
+
+## License
+
+This project is licensed under the GNU License - see the [LICENSE](LICENSE) file for details.
