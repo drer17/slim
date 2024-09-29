@@ -30,7 +30,7 @@
  *        - Archive
  */
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   IconArchive,
@@ -55,6 +55,7 @@ import {
 import { ContextMenuSeparator } from "@radix-ui/react-context-menu";
 import { useDebouncedCallback } from "use-debounce";
 import Tag, { TagProps } from "../tag/tag";
+import ExpandedContent from "../expanded-content/expanded-content";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SwatchesPicker from "@/components/ui/swatches-picker";
 import Link from "next/link";
@@ -94,25 +95,6 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const [focussed, setFocussed] = React.useState<boolean>(false);
   const [newColor, setColor] = React.useState<string>(color || "#09090b");
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
-        setFocussed(false);
-      }
-    };
-
-    if (focussed) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [focussed]);
 
   const changeColor = useDebouncedCallback((color: string) => {
     changeColorCallback(color);
@@ -218,23 +200,28 @@ const Card: React.FC<CardProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <motion.div
-              ref={cardRef}
-              className="dark:bg-zinc-900 rounded-lg w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
+            <ExpandedContent
+              height={"500px"}
+              expanded={focussed}
+              onOutsideClick={() => setFocussed(false)}
             >
-              <div className="flex justify-between mb-2">
-                <h1 className="text-2xl font-bold">{title}</h1>
-                {href && (
-                  <Link href={href}>
-                    <IconArrowUpRight className="text-zinc-500 w-5 h-5 dark:hover:text-zinc-400" />
-                  </Link>
-                )}
-              </div>
-              {expandedContent}
-            </motion.div>
+              <motion.div
+                className="dark:bg-zinc-900 rounded-lg w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+              >
+                <div className="flex justify-between mb-2">
+                  <h1 className="text-2xl font-bold">{title}</h1>
+                  {href && (
+                    <Link href={href}>
+                      <IconArrowUpRight className="text-zinc-500 w-5 h-5 dark:hover:text-zinc-400" />
+                    </Link>
+                  )}
+                </div>
+                {expandedContent}
+              </motion.div>
+            </ExpandedContent>
           </motion.div>
         )}
       </AnimatePresence>
