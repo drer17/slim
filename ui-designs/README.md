@@ -33,7 +33,7 @@ These components have been extracted from the ui-design drawio.
    - Expandable (see Framer)
    - Title?
    - Scrollable
-3. Datatable (Table Level 2, 3, 4, 5)
+3. DataTable (Table Level 2, 3, 4, 5)
    - Hide Columns
      - Hidden column breakpoints (screensize)
    - Filter
