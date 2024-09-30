@@ -94,7 +94,7 @@ const Card: React.FC<CardProps> = ({
   archiveCallback,
 }) => {
   const [focussed, setFocussed] = React.useState<boolean>(false);
-  const [newColor, setColor] = React.useState<string>(color || "#09090b");
+  const [newColor, setColor] = React.useState<string>(color || "#18181b");
 
   const changeColor = useDebouncedCallback((color: string) => {
     changeColorCallback(color);
