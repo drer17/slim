@@ -128,11 +128,6 @@ model Obligation {
 
   label       String
   description String?
-  date        DateTime?
-
-  frequency     Int?
-  frequencyUnit String?
-  amount        Float   @default(0)
 
   createdAt  DateTime  @default(now())
   archivedAt DateTime?
