@@ -103,7 +103,7 @@ const Card: React.FC<CardProps> = ({
   useEffect(() => changeColor(newColor), [changeColor, newColor]);
 
   const cardContents = (
-    <div className="dark:bg-zinc-950 hover:dark:bg-zinc-950 rounded-lg w-64 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+    <div className="dark:bg-zinc-900 rounded-md w-64 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div className="flex items-center justify-center text-zinc-500">
         {icon}
       </div>
@@ -140,7 +140,7 @@ const Card: React.FC<CardProps> = ({
   );
 
   const condensedContents = (
-    <div className="dark:bg-zinc-950 hover:dark:bg-zinc-950 rounded-lg w-64 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+    <div className="dark:bg-zinc-900 rounded-md w-64 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div className="col-span-4 flex items-center">
         <div className="font-bold">{title}</div>
       </div>
@@ -161,7 +161,7 @@ const Card: React.FC<CardProps> = ({
       <ContextMenu>
         <ContextMenuTrigger>
           <div
-            className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 p-0.5 rounded-lg"
+            className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 p-0.5 rounded-md"
             onClick={() => setFocussed(true)}
             style={{ background: newColor }}
           >
