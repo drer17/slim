@@ -15,7 +15,7 @@ import React, { useEffect, useRef } from "react";
 export interface ExpandedContentProps {
   expanded: boolean;
   onOutsideClick: () => void;
-  height: number;
+  height: string;
   children: React.ReactNode;
 }
 
