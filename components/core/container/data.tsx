@@ -1,8 +1,8 @@
+import { IconNotes } from "@tabler/icons-react";
 import { ContainerProps } from "./container";
 
-const containerPlaceholderData: ContainerProps = {
-  icon: "",
+export const containerPlaceholderData: ContainerProps = {
+  icon: <IconNotes />,
   title: "Notes",
   expandable: true,
-  content: "Hello",
 };
