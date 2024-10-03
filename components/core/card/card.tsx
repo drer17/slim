@@ -161,7 +161,7 @@ const Card: React.FC<CardProps> = ({
       <ContextMenu>
         <ContextMenuTrigger>
           <div
-            className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 p-0.5 rounded-md"
+            className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 p-0.5 rounded-md w-64"
             onClick={() => setFocussed(true)}
             style={{ background: newColor }}
           >
