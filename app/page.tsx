@@ -10,7 +10,7 @@ import { columns, rows } from "@/components/core/data-table/placeholder-data";
 export default function Home() {
   return (
     <div className="space-y-9 w-full">
-      <h1>SLIM</h1>
+      <div className="h-4" />
       <Card {...cardPlaceholderData} />
       <div className="w-[300px] h-[400px]">
         <Container {...containerPlaceholderData}>Hello</Container>

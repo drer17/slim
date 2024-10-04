@@ -5,6 +5,9 @@ import "./theme/globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import ThemeToggle from "./theme/theme_toggle";
+import Header from "@/components/global/header/header";
+import { cn } from "@/lib/utils";
+import SideBar from "@/components/global/side-bar/side-bar";
 
 export const metadata: Metadata = {
   title: "SLIM",
@@ -34,12 +37,21 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            <div className="max-w-default w-full flex flex-col items-center self-center p-4">
-              <main className="flex flex-col h-full w-full items-center">
-                {children}
+            <div className="w-full flex flex-col items-center self-center">
+              <div
+                className={cn(
+                  "flex flex-col md:flex-row w-full flex-1 mx-auto overflow-hidden",
+                  "h-svh",
+                )}
+              >
+                <SideBar />
+                <main className="w-full p-4">
+                  <Header />
+                  {children}
+                  <ThemeToggle />
+                </main>
                 <Toaster />
-                <ThemeToggle />
-              </main>
+              </div>
             </div>
           </TooltipProvider>
         </ThemeProvider>
