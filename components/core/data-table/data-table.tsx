@@ -72,7 +72,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   rows: TData[];
 
