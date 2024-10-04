@@ -1,3 +1,5 @@
+"use client";
+
 import { Table } from "@tanstack/react-table";
 import {
   DropdownMenu,
@@ -80,7 +82,7 @@ export function DataTableToolbar<TData>({
     <div className="grid gap-2 grid-cols-10 py-2 items-center">
       <div className="flex items-center col-span-3">
         <Input
-          value={table.getState().globalFilter}
+          value={table.getState().globalFilter || ""}
           onChange={(e) => table.setGlobalFilter(String(e.target.value))}
           placeholder="Search..."
           className="h-8"

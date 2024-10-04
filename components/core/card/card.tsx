@@ -103,8 +103,11 @@ const Card: React.FC<CardProps> = ({
   useEffect(() => changeColor(newColor), [changeColor, newColor]);
 
   const cardContents = (
-    <div className="dark:bg-zinc-900 rounded-md w-64 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
-      <div className="flex items-center justify-center text-zinc-500">
+    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+      <div
+        className="flex items-center justify-center text-zinc-500"
+        style={{ color: newColor }}
+      >
         {icon}
       </div>
       <div className="col-span-3 flex items-center">
@@ -120,10 +123,10 @@ const Card: React.FC<CardProps> = ({
         onClick={() => changeStarCallback(!starred)}
       >
         {starred && (
-          <IconStarFilled className="w-5 h-5 dark:text-yellow-700 hover:dark:text-yellow-600" />
+          <IconStarFilled className="w-5 h-5 dark:text-yellow-700 text-yellow-400 hover:dark:text-yellow-600 hover:text-yellow-300" />
         )}
         {!starred && (
-          <IconStar className="w-5 h-5 dark:text-yellow-700 invisible group-hover:visible hover:dark:text-yellow-600" />
+          <IconStar className="w-5 h-5 dark:text-yellow-700 text-yellow-400 invisible group-hover:visible hover:dark:text-yellow-600 hover:text-yellow-300" />
         )}
       </div>
       <ScrollArea className="row-span-2 flex justify-start flex-col">
@@ -140,7 +143,7 @@ const Card: React.FC<CardProps> = ({
   );
 
   const condensedContents = (
-    <div className="dark:bg-zinc-900 rounded-md w-64 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div className="col-span-4 flex items-center">
         <div className="font-bold">{title}</div>
       </div>
@@ -160,11 +163,7 @@ const Card: React.FC<CardProps> = ({
     <div>
       <ContextMenu>
         <ContextMenuTrigger>
-          <div
-            className="bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 p-0.5 rounded-md w-64"
-            onClick={() => setFocussed(true)}
-            style={{ background: newColor }}
-          >
+          <div onClick={() => setFocussed(true)}>
             {condensed ? condensedContents : cardContents}
           </div>
         </ContextMenuTrigger>
@@ -181,7 +180,7 @@ const Card: React.FC<CardProps> = ({
           </ContextMenuSub>
           <ContextMenuSeparator />
           <ContextMenuItem
-            className="dark:text-red-700"
+            className="dark:text-red-700 text-red-300"
             onClick={() => archiveCallback()}
           >
             <span>
@@ -206,7 +205,7 @@ const Card: React.FC<CardProps> = ({
               onOutsideClick={() => setFocussed(false)}
             >
               <motion.div
-                className="dark:bg-zinc-900 rounded-lg w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
+                className="dark:bg-zinc-900 bg-zinc-100 rounded-lg w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
@@ -215,7 +214,7 @@ const Card: React.FC<CardProps> = ({
                   <h1 className="text-2xl font-bold">{title}</h1>
                   {href && (
                     <Link href={href}>
-                      <IconArrowUpRight className="text-zinc-500 w-5 h-5 dark:hover:text-zinc-400" />
+                      <IconArrowUpRight className="text-zinc-500 w-5 h-5 dark:hover:text-zinc-400 hover:text-zinc-600" />
                     </Link>
                   )}
                 </div>
