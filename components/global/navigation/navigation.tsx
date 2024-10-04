@@ -1,61 +1,44 @@
+/*
+ * Navigation Component
+ *
+ * Author: Andre Repanich
+ * Date: 05-10-24
+ *
+ * Component Requirements
+ * [x]- Side bar navigation
+ * [x]- Mobile support
+ */
+
 "use client";
 
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "../../ui/sidebar";
-import {
-  IconArrowLeft,
-  IconBrandTabler,
-  IconPin,
-  IconSettings,
-  IconUserBolt,
-} from "@tabler/icons-react";
+import { IconPin } from "@tabler/icons-react";
 import Link from "next/link";
 
 import { motion } from "framer-motion";
 import SlimIcon from "../slim-icon";
-import { Button } from "@/components/ui/button";
+import { coreLinks, links } from "./data";
+import { cn } from "@/lib/utils";
 
-const SideBar = () => {
-  const links = [
-    {
-      label: "Dashboard",
-      href: "#",
-      icon: (
-        <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
-      label: "Profile",
-      href: "#",
-      icon: (
-        <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
-      label: "Settings",
-      href: "#",
-      icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
-      label: "Logout",
-      href: "#",
-      icon: (
-        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
-  ];
+interface NavigationProps {
+  mobileHeader?: React.ReactNode;
+}
+
+const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
   const [open, setOpen] = useState(false);
   const [animate, setAnimate] = useState(true);
   return (
     <Sidebar open={open} setOpen={setOpen} animate={animate}>
-      <SidebarBody className="justify-between gap-10 h-svh bg-zinc-50 dark:bg-zinc-900">
+      <SidebarBody
+        className="justify-between gap-10 h-svh bg-zinc-50 dark:bg-zinc-900"
+        mobileHeader={mobileHeader}
+      >
         <div className="flex justify-between items-center">
           {open || !animate ? <Logo /> : <LogoIcon />}
           {open && (
             <div
-              className="dark:hover:text-zinc-400 hover:text-zinc-600 text-zinc-500"
+              className="dark:hover:text-zinc-400 hover:text-zinc-600 text-zinc-500 invisible md:visible"
               onClick={() => setAnimate(!animate)}
             >
               <IconPin className="w-4 h-4 " />
@@ -65,7 +48,20 @@ const SideBar = () => {
         <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <div className="flex flex-col gap-2">
             {links.map((link, idx) => (
-              <SidebarLink key={idx} link={link} />
+              <SidebarLink key={idx} link={link} className={link.class} />
+            ))}
+          </div>
+          <p
+            className={cn(
+              "uppercase font-medium text-zinc-500 text-sm mt-10 mb-4",
+              open ? "visible" : "invisible",
+            )}
+          >
+            core
+          </p>
+          <div className="flex flex-col gap-2">
+            {coreLinks.map((link, idx) => (
+              <SidebarLink key={idx} link={link} className={link.class} />
             ))}
           </div>
         </div>
@@ -73,7 +69,8 @@ const SideBar = () => {
     </Sidebar>
   );
 };
-export default SideBar;
+
+export default Navigation;
 
 export const Logo = () => {
   return (

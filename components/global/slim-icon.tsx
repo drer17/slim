@@ -11,9 +11,9 @@ const SlimIcon = () => {
         <rect
           opacity="1"
           fill="#333333"
-          fill-opacity="1"
+          fillOpacity="1"
           stroke="#000000"
-          stroke-width="0"
+          strokeWidth="0"
           id="rect1"
           width="14.923858"
           height="14.923858"
@@ -23,11 +23,11 @@ const SlimIcon = () => {
           ry="3.1361976"
         />
         <text
-          font-size="17.294px"
+          fontSize="17.294px"
           line-height="0.9"
-          font-family="'JetBrainsMono Nerd Font Mono'"
+          fontFamily="'JetBrainsMono Nerd Font Mono'"
           fill="#ffffff"
-          fill-opacity="1"
+          fillOpacity="1"
           stroke="#000000"
           stroke-width="0"
           x="45.623981"
@@ -38,8 +38,8 @@ const SlimIcon = () => {
             x="45.623981"
             y="71.913208"
             id="tspan1"
-            font-family="'JetBrainsMono Nerd Font Mono'"
-            font-size="17.294px"
+            fontFamily="'JetBrainsMono Nerd Font Mono'"
+            fontSize="17.294px"
             fill="#ffffff"
           >
             s
