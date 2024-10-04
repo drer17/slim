@@ -1,5 +1,29 @@
 "use client";
 
+/*
+ * Data Table
+ *
+ * Author: Andre Repanich
+ * Date: 04-10-24
+ *
+ * Component Requirements
+ * [x]- Hide Columns
+ * [ ]- Hidden column breakpoints (screensize)
+ * [x]- Filter
+ * [x]- Lazy Load
+ * [x]- Sort columns (ASC DSC)
+ * [x]- Filter columns
+ * [x]- Column header drop down
+ *    [ ]- Custom menu items
+ * [x]- Select row opens dialog
+ * [ ]- Select rows
+ * [ ]- Callback actions on selection
+ * [ ]- export
+ * [x]- Render jsx in cell
+ * [ ]- horizontal and vertical scrolling
+ * [x]- Editable cells
+ */
+
 import * as React from "react";
 import "@tanstack/react-table";
 import {
@@ -51,13 +75,16 @@ declare module "@tanstack/react-table" {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   rows: TData[];
+
   dataModifier?: (
     rowIdx: number,
     colKey: string,
     value: any,
   ) => Promise<Status>;
   dataRetriever?: (numOfRows: number, forPage: number) => Promise<TData[]>;
+
   expandedContent?: React.ReactNode;
+
   hideToolbar?: boolean;
   hideManageColumns?: boolean;
   hideFilterColumns?: boolean;
