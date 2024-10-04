@@ -28,6 +28,9 @@ import { defaultColumn } from "./data-table-cell-edit";
 import { Status, generateToast } from "@/interfaces/response";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "@/components/ui/toast";
+import { AnimatePresence, motion } from "framer-motion";
+import ExpandedContent from "../expanded-content/expanded-content";
+import InViewPort from "@/components/invisible/in-view-port";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -53,16 +56,22 @@ interface DataTableProps<TData, TValue> {
     colKey: string,
     value: any,
   ) => Promise<Status>;
+  dataRetriever?: (numOfRows: number, forPage: number) => Promise<TData[]>;
+  expandedContent?: React.ReactNode;
   hideToolbar?: boolean;
   hideManageColumns?: boolean;
   hideFilterColumns?: boolean;
   hideExportOptions?: boolean;
 }
 
+const ROW_LIMIT = 50;
+
 export function DataTable<TData, TValue>({
   columns,
   rows,
   dataModifier,
+  dataRetriever,
+  expandedContent,
   hideManageColumns,
   hideFilterColumns,
   hideExportOptions,
@@ -77,6 +86,9 @@ export function DataTable<TData, TValue>({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState<TData[]>(rows);
+  const [focussedRow, setFocussedRow] = React.useState<number>(-1);
+  const [page, setPage] = React.useState(1);
+  const [isDone, setIsDone] = React.useState(false);
 
   const table = useReactTable({
     data,
@@ -117,6 +129,15 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const getMoreData = async () => {
+    if (isDone || !dataRetriever) return;
+    const newRows = await dataRetriever(ROW_LIMIT, page);
+
+    if (newRows.length === 0) setIsDone(true);
+    setData((prevData) => [...prevData, ...newRows]);
+    setPage(page + 1);
+  };
+
   const toolbar = (
     <DataTableToolbar
       table={table}
@@ -151,10 +172,11 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, rowIdx) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => setFocussedRow(rowIdx)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -176,9 +198,39 @@ export function DataTable<TData, TValue>({
                 </TableCell>
               </TableRow>
             )}
+            <TableRow className="hidden border-0">
+              <TableCell colSpan={columns.length} className="border-0">
+                <InViewPort callback={() => getMoreData()} />
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </div>
+      <AnimatePresence>
+        {focussedRow >= 0 && expandedContent && (
+          <motion.div
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ExpandedContent
+              height={"500px"}
+              expanded={focussedRow >= 0}
+              onOutsideClick={() => setFocussedRow(-1)}
+            >
+              <motion.div
+                className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+              >
+                {expandedContent}
+              </motion.div>
+            </ExpandedContent>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -45,7 +45,11 @@ const ExpandedContent: React.FC<ExpandedContentProps> = ({
     };
   }, [expanded, onOutsideClick]);
   return (
-    <div className="w-full" style={{ height: height }} ref={cardRef}>
+    <div
+      className="w-full flex justify-center"
+      style={{ height: height }}
+      ref={cardRef}
+    >
       {children}
     </div>
   );
