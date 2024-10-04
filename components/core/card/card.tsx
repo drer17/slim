@@ -160,7 +160,7 @@ const Card: React.FC<CardProps> = ({
   );
 
   return (
-    <div>
+    <div className="inline-flex">
       <ContextMenu>
         <ContextMenuTrigger>
           <div onClick={() => setFocussed(true)}>
