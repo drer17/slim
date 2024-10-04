@@ -66,7 +66,7 @@ const Container: React.FC<ContainerProps> = ({
               onOutsideClick={() => setFocussed(false)}
             >
               <motion.div
-                className="dark:bg-zinc-900 rounded-md w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
+                className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}

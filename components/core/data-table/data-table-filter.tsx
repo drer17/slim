@@ -30,7 +30,7 @@ export function DataTableFilter<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const [filterValue, setFilterValue] = React.useState<string>("");
-  const [selectedColumn, setSelectedColumn] = React.useState<string>("");
+  const [selectedColumn, setSelectedColumn] = React.useState<string>("id");
 
   const handleApplyFilter = () => {
     if (selectedColumn && filterValue) {
@@ -90,7 +90,7 @@ export function DataTableFilter<TData>({
           </TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end">
-          <div className="flex flex-col rounded-md shadow-md">
+          <div className="flex flex-col rounded-md">
             <div className="flex space-x-2 items-center">
               <Select
                 defaultValue={selectedColumn}

@@ -16,7 +16,7 @@ export default function Home() {
         <Container {...containerPlaceholderData}>Hello</Container>
       </div>
       <div className="w-full">
-        <DataTable columns={columns} data={rows} />
+        <DataTable columns={columns} rows={rows} />
       </div>
     </div>
   );
