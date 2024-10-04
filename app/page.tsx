@@ -16,7 +16,7 @@ export default function Home() {
         <Container {...containerPlaceholderData}>Hello</Container>
       </div>
       <div className="w-full">
-        <DataTable columns={columns} rows={rows} />
+        <DataTable columns={columns} rows={rows} expandedContent={"hello"} />
       </div>
     </div>
   );
