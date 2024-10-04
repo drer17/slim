@@ -4,6 +4,7 @@ import { roboto } from "./theme/fonts";
 import "./theme/globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
+import ThemeToggle from "./theme/theme_toggle";
 
 export const metadata: Metadata = {
   title: "SLIM",
@@ -37,6 +38,7 @@ export default function RootLayout({
               <main className="flex flex-col h-full w-full items-center">
                 {children}
                 <Toaster />
+                <ThemeToggle />
               </main>
             </div>
           </TooltipProvider>
