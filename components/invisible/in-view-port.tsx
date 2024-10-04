@@ -1,3 +1,13 @@
+/*
+ * InViewPort
+ *
+ * Author: Andre Repanich
+ * Date: 04-10-24
+ *
+ * Component Requirements
+ * Runs a callback when wasnt in view and is now
+ */
+
 import { useEffect, useRef } from "react";
 
 interface inViewPortProps {
