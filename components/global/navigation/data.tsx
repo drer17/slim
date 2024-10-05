@@ -5,7 +5,7 @@ import {
   IconChecklist,
   IconCircleMinus2,
   IconCirclePlus2,
-  IconLayoutDashboardFilled,
+  IconLayoutDashboard,
   IconUsers,
 } from "@tabler/icons-react";
 
@@ -14,7 +14,7 @@ export const links = [
     label: "Dashboard",
     href: "#",
     icon: (
-      <IconLayoutDashboardFilled className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      <IconLayoutDashboard className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
     class: "",
   },

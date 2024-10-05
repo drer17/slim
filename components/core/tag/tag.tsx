@@ -28,7 +28,7 @@ export interface TagProps {
   label: string;
   color?: string;
   detail?: boolean;
-  removeTagCallback: (id: string) => void;
+  removeTagCallback?: (id: string) => void;
 }
 
 const Tag: React.FC<TagProps> = ({
@@ -40,13 +40,13 @@ const Tag: React.FC<TagProps> = ({
 }) => (
   <Tooltip>
     <TooltipTrigger
-      className="rounded-lg justify-between flex w-full max-h-8 items-center p-2"
+      className="rounded-lg justify-between flex w-full max-h-8 items-center p-2 bg-zinc-500"
       style={{ background: color, height: !detail ? "16px" : undefined }}
     >
       {detail && (
         <>
           <p>{label}</p>
-          <button onClick={() => removeTagCallback(id)}>
+          <button onClick={() => removeTagCallback && removeTagCallback(id)}>
             <IconX
               className="w-4 h-4 invisible hover:visible"
               style={{ color: getComplementaryColor(color) }}
