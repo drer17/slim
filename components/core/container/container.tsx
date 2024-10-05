@@ -18,10 +18,18 @@
  *    - Expand card
  */
 
-import React from "react";
+import React, { createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMaximize } from "@tabler/icons-react";
 import ExpandedContent from "../expanded-content/expanded-content";
+
+interface ContainerContextProps {
+  focussed: boolean;
+}
+const ContainerContext = createContext<ContainerContextProps | undefined>(
+  undefined,
+);
+export const useContainerContext = () => useContext(ContainerContext);
 
 export interface ContainerProps {
   title: string;
@@ -39,12 +47,12 @@ const Container: React.FC<ContainerProps> = ({
   const [focussed, setFocussed] = React.useState<boolean>(false);
 
   return (
-    <div>
+    <ContainerContext.Provider value={{ focussed }}>
       <div className="w-full h-full flex flex-col group p-2 rounded-md">
         <div className="flex justify-between mb-2">
           <div className="flex items-center space-x-2">
             {icon}
-            <h1 className="text-2xl font-bold">{title}</h1>
+            <h1 className="text-xl font-bold">{title}</h1>
           </div>
           <button onClick={() => setFocussed(true)}>
             <IconMaximize className="text-zinc-500 w-5 h-5 invisible group-hover:visible" />
@@ -83,7 +91,7 @@ const Container: React.FC<ContainerProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </ContainerContext.Provider>
   );
 };
 

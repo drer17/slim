@@ -31,7 +31,7 @@ const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
   return (
     <Sidebar open={open} setOpen={setOpen} animate={animate}>
       <SidebarBody
-        className="justify-between gap-10 h-svh bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur"
+        className="justify-between gap-10 h-svh bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur group"
         mobileHeader={mobileHeader}
       >
         <div className="flex justify-between items-center">
@@ -53,8 +53,8 @@ const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
           </div>
           <p
             className={cn(
-              "uppercase font-medium text-zinc-500 text-sm mt-10 mb-4",
-              open || !animate ? "visible" : "invisible",
+              "uppercase font-medium text-zinc-500 text-sm mt-10 mb-4 group-hover:visible invisible duration-100 ease-in-out",
+              !animate ? "visible" : "invisible",
             )}
           >
             core
