@@ -18,25 +18,37 @@ model User {
   email    String @unique
   password String
 
-  currency String @default("AUD")
+  currency       String           @default("AUD")
+  PortfolioUsers PortfolioUsers[]
+}
+
+model Portfolio {
+  id String @id @default(uuid())
+
+  currency    String @default("AUD")
+  name        String
+  description String
+
+  createdAt  DateTime  @default(now())
+  archivedAt DateTime?
 
   AssetLiabilityType  AssetLiabilityType[]
   TransactionCategory TransactionCategory[]
   AssetLiability      AssetLiability[]
   Obligation          Obligation[]
   Entity              Entity[]
-  Occurrence          Occurrence[]
   Note                Note[]
   Tag                 Tag[]
   Attribute           Attribute[]
   Document            Document[]
+  PortfolioUsers      PortfolioUsers[]
 }
 
 // Level 1
 
 model AssetLiabilityType {
-  id     String @id @default(uuid())
-  userId String
+  id          String @id @default(uuid())
+  portfolioId String
 
   icon  String?
   color String?
@@ -44,16 +56,16 @@ model AssetLiabilityType {
   label String
   asset Boolean
 
-  user User @relation(fields: [userId], references: [id])
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id])
 
   AssetLiability AssetLiability[]
   AttributeLink  AttributeLink[]
 }
 
 model TransactionCategory {
-  id       String  @id @default(uuid())
-  userId   String
-  parentId String?
+  id          String  @id @default(uuid())
+  portfolioId String
+  parentId    String?
 
   // applies to certain assets
   assetId String?
@@ -64,9 +76,9 @@ model TransactionCategory {
   label   String
   expense Boolean @default(true)
 
-  user   User                 @relation(fields: [userId], references: [id])
-  asset  AssetLiability?      @relation(fields: [assetId], references: [id])
-  parent TransactionCategory? @relation("TransactionCategoryToParent", fields: [parentId], references: [id])
+  portfolio Portfolio            @relation(fields: [portfolioId], references: [id])
+  asset     AssetLiability?      @relation(fields: [assetId], references: [id])
+  parent    TransactionCategory? @relation("TransactionCategoryToParent", fields: [parentId], references: [id])
 
   children     TransactionCategory[] @relation("TransactionCategoryToParent")
   transactions Transaction[]
@@ -76,7 +88,7 @@ model TransactionCategory {
 
 model AssetLiability {
   id          String @id @default(uuid())
-  userId      String
+  portfolioId String
   assetTypeId String
 
   parentId String?
@@ -94,7 +106,7 @@ model AssetLiability {
   createdAt  DateTime  @default(now())
   archivedAt DateTime?
 
-  user      User               @relation(fields: [userId], references: [id])
+  portfolio Portfolio          @relation(fields: [portfolioId], references: [id])
   assetType AssetLiabilityType @relation(fields: [assetTypeId], references: [id])
   parent    AssetLiability?    @relation("AssetLiabilityToParent", fields: [parentId], references: [id])
   children  AssetLiability[]   @relation("AssetLiabilityToParent")
@@ -113,8 +125,8 @@ model AssetLiability {
 // Level 3
 
 model Obligation {
-  id     String @id @default(uuid())
-  userId String
+  id          String @id @default(uuid())
+  portfolioId String
 
   // to an entity
   entityId String?
@@ -132,7 +144,7 @@ model Obligation {
   createdAt  DateTime  @default(now())
   archivedAt DateTime?
 
-  user           User            @relation(fields: [userId], references: [id])
+  portfolio      Portfolio       @relation(fields: [portfolioId], references: [id])
   assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
   entity         Entity?         @relation(fields: [entityId], references: [id])
 
@@ -145,8 +157,8 @@ model Obligation {
 }
 
 model Entity {
-  id     String @id @default(uuid())
-  userId String
+  id          String @id @default(uuid())
+  portfolioId String
 
   // belonging to an asset or liability, an asset or liability knows the entity
   assetLiabilityId String?
@@ -165,7 +177,7 @@ model Entity {
   createdAt  DateTime  @default(now())
   archivedAt DateTime?
 
-  user           User            @relation(fields: [userId], references: [id])
+  portfolio      Portfolio       @relation(fields: [portfolioId], references: [id])
   assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
 
   Obligation    Obligation[]
@@ -256,15 +268,13 @@ model Occurrence {
   NoteLink     NoteLink[]
   TagLink      TagLink[]
   DocumentLink DocumentLink[]
-  User         User?          @relation(fields: [userId], references: [id])
-  userId       String?
 }
 
 // Level 6
 
 model Attribute {
-  id     String @id @default(uuid())
-  userId String
+  id          String @id @default(uuid())
+  portfolioId String
 
   label String
   value String
@@ -272,38 +282,38 @@ model Attribute {
 
   tooltip String?
 
-  user          User            @relation(fields: [userId], references: [id])
+  portfolio     Portfolio       @relation(fields: [portfolioId], references: [id])
   AttributeLink AttributeLink[]
 }
 
 // Level 7
 
 model Note {
-  id     String @id @default(uuid())
-  userId String
+  id          String @id @default(uuid())
+  portfolioId String
 
   text      String
   createdAt DateTime @default(now())
 
-  user     User       @relation(fields: [userId], references: [id])
-  NoteLink NoteLink[]
-  TagLink  TagLink[]
+  portfolio Portfolio  @relation(fields: [portfolioId], references: [id])
+  NoteLink  NoteLink[]
+  TagLink   TagLink[]
 }
 
 model Tag {
-  id     String @id @default(uuid())
-  userId String
+  id          String @id @default(uuid())
+  portfolioId String
 
   label String
   color String?
 
-  user    User      @relation(fields: [userId], references: [id])
-  TagLink TagLink[]
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id])
+  TagLink   TagLink[]
 }
 
 model Document {
-  id     String @id @default(uuid())
-  userId String
+  id          String @id @default(uuid())
+  portfolioId String
 
   starred Boolean @default(false)
 
@@ -313,7 +323,7 @@ model Document {
 
   createdAt DateTime @default(now())
 
-  user         User           @relation(fields: [userId], references: [id])
+  portfolio    Portfolio      @relation(fields: [portfolioId], references: [id])
   DocumentLink DocumentLink[]
   TagLink      TagLink[]
 }
@@ -335,6 +345,18 @@ model ObligationRule {
 }
 
 // Linking Tables
+
+model PortfolioUsers {
+  id String @id @default(uuid())
+
+  portfolioId String
+  userId      String
+
+  role String
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+}
 
 model AttributeLink {
   id          String @id @default(uuid())
