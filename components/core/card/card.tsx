@@ -54,21 +54,22 @@ import {
 } from "@/components/ui/context-menu";
 import { ContextMenuSeparator } from "@radix-ui/react-context-menu";
 import { useDebouncedCallback } from "use-debounce";
-import Tag, { TagProps } from "../tag/tag";
+import TagComponent from "../tag/tag";
 import ExpandedContent from "../expanded-content/expanded-content";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SwatchesPicker from "@/components/ui/swatches-picker";
 import Link from "next/link";
 import Favourite from "../other/favourite";
+import { Tag } from "@prisma/client";
 
 export interface CardProps {
   icon: React.ReactNode;
   title: string;
   secondary?: string;
   primary: React.ReactNode;
-  tags: TagProps[];
-  starred?: Boolean;
-  condensed?: Boolean;
+  tags: Tag[];
+  starred?: boolean;
+  condensed?: boolean;
   color?: string;
   presetColors: string[];
   href?: string;
@@ -123,7 +124,7 @@ const Card: React.FC<CardProps> = ({
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
           <React.Fragment key={tag.id}>
-            <Tag {...tag} />
+            <TagComponent {...tag} />
             <div className="h-1" />
           </React.Fragment>
         ))}
@@ -141,7 +142,7 @@ const Card: React.FC<CardProps> = ({
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
           <React.Fragment key={tag.id}>
-            <Tag {...tag} />
+            <TagComponent {...tag} />
             <div className="h-1" />
           </React.Fragment>
         ))}

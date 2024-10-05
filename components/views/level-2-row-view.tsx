@@ -16,7 +16,7 @@
  */
 
 import { IconDots } from "@tabler/icons-react";
-import Card, { CardProps } from "../core/card/card";
+import { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
 import PathToResource from "./path-to-resource";
 import {
@@ -28,8 +28,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
-import Tag, { TagProps } from "../core/tag/tag";
-import { Attribute, Document, Note } from "@prisma/client";
+import TagComponent from "../core/tag/tag";
+import { Attribute, Document, Note, Tag } from "@prisma/client";
 import Favourite from "../core/other/favourite";
 import Container from "../core/container/container";
 import Link from "next/link";
@@ -38,7 +38,7 @@ export interface Level2RowViewProps {
   pathToResource: string[];
   icon: React.ReactNode;
   title: string;
-  tags: TagProps[];
+  tags: Tag[];
   starred: boolean;
   primary: string;
   description: string;
@@ -48,7 +48,7 @@ export interface Level2RowViewProps {
   actionButtons: { icon: React.ReactNode; label: string; href: string }[];
   level2Children: CardProps[];
   level3Children: CardProps[];
-  changeStarCallback: (star: boolean) => void;
+  changeStarCallback?: (star: boolean) => void;
   menuOptions: { label: string; callback: () => any }[];
 }
 
@@ -80,7 +80,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
         </div>
         <div className="flex-1 flex space-x-2 items-end h-6">
           {tags.map((tag, idx) => (
-            <Tag key={`Tag${idx}`} {...tag} />
+            <TagComponent key={`Tag${idx}`} {...tag} />
           ))}
         </div>
         <div className="space-x-2 flex">

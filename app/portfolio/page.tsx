@@ -1,11 +1,7 @@
 "use client";
 
 import ThemeToggle from "../theme/theme_toggle";
-import {
-  level2PlaceholderData,
-  level2RowPlaceholderData,
-} from "@/components/views/placeholder-data";
-import Level2TableView from "@/components/views/level-2-table-view";
+import { level2RowPlaceholderData } from "@/components/views/placeholder-data";
 import Level2RowView from "@/components/views/level-2-row-view";
 
 export default function Page() {

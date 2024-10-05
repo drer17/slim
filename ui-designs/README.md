@@ -68,10 +68,10 @@ These components have been extracted from the ui-design drawio.
 1. Level 2 Row
 1. Level 3 Row
 
-# Model to UI
+# Routes
 
-Each model can be represented as a class.
-
-ViewedModel -> Level -> Model
-
-There can be methods to process model specific info to data the view can process.
+```
+|- account
+    |- asset-liability
+    |- data-table
+```
