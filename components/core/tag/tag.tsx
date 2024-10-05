@@ -6,6 +6,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getComplementaryColor } from "@/lib/utilities/color";
+import { Tag } from "@prisma/client";
 import { IconXboxX } from "@tabler/icons-react";
 
 /*
@@ -23,31 +24,25 @@ import { IconXboxX } from "@tabler/icons-react";
  *    - If condensed, show tooltip
  */
 
-export interface TagProps {
-  id: string;
-  label: string;
-  color?: string;
-  detail?: boolean;
-  removeTagCallback?: (id: string) => void;
-}
-
-const Tag: React.FC<TagProps> = ({
-  id,
-  label,
-  color,
-  detail,
-  removeTagCallback,
-}) => (
+const TagComponent: React.FC<
+  Tag & {
+    detail?: string;
+    removeTagCallback?: (id: string) => void;
+  }
+> = ({ id, label, color, detail, removeTagCallback }) => (
   <Tooltip>
     <TooltipTrigger
-      className="rounded-full justify-between max-h-4 flex w-auto items-center p-2 bg-zinc-500 group"
-      style={{ background: color, height: !detail ? "16px" : undefined }}
+      className="rounded-md justify-between max-h-4 flex w-auto items-center p-2 bg-zinc-500 group"
+      style={{
+        background: color || undefined,
+        height: !detail ? "16px" : undefined,
+      }}
     >
       {detail && (
         <>
           <p
             className="text-xs uppercase font-medium"
-            style={{ color: getComplementaryColor(color) }}
+            style={{ color: getComplementaryColor(color || undefined) }}
           >
             {label}
           </p>
@@ -61,4 +56,4 @@ const Tag: React.FC<TagProps> = ({
   </Tooltip>
 );
 
-export default Tag;
+export default TagComponent;

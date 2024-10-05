@@ -19,7 +19,7 @@ export default function Layout({
         <div className="hidden md:flex">
           <Header />
         </div>
-        {children}
+        <div className="mt-8">{children}</div>
       </div>
     </div>
   );

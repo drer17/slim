@@ -12,7 +12,7 @@ import {
 export const links = [
   {
     label: "Dashboard",
-    href: "#",
+    href: "portfolio/dashboard/{asset}",
     icon: (
       <IconLayoutDashboard className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -20,7 +20,7 @@ export const links = [
   },
   {
     label: "Cash Flow",
-    href: "#",
+    href: "portfolio/grid/{asset}",
     icon: (
       <IconTable className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -28,7 +28,7 @@ export const links = [
   },
   {
     label: "Calendar",
-    href: "#",
+    href: "portfolio/calendar/{asset}",
     icon: (
       <IconCalendarMonth className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -36,7 +36,7 @@ export const links = [
   },
   {
     label: "Graph",
-    href: "#",
+    href: "portfolio/graph/{asset}",
     icon: (
       <IconChartDots3 className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -47,7 +47,7 @@ export const links = [
 export const coreLinks = [
   {
     label: "Assets",
-    href: "#",
+    href: "portfolio/table/asset-liabilities/assets/{asset}",
     icon: (
       <IconCirclePlus2 className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -55,7 +55,7 @@ export const coreLinks = [
   },
   {
     label: "Liabilities",
-    href: "#",
+    href: "portfolio/table/asset-liabilities/liabilities/{asset}",
     icon: (
       <IconCircleMinus2 className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -63,7 +63,7 @@ export const coreLinks = [
   },
   {
     label: "Obligations",
-    href: "#",
+    href: "portfolio/table/obligations/{asset}",
     icon: (
       <IconChecklist className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -71,7 +71,7 @@ export const coreLinks = [
   },
   {
     label: "Entities",
-    href: "#",
+    href: "portfolio/table/entities/{asset}",
     icon: (
       <IconUsers className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),

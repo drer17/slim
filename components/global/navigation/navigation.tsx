@@ -31,7 +31,7 @@ const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
   return (
     <Sidebar open={open} setOpen={setOpen} animate={animate}>
       <SidebarBody
-        className="justify-between gap-10 h-svh bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur group"
+        className="justify-between gap-7 h-svh bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur group"
         mobileHeader={mobileHeader}
       >
         <div className="flex justify-between items-center">

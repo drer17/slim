@@ -1,3 +1,5 @@
+"use client";
+
 import { IconStar, IconStarFilled } from "@tabler/icons-react";
 
 interface FavouriteProps {
