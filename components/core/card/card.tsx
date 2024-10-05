@@ -59,6 +59,7 @@ import ExpandedContent from "../expanded-content/expanded-content";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SwatchesPicker from "@/components/ui/swatches-picker";
 import Link from "next/link";
+import Favourite from "../other/favourite";
 
 export interface CardProps {
   icon: React.ReactNode;
@@ -118,17 +119,7 @@ const Card: React.FC<CardProps> = ({
           {secondary && <TooltipContent>{secondary}</TooltipContent>}
         </Tooltip>
       </div>
-      <div
-        className="flex items-center justify-end"
-        onClick={() => changeStarCallback(!starred)}
-      >
-        {starred && (
-          <IconStarFilled className="w-5 h-5 dark:text-yellow-700 text-yellow-400 hover:dark:text-yellow-600 hover:text-yellow-300" />
-        )}
-        {!starred && (
-          <IconStar className="w-5 h-5 dark:text-yellow-700 text-yellow-400 invisible group-hover:visible hover:dark:text-yellow-600 hover:text-yellow-300" />
-        )}
-      </div>
+      <Favourite starred={starred} changeStarCallback={changeStarCallback} />
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
           <React.Fragment key={tag.id}>

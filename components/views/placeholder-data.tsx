@@ -1,6 +1,8 @@
-import { Level2ModelViewProps } from "./level-2-model-view";
+import { IconCalendar, IconTable } from "@tabler/icons-react";
+import { Level2RowViewProps } from "./level-2-row-view";
+import { Level2TableViewProps } from "./level-2-table-view";
 
-export const level2PlaceholderData: Level2ModelViewProps = {
+export const level2PlaceholderData: Level2TableViewProps = {
   pathToResource: ["Home", "Resources", "Models"],
   title: "Level 2 Models",
   items: [
@@ -150,5 +152,94 @@ export const level2PlaceholderData: Level2ModelViewProps = {
       archiveCallback: () => console.log("Archived Model 6"),
       type: { label: "Type F", icon: <svg width="16" height="16" /> },
     },
+  ],
+};
+
+export const level2RowPlaceholderData: Level2RowViewProps = {
+  pathToResource: ["Home", "Resources", "Item1"],
+  icon: (
+    <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10" fill="gray" />
+    </svg>
+  ),
+  title: "Sample Resource",
+  tags: [
+    { label: "Urgent", color: "grey", detail: true },
+    { label: "Important", color: "grey", detail: true },
+  ],
+  starred: true,
+  primary: "Primary Content",
+  description: "This is a description of the resource.",
+  attributes: [
+    { name: "Attribute 1", value: "Value 1" },
+    { name: "Attribute 2", value: "Value 2" },
+  ],
+  documents: [
+    { name: "Document 1", url: "/docs/document1.pdf" },
+    { name: "Document 2", url: "/docs/document2.pdf" },
+  ],
+  notes: [
+    { author: "User 1", content: "This is a note", timestamp: new Date() },
+    { author: "User 2", content: "Another note", timestamp: new Date() },
+  ],
+  actionButtons: [
+    { icon: <IconTable className="" />, label: "Cash Flow", href: "" },
+    { icon: <IconCalendar className="" />, label: "Calendar", href: "" },
+  ],
+  level2Children: [
+    {
+      icon: (
+        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+          <rect width="24" height="24" fill="green" />
+        </svg>
+      ),
+      title: "Level 2 Child 1",
+      primary: "Primary info",
+      tags: [{ label: "Child Tag", color: "yellow" }],
+      presetColors: ["green", "yellow"],
+      changeColorCallback: (color) => console.log(`Color changed to ${color}`),
+      changeStarCallback: (star) =>
+        console.log(`Star status changed to ${star}`),
+      archiveCallback: () => console.log("Archived"),
+    },
+    {
+      icon: (
+        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+          <rect width="24" height="24" fill="blue" />
+        </svg>
+      ),
+      title: "Level 2 Child 2",
+      primary: "Secondary info",
+      tags: [{ label: "Another Tag", color: "purple" }],
+      presetColors: ["blue", "purple"],
+      changeColorCallback: (color) => console.log(`Color changed to ${color}`),
+      changeStarCallback: (star) =>
+        console.log(`Star status changed to ${star}`),
+      archiveCallback: () => console.log("Archived"),
+    },
+  ],
+  level3Children: [
+    {
+      icon: (
+        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+          <rect width="24" height="24" fill="orange" />
+        </svg>
+      ),
+      title: "Level 3 Child 1",
+      primary: "Tertiary info",
+      tags: [{ label: "Level 3 Tag", color: "orange" }],
+      presetColors: ["orange", "black"],
+      changeColorCallback: (color) => console.log(`Color changed to ${color}`),
+      changeStarCallback: (star) =>
+        console.log(`Star status changed to ${star}`),
+      archiveCallback: () => console.log("Archived"),
+    },
+  ],
+  changeStarCallback: (star) => {
+    console.log(`Starred status changed to: ${star}`);
+  },
+  menuOptions: [
+    { label: "Edit", callback: () => console.log("Edit clicked") },
+    { label: "Delete", callback: () => console.log("Delete clicked") },
   ],
 };

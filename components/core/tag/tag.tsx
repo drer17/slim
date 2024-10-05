@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getComplementaryColor } from "@/lib/utilities/color";
-import { IconX } from "@tabler/icons-react";
+import { IconXboxX } from "@tabler/icons-react";
 
 /*
  * Tag
@@ -40,18 +40,20 @@ const Tag: React.FC<TagProps> = ({
 }) => (
   <Tooltip>
     <TooltipTrigger
-      className="rounded-lg justify-between flex w-full max-h-8 items-center p-2 bg-zinc-500"
+      className="rounded-full justify-between max-h-4 flex w-auto items-center p-2 bg-zinc-500 group"
       style={{ background: color, height: !detail ? "16px" : undefined }}
     >
       {detail && (
         <>
-          <p>{label}</p>
-          <button onClick={() => removeTagCallback && removeTagCallback(id)}>
-            <IconX
-              className="w-4 h-4 invisible hover:visible"
-              style={{ color: getComplementaryColor(color) }}
-            />
-          </button>
+          <p
+            className="text-xs uppercase font-medium"
+            style={{ color: getComplementaryColor(color) }}
+          >
+            {label}
+          </p>
+          <div onClick={() => removeTagCallback && removeTagCallback(id)}>
+            <IconXboxX className="w-3 h-3 invisible group-hover:visible ml-1" />
+          </div>
         </>
       )}
     </TooltipTrigger>

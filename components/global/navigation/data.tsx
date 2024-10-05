@@ -1,11 +1,11 @@
 import {
   IconCalendarMonth,
-  IconCash,
   IconChartDots3,
   IconChecklist,
   IconCircleMinus2,
   IconCirclePlus2,
   IconLayoutDashboard,
+  IconTable,
   IconUsers,
 } from "@tabler/icons-react";
 
@@ -22,7 +22,7 @@ export const links = [
     label: "Cash Flow",
     href: "#",
     icon: (
-      <IconCash className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      <IconTable className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
     class: "mb-4",
   },
