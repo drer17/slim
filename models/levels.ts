@@ -4,6 +4,7 @@
 
 import { CardProps } from "@/components/core/card/card";
 import { DataTableProps } from "@/components/core/data-table/data-table";
+import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 
 export class Level1ModelView extends BaseModelView {
   public typeProps!: any;
@@ -11,7 +12,7 @@ export class Level1ModelView extends BaseModelView {
 
 export class Level2ModelView extends BaseModelView {
   public cardProps!: CardProps;
-  public pageProps!: any;
+  public pageProps!: Level2TableViewProps;
 
   public parentHref!: string;
 }

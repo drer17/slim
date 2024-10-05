@@ -71,7 +71,7 @@ export interface CardProps {
   color?: string;
   presetColors: string[];
   href?: string;
-  expandedContent?: React.ReactNode;
+  children?: React.ReactNode;
   changeColorCallback: (color: string) => void;
   changeStarCallback: (star: boolean) => void;
   archiveCallback: () => void;
@@ -88,7 +88,7 @@ const Card: React.FC<CardProps> = ({
   color,
   presetColors,
   href,
-  expandedContent,
+  children,
   changeColorCallback,
   changeStarCallback,
   archiveCallback,
@@ -103,7 +103,7 @@ const Card: React.FC<CardProps> = ({
   useEffect(() => changeColor(newColor), [changeColor, newColor]);
 
   const cardContents = (
-    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md min-w-44 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div
         className="flex items-center justify-center text-zinc-500"
         style={{ color: newColor }}
@@ -143,7 +143,7 @@ const Card: React.FC<CardProps> = ({
   );
 
   const condensedContents = (
-    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md min-w-44 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div className="col-span-4 flex items-center">
         <div className="font-bold">{title}</div>
       </div>
@@ -160,9 +160,9 @@ const Card: React.FC<CardProps> = ({
   );
 
   return (
-    <div className="inline-flex">
+    <div className="flex w-full">
       <ContextMenu>
-        <ContextMenuTrigger>
+        <ContextMenuTrigger className="w-full">
           <div onClick={() => setFocussed(true)}>
             {condensed ? condensedContents : cardContents}
           </div>
@@ -192,7 +192,7 @@ const Card: React.FC<CardProps> = ({
       </ContextMenu>
 
       <AnimatePresence>
-        {focussed && expandedContent && (
+        {focussed && children && (
           <motion.div
             className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
             initial={{ opacity: 0 }}
@@ -218,7 +218,7 @@ const Card: React.FC<CardProps> = ({
                     </Link>
                   )}
                 </div>
-                {expandedContent}
+                {children}
               </motion.div>
             </ExpandedContent>
           </motion.div>
