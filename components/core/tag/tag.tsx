@@ -6,7 +6,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getComplementaryColor } from "@/lib/utilities/color";
-import { IconX } from "@tabler/icons-react";
+import { Tag } from "@prisma/client";
+import { IconXboxX } from "@tabler/icons-react";
 
 /*
  * Tag
@@ -23,35 +24,31 @@ import { IconX } from "@tabler/icons-react";
  *    - If condensed, show tooltip
  */
 
-export interface TagProps {
-  id: string;
-  label: string;
-  color?: string;
-  detail?: boolean;
-  removeTagCallback: (id: string) => void;
-}
-
-const Tag: React.FC<TagProps> = ({
-  id,
-  label,
-  color,
-  detail,
-  removeTagCallback,
-}) => (
+const TagComponent: React.FC<
+  Tag & {
+    detail?: string;
+    removeTagCallback?: (id: string) => void;
+  }
+> = ({ id, label, color, detail, removeTagCallback }) => (
   <Tooltip>
     <TooltipTrigger
-      className="rounded-lg justify-between flex w-full max-h-8 items-center p-2"
-      style={{ background: color, height: !detail ? "16px" : undefined }}
+      className="rounded-md justify-between max-h-4 flex w-auto items-center p-2 bg-zinc-500 group"
+      style={{
+        background: color || undefined,
+        height: !detail ? "16px" : undefined,
+      }}
     >
       {detail && (
         <>
-          <p>{label}</p>
-          <button onClick={() => removeTagCallback(id)}>
-            <IconX
-              className="w-4 h-4 invisible hover:visible"
-              style={{ color: getComplementaryColor(color) }}
-            />
-          </button>
+          <p
+            className="text-xs uppercase font-medium"
+            style={{ color: getComplementaryColor(color || undefined) }}
+          >
+            {label}
+          </p>
+          <div onClick={() => removeTagCallback && removeTagCallback(id)}>
+            <IconXboxX className="w-3 h-3 invisible group-hover:visible ml-1" />
+          </div>
         </>
       )}
     </TooltipTrigger>
@@ -59,4 +56,4 @@ const Tag: React.FC<TagProps> = ({
   </Tooltip>
 );
 
-export default Tag;
+export default TagComponent;

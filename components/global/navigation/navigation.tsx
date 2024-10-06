@@ -20,18 +20,21 @@ import { motion } from "framer-motion";
 import SlimIcon from "../slim-icon";
 import { coreLinks, links } from "./data";
 import { cn } from "@/lib/utils";
+import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
+import { format } from "@/lib/utilities/string";
 
 interface NavigationProps {
   mobileHeader?: React.ReactNode;
 }
 
 const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
+  const { target } = usePortfolioContext();
   const [open, setOpen] = useState(false);
   const [animate, setAnimate] = useState(true);
   return (
     <Sidebar open={open} setOpen={setOpen} animate={animate}>
       <SidebarBody
-        className="justify-between gap-10 h-svh bg-zinc-50 dark:bg-zinc-900"
+        className="justify-between gap-7 h-svh bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur group"
         mobileHeader={mobileHeader}
       >
         <div className="flex justify-between items-center">
@@ -48,20 +51,28 @@ const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
         <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <div className="flex flex-col gap-2">
             {links.map((link, idx) => (
-              <SidebarLink key={idx} link={link} className={link.class} />
+              <SidebarLink
+                key={idx}
+                link={{ ...link, href: format(link.href, { asset: target }) }}
+                className={link.class}
+              />
             ))}
           </div>
           <p
             className={cn(
-              "uppercase font-medium text-zinc-500 text-sm mt-10 mb-4",
-              open ? "visible" : "invisible",
+              "uppercase font-medium text-zinc-500 text-sm mt-10 mb-4 group-hover:visible invisible duration-100 ease-in-out",
+              !animate ? "visible" : "invisible",
             )}
           >
             core
           </p>
           <div className="flex flex-col gap-2">
             {coreLinks.map((link, idx) => (
-              <SidebarLink key={idx} link={link} className={link.class} />
+              <SidebarLink
+                key={idx}
+                link={{ ...link, href: format(link.href, { asset: target }) }}
+                className={link.class}
+              />
             ))}
           </div>
         </div>

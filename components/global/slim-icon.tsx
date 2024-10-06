@@ -29,7 +29,7 @@ const SlimIcon = () => {
           fill="#ffffff"
           fillOpacity="1"
           stroke="#000000"
-          stroke-width="0"
+          strokeWidth="0"
           x="45.623981"
           y="71.913208"
           id="text1"

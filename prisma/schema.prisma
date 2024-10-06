@@ -18,8 +18,8 @@ model User {
   email    String @unique
   password String
 
-  currency       String           @default("AUD")
   PortfolioUsers PortfolioUsers[]
+  Note           Note[]
 }
 
 model Portfolio {
@@ -292,10 +292,12 @@ model Note {
   id          String @id @default(uuid())
   portfolioId String
 
+  author    String
   text      String
   createdAt DateTime @default(now())
 
   portfolio Portfolio  @relation(fields: [portfolioId], references: [id])
+  user      User       @relation(fields: [author], references: [id])
   NoteLink  NoteLink[]
   TagLink   TagLink[]
 }

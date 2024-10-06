@@ -19,7 +19,7 @@ const Target = () => {
         labelKey="label"
         valueKey="id"
         placeholder="Root"
-        buttonClassName="text-lg font-bold"
+        buttonClassName="text-lg font-bold pl-2"
         commandPrompt="Search assets..."
       />
     </div>

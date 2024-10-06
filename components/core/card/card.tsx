@@ -30,14 +30,9 @@
  *        - Archive
  */
 
-import React, { useEffect } from "react";
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  IconArchive,
-  IconArrowUpRight,
-  IconStar,
-  IconStarFilled,
-} from "@tabler/icons-react";
+import { IconArchive, IconArrowUpRight } from "@tabler/icons-react";
 import {
   Tooltip,
   TooltipContent,
@@ -54,27 +49,36 @@ import {
 } from "@/components/ui/context-menu";
 import { ContextMenuSeparator } from "@radix-ui/react-context-menu";
 import { useDebouncedCallback } from "use-debounce";
-import Tag, { TagProps } from "../tag/tag";
+import TagComponent from "../tag/tag";
 import ExpandedContent from "../expanded-content/expanded-content";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SwatchesPicker from "@/components/ui/swatches-picker";
 import Link from "next/link";
+import Favourite from "../other/favourite";
+import { Tag } from "@prisma/client";
+import Level2RowView, {
+  Level2RowViewProps,
+} from "@/components/views/level-2-row-view";
+import { getRowData } from "@/lib/actions/get";
+import useUpdateEffect from "@/hooks/use-update-effect";
+import { archive, updateColor, updateStar } from "@/lib/actions/update";
+import { useToast } from "@/hooks/use-toast";
+import { ToastProps } from "@/components/ui/toast";
 
 export interface CardProps {
   icon: React.ReactNode;
   title: string;
   secondary?: string;
   primary: React.ReactNode;
-  tags: TagProps[];
-  starred?: Boolean;
-  condensed?: Boolean;
+  tags: Tag[];
+  starred?: boolean;
+  condensed?: boolean;
   color?: string;
   presetColors: string[];
   href?: string;
-  expandedContent?: React.ReactNode;
-  changeColorCallback: (color: string) => void;
-  changeStarCallback: (star: boolean) => void;
-  archiveCallback: () => void;
+  slug: string[];
+  children?: React.ReactNode;
+  getRowAsChild?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -88,22 +92,54 @@ const Card: React.FC<CardProps> = ({
   color,
   presetColors,
   href,
-  expandedContent,
-  changeColorCallback,
-  changeStarCallback,
-  archiveCallback,
+  slug,
+  children,
+  getRowAsChild,
 }) => {
   const [focussed, setFocussed] = React.useState<boolean>(false);
-  const [newColor, setColor] = React.useState<string>(color || "#18181b");
+  const [newColor, setColor] = React.useState<string>(color || "#FFF");
+  const [rowDataLevel2, setRowDataLevel2] = React.useState<
+    Level2RowViewProps | undefined
+  >(undefined);
+  const { toast } = useToast();
+
+  useUpdateEffect(() => {
+    const getData = async () => {
+      if (!slug) return;
+      const data = await getRowData(slug);
+      if (!data) return;
+      switch (data.viewLevel) {
+        case "level-2":
+          setRowDataLevel2(data.data);
+      }
+    };
+    if (getRowAsChild && focussed) {
+      getData();
+    }
+  }, [getRowAsChild, focussed]);
 
   const changeColor = useDebouncedCallback((color: string) => {
-    changeColorCallback(color);
+    const update = async () => {
+      const res = await updateColor(slug, color);
+      if (res) toast(res as ToastProps);
+    };
+    update();
   }, 1000);
 
-  useEffect(() => changeColor(newColor), [changeColor, newColor]);
+  const changeStar = async (star: boolean) => {
+    const res = await updateStar(slug, star);
+    if (res) toast(res as ToastProps);
+  };
+
+  const archiveItem = async () => {
+    const res = await archive(slug);
+    if (res) toast(res as ToastProps);
+  };
+
+  useUpdateEffect(() => changeColor(newColor), [changeColor, newColor]);
 
   const cardContents = (
-    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md min-w-44 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div
         className="flex items-center justify-center text-zinc-500"
         style={{ color: newColor }}
@@ -113,26 +149,19 @@ const Card: React.FC<CardProps> = ({
       <div className="col-span-3 flex items-center">
         <Tooltip>
           <TooltipTrigger>
-            <div className="font-bold">{title}</div>
+            <p className="font-bold text-left">{title}</p>
           </TooltipTrigger>
           {secondary && <TooltipContent>{secondary}</TooltipContent>}
         </Tooltip>
       </div>
-      <div
-        className="flex items-center justify-end"
-        onClick={() => changeStarCallback(!starred)}
-      >
-        {starred && (
-          <IconStarFilled className="w-5 h-5 dark:text-yellow-700 text-yellow-400 hover:dark:text-yellow-600 hover:text-yellow-300" />
-        )}
-        {!starred && (
-          <IconStar className="w-5 h-5 dark:text-yellow-700 text-yellow-400 invisible group-hover:visible hover:dark:text-yellow-600 hover:text-yellow-300" />
-        )}
-      </div>
+      <Favourite
+        starred={starred}
+        changeStarCallback={(star) => changeStar(star)}
+      />
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
           <React.Fragment key={tag.id}>
-            <Tag {...tag} />
+            <TagComponent {...tag} />
             <div className="h-1" />
           </React.Fragment>
         ))}
@@ -143,14 +172,14 @@ const Card: React.FC<CardProps> = ({
   );
 
   const condensedContents = (
-    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md min-w-44 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div className="col-span-4 flex items-center">
         <div className="font-bold">{title}</div>
       </div>
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
           <React.Fragment key={tag.id}>
-            <Tag {...tag} />
+            <TagComponent {...tag} />
             <div className="h-1" />
           </React.Fragment>
         ))}
@@ -160,9 +189,9 @@ const Card: React.FC<CardProps> = ({
   );
 
   return (
-    <div className="inline-flex">
+    <div className="flex w-full">
       <ContextMenu>
-        <ContextMenuTrigger>
+        <ContextMenuTrigger className="w-full">
           <div onClick={() => setFocussed(true)}>
             {condensed ? condensedContents : cardContents}
           </div>
@@ -181,7 +210,7 @@ const Card: React.FC<CardProps> = ({
           <ContextMenuSeparator />
           <ContextMenuItem
             className="dark:text-red-700 text-red-300"
-            onClick={() => archiveCallback()}
+            onClick={() => archiveItem()}
           >
             <span>
               <IconArchive className="h-4 w-4 mr-2" />
@@ -192,7 +221,7 @@ const Card: React.FC<CardProps> = ({
       </ContextMenu>
 
       <AnimatePresence>
-        {focussed && expandedContent && (
+        {focussed && (children || getRowAsChild) && (
           <motion.div
             className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
             initial={{ opacity: 0 }}
@@ -211,14 +240,22 @@ const Card: React.FC<CardProps> = ({
                 exit={{ scale: 0.9 }}
               >
                 <div className="flex justify-between mb-2">
-                  <h1 className="text-2xl font-bold">{title}</h1>
+                  <h1 className="text-2xl font-bold">{secondary}</h1>
                   {href && (
-                    <Link href={href}>
+                    <Link href={href + slug?.join("/")}>
                       <IconArrowUpRight className="text-zinc-500 w-5 h-5 dark:hover:text-zinc-400 hover:text-zinc-600" />
                     </Link>
                   )}
                 </div>
-                {expandedContent}
+                {getRowAsChild ? (
+                  rowDataLevel2 ? (
+                    <Level2RowView {...rowDataLevel2} />
+                  ) : (
+                    children
+                  )
+                ) : (
+                  children
+                )}
               </motion.div>
             </ExpandedContent>
           </motion.div>
