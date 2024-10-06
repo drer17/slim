@@ -10,27 +10,15 @@
  * [x]- View as per ui design doc
  */
 
-import { IconDots, IconPlus } from "@tabler/icons-react";
 import Card, { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import PathToResource from "../core/other/path-to-resource";
-import { ToastProps } from "../ui/toast";
 import { useToast } from "@/hooks/use-toast";
-import { archive } from "@/lib/actions/update";
 import ViewOptions from "../core/other/view-options";
 
 export interface Level2TableViewProps {
   pathToResource: string[];
   title: string;
-  slug: string[];
   items: (CardProps & { type: { label: string; icon?: React.ReactNode } })[];
   menuOptions: string[];
 }
@@ -38,7 +26,6 @@ export interface Level2TableViewProps {
 const Level2TableView: React.FC<Level2TableViewProps> = ({
   pathToResource,
   title,
-  slug,
   items,
   menuOptions,
 }) => {
@@ -61,15 +48,7 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
     >,
   );
 
-  const availableMenuOptions = {
-    archive: {
-      icon: <IconPlus className="text-red-500 mr-2 w-4 h-4" />,
-      callable: async () => {
-        const res = await archive(slug);
-        if (res) toast(res as ToastProps);
-      },
-    },
-  };
+  const availableMenuOptions = {};
 
   return (
     <div className="w-full flex-col">

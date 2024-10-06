@@ -26,12 +26,14 @@ import { Attribute, Document, Note, Tag } from "@prisma/client";
 import Favourite from "../core/other/favourite";
 import Container from "../core/container/container";
 import Link from "next/link";
-import { archive, updateStar } from "@/lib/actions/update";
+import { archive, updateStar, upsertLevel7 } from "@/lib/actions/update";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "../ui/toast";
 import { useExpandedContext } from "../core/expanded-content/expanded-content";
 import PathToResource from "../core/other/path-to-resource";
 import ViewOptions from "../core/other/view-options";
+import Notes from "../core/text/notes";
+import DescriptionComponent from "../core/text/description";
 
 export interface Level2RowViewProps {
   pathToResource: string[];
@@ -88,6 +90,14 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
     },
   };
 
+  const saveNote = async (data: Record<string, string>, id?: string) => {
+    const res = await upsertLevel7(slug, "note", data, id, {
+      linkingTable: "noteLink",
+      key: "noteId",
+    });
+    if (res) toast(res as ToastProps);
+  };
+
   return (
     <div className="w-full flex flex-col">
       <PathToResource path={pathToResource} className="ml-2" />
@@ -118,9 +128,14 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
       <ScrollArea className="w-full">
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
           <div className="flex flex-col space-y-4">
-            <Container title="Description" expandable={true}>
-              {description}
-            </Container>
+            <div className="p-2 space-y-2 min-h-28">
+              <h2 className="text-xl font-bold">Description</h2>
+              <DescriptionComponent
+                text={description}
+                slug={slug}
+                readOnly={isInDialog}
+              />
+            </div>
             <div className="grid-cols-2 grid gap-2">
               <Container title="Attributes" expandable={true}>
                 {description}
@@ -130,7 +145,11 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
               </Container>
             </div>
             <Container title="Notes" expandable={true}>
-              {description}
+              <Notes
+                notes={notes}
+                save={(data, id) => saveNote(data, id)}
+                readOnly={isInDialog}
+              />
             </Container>
           </div>
           <div className="flex flex-col space-y-4">
