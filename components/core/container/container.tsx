@@ -47,7 +47,7 @@ const Container: React.FC<ContainerProps> = ({
         <div className="flex justify-between mb-2">
           <div className="flex items-center space-x-2">
             {icon}
-            <h1 className="text-xl font-bold">{title}</h1>
+            <h2 className="text-xl font-bold">{title}</h2>
           </div>
           {checkInDialog === undefined && (
             <button onClick={() => setFocussed(true)}>
@@ -79,7 +79,7 @@ const Container: React.FC<ContainerProps> = ({
                 <div className="flex justify-between mb-2">
                   <div className="flex items-center space-x-2">
                     {icon}
-                    <h1 className="text-2xl font-bold">{title}</h1>
+                    <h2 className="text-2xl font-bold">{title}</h2>
                   </div>
                 </div>
                 {children}

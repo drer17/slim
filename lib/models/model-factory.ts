@@ -1,8 +1,8 @@
-import { BaseModelView } from "./base";
+import { BaseModel } from "./base";
 import { AssetLiabilityModel } from "./tables/asset-liability";
 
 export class ModelFactory {
-  public static create(slug: (string | undefined)[]): BaseModelView {
+  public static create(slug: (string | undefined)[]): BaseModel {
     if (!slug) return new AssetLiabilityModel();
 
     const model = slug[0];

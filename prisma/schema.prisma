@@ -292,9 +292,11 @@ model Note {
   id          String @id @default(uuid())
   portfolioId String
 
-  author    String
-  text      String
-  createdAt DateTime @default(now())
+  author String
+  text   String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
 
   portfolio Portfolio  @relation(fields: [portfolioId], references: [id])
   user      User       @relation(fields: [author], references: [id])

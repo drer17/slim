@@ -1,11 +1,11 @@
 import { getIcon } from "@/components/global/icons";
 import { prisma } from "@/lib/prisma";
 import { Level2RowViewProps } from "@/components/views/level-2-row-view";
-import { Level2ModelView } from "../levels/level-2";
+import { Level2Model } from "../levels/level-2";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { CardProps } from "@/components/core/card/card";
 
-export class AssetLiabilityModel extends Level2ModelView {
+export class AssetLiabilityModel extends Level2Model {
   private asset?: boolean;
 
   constructor(type?: string, id?: string) {

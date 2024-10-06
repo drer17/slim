@@ -1,9 +1,11 @@
 import { Level2RowViewProps } from "@/components/views/level-2-row-view";
-import { BaseModelView } from "../base";
+import { BaseModel, TableNames } from "../base";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { prisma } from "@/lib/prisma";
+import { generateToast } from "@/lib/utilities/response";
+import { Status } from "@/lib/interfaces/response";
 
-export abstract class Level2ModelView extends BaseModelView {
+export abstract class Level2Model extends BaseModel {
   viewClass = "level-2";
   id?: string;
 
@@ -47,6 +49,40 @@ export abstract class Level2ModelView extends BaseModelView {
       console.log(`${this.tableName} with ID ${this.id} archived successfully`);
     } catch (error) {
       console.error("Error archiving asset:", error);
+    }
+  }
+
+  public async upsertLevel7(
+    targetTable: TableNames,
+    data: Record<string, any>,
+    targetId?: string,
+    link?: { linkingTable: TableNames; key: string },
+  ) {
+    try {
+      if (this.id) {
+        await prisma[targetTable].update({
+          where: { id: targetId },
+          data: data,
+        });
+        console.log(`Updated ${this.tableName} with ID ${this.id}`);
+      } else if (link) {
+        const newRecord = await prisma[targetTable].create({
+          data: data,
+        });
+        const linkingRecord = await prisma[link.linkingTable].create({
+          data: {
+            [link.key]: newRecord.id,
+            [this.tableName + "Id"]: this.id,
+          },
+        });
+        this.id = newRecord.id;
+        console.log(
+          `Created new record in ${this.tableName} with ID ${newRecord.id} linked to ${link.linkingTable}: ${linkingRecord.id}`,
+        );
+      }
+    } catch (error) {
+      console.error("Error archiving asset:", error);
+      return generateToast(Status.failed);
     }
   }
 }
