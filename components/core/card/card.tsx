@@ -149,7 +149,16 @@ const Card: React.FC<CardProps> = ({
       <div className="col-span-3 flex items-center">
         <Tooltip>
           <TooltipTrigger>
-            <p className="font-bold text-left">{title}</p>
+            {href ? (
+              <Link
+                href={href + slug?.join("/")}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="font-bold text-left">{title}</p>
+              </Link>
+            ) : (
+              <p className="font-bold text-left">{title}</p>
+            )}
           </TooltipTrigger>
           {secondary && <TooltipContent>{secondary}</TooltipContent>}
         </Tooltip>
@@ -174,7 +183,16 @@ const Card: React.FC<CardProps> = ({
   const condensedContents = (
     <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md min-w-44 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div className="col-span-4 flex items-center">
-        <div className="font-bold">{title}</div>
+        {href ? (
+          <Link
+            href={href + slug?.join("/")}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="font-bold text-left">{title}</p>
+          </Link>
+        ) : (
+          <p className="font-bold text-left">{title}</p>
+        )}
       </div>
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
