@@ -11,7 +11,6 @@
 import { IconDots } from "@tabler/icons-react";
 import Card, { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
-import PathToResource from "./path-to-resource";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
+import PathToResource from "../core/other/path-to-resource";
 
 export interface Level3TableViewProps {
   pathToResource: string[];

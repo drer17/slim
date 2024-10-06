@@ -14,7 +14,10 @@ const Favourite: React.FC<FavouriteProps> = ({
   return (
     <div
       className="flex items-center justify-end"
-      onClick={() => changeStarCallback(!starred)}
+      onClick={(e) => {
+        e.stopPropagation();
+        changeStarCallback(!starred);
+      }}
     >
       {starred && (
         <IconStarFilled className="w-5 h-5 dark:text-yellow-700 text-yellow-400 hover:dark:text-yellow-600 hover:text-yellow-300" />

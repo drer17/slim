@@ -2,16 +2,73 @@ import { getIcon } from "@/components/global/icons";
 import { prisma } from "@/lib/prisma";
 import { Level2RowViewProps } from "@/components/views/level-2-row-view";
 import { Level2ModelView } from "../levels/level-2";
+import { Level2TableViewProps } from "@/components/views/level-2-table-view";
+import { CardProps } from "@/components/core/card/card";
 
 export class AssetLiabilityModel extends Level2ModelView {
-  private id?: string;
   private asset?: boolean;
 
   constructor(type?: string, id?: string) {
     super();
-    this.asset = type === "liabilities" ? false : true;
+    this.tableName = "assetLiability";
+    this.asset = type === "liability" ? false : true;
     this.id = id;
     this.getDataForRow();
+  }
+
+  public async getDataForTable(): Promise<Level2TableViewProps> {
+    const res = await prisma.assetLiability.findMany({
+      where: {
+        id: this.id,
+        assetType: {
+          asset: this.asset,
+        },
+        portfolio: {
+          PortfolioUsers: {
+            some: {
+              userId: this.userId,
+            },
+          },
+        },
+      },
+      include: {
+        assetType: true,
+        TagLink: {
+          include: {
+            tag: true,
+          },
+        },
+        valuations: { take: 1, orderBy: { createdAt: "desc" } },
+      },
+    });
+
+    const data: Level2TableViewProps = {
+      pathToResource: ["portfolio", "assets"],
+      title: this.asset ? "Assets" : "Liabilites",
+      items: res.map((asset) => ({
+        type: {
+          label: asset.assetType.label,
+          icon: getIcon(asset.assetType.icon),
+        },
+        icon: getIcon(asset.icon),
+        title: asset.label,
+        secondary: asset.assetType.label,
+        primary: asset.valuations[0]?.value,
+        tags: asset.TagLink.map((tag) => tag.tag),
+        color: asset.color,
+        starred: asset.starred,
+        presetColors: [],
+        href: "/portfolio/row/",
+        slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
+        children: "",
+        getRowAsChild: true,
+      })) as (CardProps & {
+        type: { label: string; icon?: React.ReactNode };
+      })[],
+      menuOptions: [],
+    };
+
+    return data;
   }
 
   public async getDataForRow(): Promise<Level2RowViewProps> {
@@ -69,11 +126,13 @@ export class AssetLiabilityModel extends Level2ModelView {
       title: asset.label,
       tags: asset.TagLink.map((tag) => tag.tag),
       starred: asset.starred,
+      color: asset.color,
       primary: String(asset.valuations[0]?.value),
       description: asset.description ?? "",
       attributes: asset.attributes.map((attr) => attr.attribute),
       documents: asset.DocumentLink.map((doc) => doc.document),
       notes: asset.NoteLink.map((note) => note.note),
+      slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
       actionButtons: [],
       level2Children: asset.children.map((child) => ({
         icon: getIcon(child.icon),
@@ -84,20 +143,16 @@ export class AssetLiabilityModel extends Level2ModelView {
         color: String(child.color),
         starred: child.starred,
         presetColors: [],
-        href: "",
-        children: "",
-        changeColorCallback: (color: string) => {
-          this.changeColor("assetLiability", child.id, color);
-        },
-        changeStarCallback: (star: boolean) => {
-          this.changeStar("assetLiability", child.id, star);
-        },
-        archiveCallback: () => {
-          this.archive("assetLiability", child.id);
-        },
+        slug: [
+          "asset-liability",
+          child.assetType.asset ? "asset" : "liability",
+          asset.id,
+        ],
+        href: "/portfolio/row/",
+        getRowAsChild: true,
       })),
       level3Children: [],
-      menuOptions: [],
-    }))[0];
+      menuOptions: ["archive"],
+    }))[0] as Level2RowViewProps;
   }
 }
