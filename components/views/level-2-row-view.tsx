@@ -1,3 +1,5 @@
+"use client";
+
 /*
  * Level 2 Row Model View
  *
@@ -15,24 +17,21 @@
  * [ ]- Other
  */
 
-import { IconDots } from "@tabler/icons-react";
+import { IconArchive } from "@tabler/icons-react";
 import { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
-import PathToResource from "./path-to-resource";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import TagComponent from "../core/tag/tag";
 import { Attribute, Document, Note, Tag } from "@prisma/client";
 import Favourite from "../core/other/favourite";
 import Container from "../core/container/container";
 import Link from "next/link";
+import { archive, updateStar } from "@/lib/actions/update";
+import { useToast } from "@/hooks/use-toast";
+import { ToastProps } from "../ui/toast";
+import { useExpandedContext } from "../core/expanded-content/expanded-content";
+import PathToResource from "../core/other/path-to-resource";
+import ViewOptions from "../core/other/view-options";
 
 export interface Level2RowViewProps {
   pathToResource: string[];
@@ -40,16 +39,17 @@ export interface Level2RowViewProps {
   title: string;
   tags: Tag[];
   starred: boolean;
+  color: string;
   primary: string;
   description: string;
   attributes: Attribute[];
   documents: Document[];
   notes: Note[];
   actionButtons: { icon: React.ReactNode; label: string; href: string }[];
+  slug: string[];
   level2Children: CardProps[];
   level3Children: CardProps[];
-  changeStarCallback?: (star: boolean) => void;
-  menuOptions: { label: string; callback: () => any }[];
+  menuOptions: string[];
 }
 
 const Level2RowView: React.FC<Level2RowViewProps> = ({
@@ -58,24 +58,43 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
   title,
   tags,
   starred,
+  color,
   primary,
   description,
   attributes,
   documents,
   notes,
   actionButtons,
+  slug,
   level2Children,
   level3Children,
-  changeStarCallback,
   menuOptions,
 }) => {
+  const { toast } = useToast();
+  const { expanded: isInDialog } = useExpandedContext();
+
+  const changeStar = async (star: boolean) => {
+    const res = await updateStar(slug, star);
+    if (res) toast(res as ToastProps);
+  };
+
+  const availableMenuOptions = {
+    archive: {
+      icon: <IconArchive className="text-red-500 mr-2 w-4 h-4" />,
+      callable: async () => {
+        const res = await archive(slug);
+        if (res) toast(res as ToastProps);
+      },
+    },
+  };
+
   return (
     <div className="w-full flex flex-col">
       <PathToResource path={pathToResource} className="ml-2" />
       <div className="h-2" />
       <div className="flex w-full justify-between items-center p-2 space-x-4">
         <div className="flex items-center space-x-2">
-          {icon}
+          <span style={{ color }}>{icon}</span>
           <h1 className="font-bold text-3xl">{title}</h1>
         </div>
         <div className="flex-1 flex space-x-2 items-end h-6">
@@ -83,32 +102,16 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
             <TagComponent key={`Tag${idx}`} {...tag} />
           ))}
         </div>
-        <div className="space-x-2 flex">
+        <div className="space-x-2 flex group">
           <Favourite
             starred={starred}
-            changeStarCallback={changeStarCallback}
+            changeStarCallback={(star) => changeStar(star)}
           />
-          {menuOptions && (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className="h-6 flex items-center rounded-sm bg-secondary p-2">
-                  <IconDots />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>{title} Options</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {menuOptions.map((option, idx) => (
-                  <DropdownMenuItem
-                    key={`Menu${idx}`}
-                    onClick={() => option.callback}
-                  >
-                    {option.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <ViewOptions
+            menuOptions={menuOptions}
+            availableMenuOptions={availableMenuOptions}
+            isInDialog={isInDialog}
+          />
         </div>
       </div>
       <div className="h-8" />

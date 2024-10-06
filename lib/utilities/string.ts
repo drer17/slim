@@ -8,6 +8,12 @@
  * const template = "Hello, {user}! Welcome to {place}.";
  * const formattedString = format(template, { user: "Me", place: "TypeScript" });
  */
-function format(template: string, values: { [key: string]: string }): string {
-  return template.replace(/{(\w+)}/g, (match, key) => values[key] || match);
+export function format(
+  template: string,
+  values: { [key: string]: string | undefined },
+): string {
+  return template.replace(/{(\w+)}/g, (_, key) => {
+    const value = values[key];
+    return typeof value === "string" ? value : "";
+  });
 }

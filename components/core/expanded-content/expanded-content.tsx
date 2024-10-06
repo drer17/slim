@@ -10,7 +10,16 @@
  *  - Handle Click Outside Component
  */
 
-import React, { useEffect, useRef } from "react";
+import React, { createContext, useContext, useEffect, useRef } from "react";
+
+interface ExpandedContextProps {
+  expanded: boolean;
+}
+const ExpandedContext = createContext<ExpandedContextProps | undefined>(
+  undefined,
+);
+export const useExpandedContext = () =>
+  useContext(ExpandedContext) || { expanded: undefined };
 
 export interface ExpandedContentProps {
   expanded: boolean;
@@ -45,13 +54,15 @@ const ExpandedContent: React.FC<ExpandedContentProps> = ({
     };
   }, [expanded, onOutsideClick]);
   return (
-    <div
-      className="w-full flex justify-center"
-      style={{ height: height }}
-      ref={cardRef}
-    >
-      {children}
-    </div>
+    <ExpandedContext.Provider value={{ expanded }}>
+      <div
+        className="w-full flex justify-center"
+        style={{ height: height }}
+        ref={cardRef}
+      >
+        {children}
+      </div>
+    </ExpandedContext.Provider>
   );
 };
 

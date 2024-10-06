@@ -20,12 +20,15 @@ import { motion } from "framer-motion";
 import SlimIcon from "../slim-icon";
 import { coreLinks, links } from "./data";
 import { cn } from "@/lib/utils";
+import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
+import { format } from "@/lib/utilities/string";
 
 interface NavigationProps {
   mobileHeader?: React.ReactNode;
 }
 
 const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
+  const { target } = usePortfolioContext();
   const [open, setOpen] = useState(false);
   const [animate, setAnimate] = useState(true);
   return (
@@ -48,7 +51,11 @@ const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
         <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           <div className="flex flex-col gap-2">
             {links.map((link, idx) => (
-              <SidebarLink key={idx} link={link} className={link.class} />
+              <SidebarLink
+                key={idx}
+                link={{ ...link, href: format(link.href, { asset: target }) }}
+                className={link.class}
+              />
             ))}
           </div>
           <p
@@ -61,7 +68,11 @@ const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
           </p>
           <div className="flex flex-col gap-2">
             {coreLinks.map((link, idx) => (
-              <SidebarLink key={idx} link={link} className={link.class} />
+              <SidebarLink
+                key={idx}
+                link={{ ...link, href: format(link.href, { asset: target }) }}
+                className={link.class}
+              />
             ))}
           </div>
         </div>

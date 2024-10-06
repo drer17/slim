@@ -32,6 +32,7 @@ async function main() {
       label: "Bank Account",
       asset: true,
       portfolioId: portfolio.id,
+      icon: "bank",
     },
   });
 

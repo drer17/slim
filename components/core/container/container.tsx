@@ -18,18 +18,12 @@
  *    - Expand card
  */
 
-import React, { createContext, useContext } from "react";
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconMaximize } from "@tabler/icons-react";
-import ExpandedContent from "../expanded-content/expanded-content";
-
-interface ContainerContextProps {
-  focussed: boolean;
-}
-const ContainerContext = createContext<ContainerContextProps | undefined>(
-  undefined,
-);
-export const useContainerContext = () => useContext(ContainerContext);
+import ExpandedContent, {
+  useExpandedContext,
+} from "../expanded-content/expanded-content";
 
 export interface ContainerProps {
   title: string;
@@ -45,18 +39,21 @@ const Container: React.FC<ContainerProps> = ({
   children,
 }) => {
   const [focussed, setFocussed] = React.useState<boolean>(false);
+  const { expanded: checkInDialog } = useExpandedContext();
 
   return (
-    <ContainerContext.Provider value={{ focussed }}>
+    <div>
       <div className="w-full h-full flex flex-col group p-2 rounded-md">
         <div className="flex justify-between mb-2">
           <div className="flex items-center space-x-2">
             {icon}
             <h1 className="text-xl font-bold">{title}</h1>
           </div>
-          <button onClick={() => setFocussed(true)}>
-            <IconMaximize className="text-zinc-500 w-5 h-5 invisible group-hover:visible" />
-          </button>
+          {checkInDialog === undefined && (
+            <button onClick={() => setFocussed(true)}>
+              <IconMaximize className="text-zinc-500 w-5 h-5 invisible group-hover:visible" />
+            </button>
+          )}
         </div>
         {children}
       </div>
@@ -91,7 +88,7 @@ const Container: React.FC<ContainerProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </ContainerContext.Provider>
+    </div>
   );
 };
 

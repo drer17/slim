@@ -6,7 +6,7 @@ import { Level2ModelView } from "@/lib/models/levels/level-2";
 import { Level3ModelView } from "@/lib/models/levels/levels";
 import { ModelFactory } from "@/lib/models/model-factory";
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: { params: { slug: string[] } }) {
   const model = ModelFactory.create(params.slug);
 
   if (model instanceof Level2ModelView)
