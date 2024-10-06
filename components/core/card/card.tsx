@@ -165,7 +165,7 @@ const Card: React.FC<CardProps> = ({
       </div>
       <Favourite
         starred={starred}
-        changeStarCallback={(star) => changeStar(star)}
+        changeStarCallback={(star: boolean) => changeStar(star)}
       />
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
