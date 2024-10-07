@@ -4,7 +4,6 @@ import { Level2Model } from "../models/levels/level-2";
 import { ModelFactory } from "../models/model-factory";
 import { Slug, Status, ToastProps } from "../definitions/response";
 import { generateToast } from "../utilities/response";
-import { revalidatePath } from "next/cache";
 import { TableNames } from "../models/base";
 
 export async function updateColor(
@@ -22,7 +21,6 @@ export async function updateStar(
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    revalidatePath("/portfolio/");
     return model.changeStar(star);
   }
   return generateToast(Status.failed);
@@ -31,7 +29,6 @@ export async function updateStar(
 export async function archive(slug: Slug): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    revalidatePath("/portfolio/");
     return model.archive();
   }
   return generateToast(Status.failed);
@@ -46,7 +43,6 @@ export async function upsertLevel7(
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    revalidatePath("/portfolio/");
     return model.upsertLevel7(targetTable, data, targetId, link);
   }
   return generateToast(Status.failed);
@@ -69,7 +65,6 @@ export async function createOrRemoveLink(
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    revalidatePath("/portfolio/");
     return model.createOrRemoveLink(linkingTable, linkedId, linkedKey, remove);
   }
   return generateToast(Status.failed);

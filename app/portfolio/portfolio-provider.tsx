@@ -6,6 +6,7 @@ import { createContext, useContext, useState } from "react";
 export interface PortfolioState {
   tags: Tag[];
   colorPresets: string[];
+  author: string;
 
   assetLiabilityTypes: AssetLiabilityType[];
   transactionCategories: TransactionCategory[];
@@ -30,6 +31,7 @@ export const usePortfolioContext = () => {
 
 interface PortfolioProviderProps {
   tags: Tag[];
+  author: string;
   colorPresets: string[];
   assetLiabilityTypes: AssetLiabilityType[];
   transactionCategories: TransactionCategory[];
@@ -38,6 +40,7 @@ interface PortfolioProviderProps {
 
 export function PortfolioProvider({
   tags,
+  author,
   colorPresets,
   assetLiabilityTypes,
   transactionCategories,
@@ -51,6 +54,7 @@ export function PortfolioProvider({
         target,
         setTarget,
         portfolioState: {
+          author,
           tags,
           colorPresets,
           assetLiabilityTypes,
