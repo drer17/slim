@@ -321,9 +321,11 @@ model Document {
 
   starred Boolean @default(false)
 
-  label    String
-  tooltip  String?
-  location String
+  label   String
+  tooltip String?
+
+  filePath String
+  fileType String
 
   createdAt DateTime @default(now())
 

@@ -10,7 +10,9 @@ export type TableNames =
   | "tag"
   | "tagLink"
   | "attribute"
-  | "attributeLink";
+  | "attributeLink"
+  | "document"
+  | "documentLink";
 
 export abstract class BaseModel {
   userId: string;
