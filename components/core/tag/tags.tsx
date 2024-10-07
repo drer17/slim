@@ -1,3 +1,12 @@
+/*
+ * Tags Component
+ *
+ * Author: Andre Repanich
+ * Date: 07-10-24
+ *
+ * BUG - only opens command when clicked on the padded section of the popover trigger
+ */
+
 import {
   Command,
   CommandEmpty,
@@ -46,8 +55,8 @@ export const Tags: React.FC<TagProps> = ({ appliedTags, upsertTag }) => {
       <Popover open={open} onOpenChange={setOpen} modal={true}>
         <PopoverTrigger asChild>
           <div
-            className="flex-1 max-w-80 flex space-x-2 items-center h-9 border rounded-md p-2"
-            aria-expanded={open}
+            className="flex-1 flex space-x-2 items-center h-9 border dark:hover:border-zinc-500 rounded-md p-2"
+            onClick={() => setOpen(true)}
           >
             {tags.map((tag, idx) => (
               <TagComponent key={`Tag${idx}`} {...tag} detail={true} />

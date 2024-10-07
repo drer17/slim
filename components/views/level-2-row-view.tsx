@@ -39,6 +39,7 @@ import ViewOptions from "../core/other/view-options";
 import Notes from "../core/text/notes";
 import DescriptionComponent from "../core/text/description";
 import { Tags } from "../core/tag/tags";
+import Attributes from "../core/attributes/attributes";
 
 export interface Level2RowViewProps {
   pathToResource: string[];
@@ -96,7 +97,6 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
   };
 
   const saveNote = async (data: Record<string, string>, id?: string) => {
-    console.log(data);
     const res = await upsertLevel7(slug, "note", data, id, {
       linkingTable: "noteLink",
       key: "noteId",
@@ -106,6 +106,14 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
 
   const upsertTag = async (add: boolean, id: string) => {
     const res = await createOrRemoveLink(slug, "tagLink", id, "tagId", !add);
+    if (res) toast(res as ToastProps);
+  };
+
+  const saveAttribute = async (data: Record<string, string>, id?: string) => {
+    const res = await upsertLevel7(slug, "attribute", data, id, {
+      linkingTable: "attributeLink",
+      key: "attributeId",
+    });
     if (res) toast(res as ToastProps);
   };
 
@@ -147,7 +155,11 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
             </div>
             <div className="grid-cols-2 grid gap-2">
               <Container title="Attributes" expandable={true}>
-                {description}
+                <Attributes
+                  attributes={attributes}
+                  readOnly={isInDialog}
+                  save={saveAttribute}
+                />
               </Container>
               <Container title="Documents" expandable={true}>
                 {description}

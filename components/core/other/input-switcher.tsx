@@ -1,10 +1,16 @@
 import { Input } from "@/components/ui/input";
 
+export enum InputSwitcherType {
+  string = "string",
+  number = "number",
+}
+
 interface InputSwitcherProps {
   value: string;
-  type: string;
+  type: InputSwitcherType;
   onChange: (value: string) => void;
   onBlur?: () => void;
+  placeholder?: string;
 }
 
 const InputSwitcher: React.FC<InputSwitcherProps> = ({
@@ -12,19 +18,24 @@ const InputSwitcher: React.FC<InputSwitcherProps> = ({
   type,
   onChange,
   onBlur,
+  placeholder,
 }) => {
   switch (type) {
-    case "string":
+    case InputSwitcherType.string:
       return (
         <Input
+          className="h-8 capitalize"
+          placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.currentTarget.value)}
           onBlur={() => onBlur && onBlur()}
         />
       );
-    case "number":
+    case InputSwitcherType.number:
       return (
         <Input
+          className="h-8 capitalize"
+          placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.currentTarget.value)}
           type="number"

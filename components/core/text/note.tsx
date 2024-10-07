@@ -58,45 +58,46 @@ const NoteComponent: React.FC<NoteComponentProps> = ({
           {note?.createdAt &&
             format(note?.createdAt as Date, "MMMM dd, yyyy hh:mm a")}
         </p>
-        {editing && !readOnly ? (
-          <div>
-            <Textarea
-              autoFocus
-              className="w-full"
-              value={text}
-              onChange={(e) => setText(e.currentTarget.value)}
-              placeholder="Create new note..."
-            />
-            <div className="flex justify-end space-x-2 mt-3">
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setText(undefined);
-                  setEditing(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => {
-                  setEditing(false);
-                  saveNote();
-                }}
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <p
-            className="w-full mt-1 text-zinc-200"
-            onClick={() => setEditing(true)}
-          >
-            {note?.text || (
-              <span className="text-zinc-500">Create new note...</span>
-            )}
-          </p>
-        )}
+        <div className="h-24 p-2">
+          {editing && !readOnly ? (
+            <>
+              <Textarea
+                autoFocus
+                className="w-full"
+                value={text}
+                onChange={(e) => setText(e.currentTarget.value)}
+                placeholder="Create new note..."
+              />
+              <div className="flex justify-end space-x-2 mt-3">
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setEditing(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    setEditing(false);
+                    saveNote();
+                  }}
+                >
+                  Save
+                </Button>
+              </div>
+            </>
+          ) : (
+            <p
+              className="w-full mt-1 text-zinc-200"
+              onClick={() => setEditing(true)}
+            >
+              {note?.text || (
+                <span className="text-zinc-500">Create new note...</span>
+              )}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
