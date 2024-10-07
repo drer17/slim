@@ -3,7 +3,6 @@
 import { Note } from "@prisma/client";
 import NoteComponent from "./note";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
 
 const Notes: React.FC<
   {
@@ -14,8 +13,8 @@ const Notes: React.FC<
   }
 > = ({ save, notes, readOnly }) => {
   return (
-    <div className="w-full flex flex-col h-full">
-      <ScrollArea className={cn("max-h-[100px]")}>
+    <div className="w-full flex flex-col h-[calc(100%-40px)]">
+      <ScrollArea className="flex-1">
         {notes.reverse().map((note, idx) => (
           <NoteComponent
             key={`Note${idx}`}

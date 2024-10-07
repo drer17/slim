@@ -8,7 +8,9 @@ export type TableNames =
   | "note"
   | "noteLink"
   | "tag"
-  | "tagLink";
+  | "tagLink"
+  | "attribute"
+  | "attributeLink";
 
 export abstract class BaseModel {
   userId: string;

@@ -1,6 +1,7 @@
 import { Slug } from "../definitions/response";
 import { BaseModel } from "./base";
 import { AssetLiabilityModel } from "./tables/asset-liability";
+import { Attribute } from "./tables/attribute";
 import { Tag } from "./tables/tag";
 
 export class ModelFactory {
@@ -17,6 +18,10 @@ export class ModelFactory {
       case "tag": {
         const id = slug[1];
         return new Tag(id);
+      }
+      case "attribute": {
+        const id = slug[1];
+        return new Attribute(id);
       }
       default:
         return new AssetLiabilityModel();
