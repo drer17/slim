@@ -28,7 +28,9 @@ interface NavigationProps {
 }
 
 const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
-  const { target } = usePortfolioContext();
+  const {
+    portfolioState: { target },
+  } = usePortfolioContext();
   const [open, setOpen] = useState(false);
   const [animate, setAnimate] = useState(true);
   return (

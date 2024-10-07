@@ -3,7 +3,7 @@ import { BaseModel, TableNames } from "../base";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { prisma } from "@/lib/prisma";
 import { generateToast } from "@/lib/utilities/response";
-import { Status } from "@/lib/interfaces/response";
+import { Status } from "@/lib/definitions/response";
 
 export abstract class Level2Model extends BaseModel {
   viewClass = "level-2";
@@ -49,6 +49,28 @@ export abstract class Level2Model extends BaseModel {
       console.log(`${this.tableName} with ID ${this.id} archived successfully`);
     } catch (error) {
       console.error("Error archiving asset:", error);
+    }
+  }
+
+  public async createOrRemoveLink(
+    linkingTable: TableNames,
+    linkedId: string,
+    linkedKey: string,
+    remove?: boolean,
+  ) {
+    try {
+      if (remove) {
+        await prisma[linkingTable].delete({
+          where: { [linkedKey]: linkedId },
+        });
+      } else {
+        await prisma[linkingTable].create({
+          data: { [linkedKey]: linkedId, [this.tableName + "Id"]: this.id },
+        });
+      }
+    } catch (error) {
+      console.error("Error archiving asset:", error);
+      return generateToast(Status.failed);
     }
   }
 
