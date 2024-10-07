@@ -3,7 +3,6 @@
 import { Note } from "@prisma/client";
 import NoteComponent from "./note";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useExpandedContext } from "../expanded-content/expanded-content";
 import { cn } from "@/lib/utils";
 
 const Notes: React.FC<
@@ -14,7 +13,6 @@ const Notes: React.FC<
     readOnly?: boolean;
   }
 > = ({ save, notes, readOnly }) => {
-  const { expanded: isInExpanded } = useExpandedContext();
   return (
     <div className="w-full flex flex-col h-full">
       <ScrollArea className={cn("max-h-[100px]")}>

@@ -247,12 +247,12 @@ const Card: React.FC<CardProps> = ({
             exit={{ opacity: 0 }}
           >
             <ExpandedContent
-              height={"500px"}
+              height={""}
               expanded={focussed}
               onOutsideClick={() => setFocussed(false)}
             >
               <motion.div
-                className="dark:bg-zinc-900 bg-zinc-100 rounded-lg w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
+                className="dark:bg-zinc-900/60 backdrop-blur bg-zinc-100 rounded-lg w-full max-w-screen-md max-h-screen-md p-4"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}

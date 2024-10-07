@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { Status, ToastProps } from "../definitions/response";
 import { prisma } from "../prisma";
 import { generateToast } from "../utilities/response";
@@ -43,18 +44,20 @@ export abstract class BaseModel {
         data,
       });
       console.log(`${this.tableName} with ID ${this.id} updated successfully`);
+      revalidatePath("/portfolio/");
     } catch (error) {
       console.error("Error archiving asset:", error);
       return generateToast(Status.failed);
     }
   }
 
-  public async create(data: Record<string, any>): Promise<void | ToastProps> {
+  public async create(data: Record<string, any>): Promise<any | ToastProps> {
     try {
-      await prisma[this.tableName].create({
+      const newRow = await prisma[this.tableName].create({
         data,
       });
       console.log(`An entry to ${this.tableName} was created successfully`);
+      return newRow;
     } catch (error) {
       console.error("Error creating row:", error);
       return generateToast(Status.failed);
@@ -71,6 +74,7 @@ export abstract class BaseModel {
       console.log(
         `An ${this.id} was deleted from ${this.tableName} successfully`,
       );
+      revalidatePath("/portfolio/");
     } catch (error) {
       console.error("Error deleting row:", error);
       return generateToast(Status.failed);

@@ -78,7 +78,7 @@ const TagComponent: React.FC<
       >
         <Tooltip>
           <TooltipTrigger
-            className="rounded-md justify-between max-h-4 flex w-auto items-center p-2 bg-zinc-500 group"
+            className="rounded-sm justify-between max-h-4 flex w-auto items-center p-2 bg-zinc-500 group"
             style={{
               background: newColor || undefined,
               height: !detail ? "16px" : undefined,

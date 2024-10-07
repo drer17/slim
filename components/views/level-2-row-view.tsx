@@ -96,6 +96,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
   };
 
   const saveNote = async (data: Record<string, string>, id?: string) => {
+    console.log(data);
     const res = await upsertLevel7(slug, "note", data, id, {
       linkingTable: "noteLink",
       key: "noteId",
@@ -153,11 +154,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
               </Container>
             </div>
             <Container title="Notes" expandable={true}>
-              <Notes
-                notes={notes}
-                save={(data, id) => saveNote(data, id)}
-                readOnly={isInDialog}
-              />
+              <Notes notes={notes} save={saveNote} readOnly={isInDialog} />
             </Container>
           </div>
           <div className="flex flex-col space-y-4">

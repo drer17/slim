@@ -6,12 +6,14 @@ import { cn } from "@/lib/utils";
 import { PortfolioProvider } from "./portfolio-provider";
 import { get } from "@/lib/actions/get";
 import { AssetLiabilityType, Tag, TransactionCategory } from "@prisma/client";
+import { getUser } from "@/lib/actions/auth";
 
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const author = await getUser();
   const tags = (await get(["tag"])) as Tag[];
   const assetLiabilityTypes = (await get([
     "assetLiabilityTypes",
@@ -22,6 +24,7 @@ export default async function Layout({
 
   return (
     <PortfolioProvider
+      author={author}
       tags={tags}
       assetLiabilityTypes={assetLiabilityTypes}
       transactionCategories={transactionCategories}

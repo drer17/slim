@@ -4,6 +4,7 @@ import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { prisma } from "@/lib/prisma";
 import { generateToast } from "@/lib/utilities/response";
 import { Status } from "@/lib/definitions/response";
+import { revalidatePath } from "next/cache";
 
 export abstract class Level2Model extends BaseModel {
   viewClass = "level-2";
@@ -21,6 +22,7 @@ export abstract class Level2Model extends BaseModel {
       console.log(
         `Color updated to ${newColor} for ${this.tableName} with ID ${this.id}`,
       );
+      revalidatePath("/portfolio/");
     } catch (error) {
       console.error("Error updating color:", error);
     }
@@ -35,6 +37,7 @@ export abstract class Level2Model extends BaseModel {
       console.log(
         `Starred status updated to ${starred} for ${this.tableName} with ID ${this.id}`,
       );
+      revalidatePath("/portfolio/");
     } catch (error) {
       console.error("Error updating starred status:", error);
     }
@@ -47,6 +50,7 @@ export abstract class Level2Model extends BaseModel {
         data: { archivedAt: new Date() },
       });
       console.log(`${this.tableName} with ID ${this.id} archived successfully`);
+      revalidatePath("/portfolio/");
     } catch (error) {
       console.error("Error archiving asset:", error);
     }
@@ -68,6 +72,7 @@ export abstract class Level2Model extends BaseModel {
           data: { [linkedKey]: linkedId, [this.tableName + "Id"]: this.id },
         });
       }
+      revalidatePath("/portfolio/");
     } catch (error) {
       console.error("Error archiving asset:", error);
       return generateToast(Status.failed);
@@ -80,8 +85,9 @@ export abstract class Level2Model extends BaseModel {
     targetId?: string,
     link?: { linkingTable: TableNames; key: string },
   ) {
+    console.log(targetTable, data, targetId, link);
     try {
-      if (this.id) {
+      if (targetId) {
         await prisma[targetTable].update({
           where: { id: targetId },
           data: data,
@@ -89,7 +95,7 @@ export abstract class Level2Model extends BaseModel {
         console.log(`Updated ${this.tableName} with ID ${this.id}`);
       } else if (link) {
         const newRecord = await prisma[targetTable].create({
-          data: data,
+          data: { ...data, portfolioId: this.portfolioId },
         });
         const linkingRecord = await prisma[link.linkingTable].create({
           data: {
@@ -102,6 +108,7 @@ export abstract class Level2Model extends BaseModel {
           `Created new record in ${this.tableName} with ID ${newRecord.id} linked to ${link.linkingTable}: ${linkingRecord.id}`,
         );
       }
+      revalidatePath("/portfolio/");
     } catch (error) {
       console.error("Error archiving asset:", error);
       return generateToast(Status.failed);

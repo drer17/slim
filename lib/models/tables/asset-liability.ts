@@ -100,7 +100,15 @@ export class AssetLiabilityModel extends Level2Model {
         },
         NoteLink: {
           include: {
-            note: true,
+            note: {
+              include: {
+                user: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
           },
         },
         DocumentLink: {
@@ -131,7 +139,10 @@ export class AssetLiabilityModel extends Level2Model {
       description: asset.description ?? "",
       attributes: asset.attributes.map((attr) => attr.attribute),
       documents: asset.DocumentLink.map((doc) => doc.document),
-      notes: asset.NoteLink.map((note) => note.note),
+      notes: asset.NoteLink.map((noteLink) => ({
+        ...noteLink.note,
+        author: noteLink.note.user.name,
+      })),
       slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
       actionButtons: [],
       level2Children: asset.children.map((child) => ({
