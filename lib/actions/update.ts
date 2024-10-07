@@ -2,13 +2,13 @@
 
 import { Level2Model } from "../models/levels/level-2";
 import { ModelFactory } from "../models/model-factory";
-import { Status, ToastProps } from "../interfaces/response";
+import { Slug, Status, ToastProps } from "../definitions/response";
 import { generateToast } from "../utilities/response";
 import { revalidatePath } from "next/cache";
 import { TableNames } from "../models/base";
 
 export async function updateColor(
-  slug: (string | undefined)[],
+  slug: Slug,
   color: string,
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
@@ -17,30 +17,28 @@ export async function updateColor(
 }
 
 export async function updateStar(
-  slug: (string | undefined)[],
+  slug: Slug,
   star: boolean,
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    revalidatePath("/");
+    revalidatePath("/portfolio/");
     return model.changeStar(star);
   }
   return generateToast(Status.failed);
 }
 
-export async function archive(
-  slug: (string | undefined)[],
-): Promise<void | ToastProps> {
+export async function archive(slug: Slug): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    revalidatePath("/");
+    revalidatePath("/portfolio/");
     return model.archive();
   }
   return generateToast(Status.failed);
 }
 
 export async function upsertLevel7(
-  slug: (string | undefined)[],
+  slug: Slug,
   targetTable: TableNames,
   data: Record<string, string>,
   targetId?: string,
@@ -48,16 +46,31 @@ export async function upsertLevel7(
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    revalidatePath("/");
+    revalidatePath("/portfolio/");
     return model.upsertLevel7(targetTable, data, targetId, link);
   }
   return generateToast(Status.failed);
 }
 
 export async function update(
-  slug: (string | undefined)[],
+  slug: Slug,
   data: Record<string, string>,
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   return model.update(data);
+}
+
+export async function createOrRemoveLink(
+  slug: Slug,
+  linkingTable: TableNames,
+  linkedId: string,
+  linkedKey: string,
+  remove?: boolean,
+): Promise<void | ToastProps> {
+  const model = ModelFactory.create(slug);
+  if (model instanceof Level2Model) {
+    revalidatePath("/portfolio/");
+    return model.createOrRemoveLink(linkingTable, linkedId, linkedKey, remove);
+  }
+  return generateToast(Status.failed);
 }

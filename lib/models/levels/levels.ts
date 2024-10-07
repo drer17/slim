@@ -7,12 +7,6 @@ import { Level2RowViewProps } from "@/components/views/level-2-row-view";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { BaseModel } from "../base";
 
-export class Level1Model extends BaseModel {
-  public viewClass = "level-1";
-
-  public typeProps!: any;
-}
-
 export abstract class Level3Model extends BaseModel {
   public viewClass = "level-3";
 

@@ -14,14 +14,21 @@ const SwatchesPicker: React.FC<SwatchesPickerProps> = ({
 }) => {
   return (
     <div>
-      <HexColorPicker color={color} onChange={onChange} />
+      <HexColorPicker
+        color={color}
+        onChange={onChange}
+        onClick={(e) => e.stopPropagation()}
+      />
       <div className="space-x-2 mt-3">
         {presetColors.map((presetColor) => (
           <button
             className="w-6 h-6 rounded-md"
             key={presetColor}
             style={{ background: presetColor }}
-            onClick={() => onChange(presetColor)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange(presetColor);
+            }}
           />
         ))}
       </div>

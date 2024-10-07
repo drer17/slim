@@ -21,12 +21,16 @@ import { IconArchive } from "@tabler/icons-react";
 import { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
-import TagComponent from "../core/tag/tag";
 import { Attribute, Document, Note, Tag } from "@prisma/client";
 import Favourite from "../core/other/favourite";
 import Container from "../core/container/container";
 import Link from "next/link";
-import { archive, updateStar, upsertLevel7 } from "@/lib/actions/update";
+import {
+  archive,
+  createOrRemoveLink,
+  updateStar,
+  upsertLevel7,
+} from "@/lib/actions/update";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "../ui/toast";
 import { useExpandedContext } from "../core/expanded-content/expanded-content";
@@ -34,6 +38,7 @@ import PathToResource from "../core/other/path-to-resource";
 import ViewOptions from "../core/other/view-options";
 import Notes from "../core/text/notes";
 import DescriptionComponent from "../core/text/description";
+import { Tags } from "../core/tag/tags";
 
 export interface Level2RowViewProps {
   pathToResource: string[];
@@ -98,6 +103,11 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
     if (res) toast(res as ToastProps);
   };
 
+  const upsertTag = async (add: boolean, id: string) => {
+    const res = await createOrRemoveLink(slug, "tagLink", id, "tagId", !add);
+    if (res) toast(res as ToastProps);
+  };
+
   return (
     <div className="w-full flex flex-col">
       <PathToResource path={pathToResource} className="ml-2" />
@@ -107,10 +117,8 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
           <span style={{ color }}>{icon}</span>
           <h1 className="font-bold text-3xl">{title}</h1>
         </div>
-        <div className="flex-1 flex space-x-2 items-end h-6">
-          {tags.map((tag, idx) => (
-            <TagComponent key={`Tag${idx}`} {...tag} />
-          ))}
+        <div className="flex-1">
+          <Tags appliedTags={tags} upsertTag={upsertTag} />
         </div>
         <div className="space-x-2 flex group">
           <Favourite

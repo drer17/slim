@@ -84,6 +84,17 @@ model TransactionCategory {
   transactions Transaction[]
 }
 
+model Tag {
+  id          String @id @default(uuid())
+  portfolioId String
+
+  label String
+  color String?
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id])
+  TagLink   TagLink[]
+}
+
 // Level 2
 
 model AssetLiability {
@@ -301,17 +312,6 @@ model Note {
   portfolio Portfolio  @relation(fields: [portfolioId], references: [id])
   user      User       @relation(fields: [author], references: [id])
   NoteLink  NoteLink[]
-  TagLink   TagLink[]
-}
-
-model Tag {
-  id          String @id @default(uuid())
-  portfolioId String
-
-  label String
-  color String?
-
-  portfolio Portfolio @relation(fields: [portfolioId], references: [id])
   TagLink   TagLink[]
 }
 

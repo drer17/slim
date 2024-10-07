@@ -1,8 +1,10 @@
+import { Slug } from "../definitions/response";
 import { BaseModel } from "./base";
 import { AssetLiabilityModel } from "./tables/asset-liability";
+import { Tag } from "./tables/tag";
 
 export class ModelFactory {
-  public static create(slug: (string | undefined)[]): BaseModel {
+  public static create(slug: Slug): BaseModel {
     if (!slug) return new AssetLiabilityModel();
 
     const model = slug[0];
@@ -11,6 +13,10 @@ export class ModelFactory {
         const assetOrLiability = slug[1];
         const id = slug[2];
         return new AssetLiabilityModel(assetOrLiability, id);
+      }
+      case "tag": {
+        const id = slug[1];
+        return new Tag(id);
       }
       default:
         return new AssetLiabilityModel();

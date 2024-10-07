@@ -8,3 +8,7 @@ export interface ToastProps {
   description: string;
   variant?: "defualt" | "destructive";
 }
+
+// used to instantiate models
+// follows format [table name, ...options, id]
+export type Slug = (string | undefined)[];
