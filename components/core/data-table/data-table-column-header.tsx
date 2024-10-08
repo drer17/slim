@@ -59,7 +59,7 @@ export function DataTableColumnHeader<TData, TValue>({
         <Button
           variant="ghost"
           size="sm"
-          className={`h-8 data-[state=open]:bg-accent ml-2 ${
+          className={`h-6 data-[state=open]:bg-accent ml-2 ${
             column.getIsSorted() ? "visible" : "invisible group-hover:visible"
           }`}
           onClick={() => handleSortToggle()}
@@ -78,7 +78,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 data-[state=open]:bg-accent invisible group-hover:visible"
+            className="h-6 data-[state=open]:bg-accent invisible group-hover:visible"
           >
             <IconDotsVertical className="h-4 w-4" />
           </Button>

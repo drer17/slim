@@ -49,12 +49,14 @@ import {
 } from "@/components/ui/table";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { defaultColumn } from "./data-table-cell-edit";
-import { Status, generateToast } from "@/interfaces/response";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "@/components/ui/toast";
 import { AnimatePresence, motion } from "framer-motion";
 import ExpandedContent from "../expanded-content/expanded-content";
 import InViewPort from "@/components/invisible/in-view-port";
+import { Status } from "@/lib/definitions/response";
+import { generateToast } from "@/lib/utilities/response";
+import { cn } from "@/lib/utils";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -89,6 +91,9 @@ export interface DataTableProps<TData, TValue> {
   hideManageColumns?: boolean;
   hideFilterColumns?: boolean;
   hideExportOptions?: boolean;
+
+  initColumnVisibility?: Partial<Record<keyof TData, boolean>>;
+  condensed?: boolean;
 }
 
 const ROW_LIMIT = 50;
@@ -103,6 +108,8 @@ export function DataTable<TData, TValue>({
   hideFilterColumns,
   hideExportOptions,
   hideToolbar,
+  initColumnVisibility,
+  condensed,
 }: DataTableProps<TData, TValue>) {
   const { toast } = useToast();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -110,7 +117,9 @@ export function DataTable<TData, TValue>({
     [],
   );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>(
+      (initColumnVisibility as unknown as VisibilityState) || {},
+    );
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState<TData[]>(rows);
   const [focussedRow, setFocussedRow] = React.useState<number>(-1);
@@ -184,7 +193,10 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className={cn(condensed && "h-8")}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -206,7 +218,7 @@ export function DataTable<TData, TValue>({
                   onClick={() => setFocussedRow(rowIdx)}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className={cn(condensed && "h-8")}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
