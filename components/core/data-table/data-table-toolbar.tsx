@@ -17,6 +17,7 @@ import {
 import React from "react";
 import { DataTableFilter } from "./data-table-filter";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -79,8 +80,15 @@ export function DataTableToolbar<TData>({
     </Tooltip>
   );
   return (
-    <div className="grid gap-2 grid-cols-10 py-2 items-center">
-      <div className="flex items-center col-span-3">
+    <div className="grid gap-2 grid-cols-10 py-2 items-center w-full">
+      <div
+        className={cn("flex items-center w-full", {
+          "col-span-3":
+            !hideManageColumns || !hideFilterColumns || !hideExportOptions,
+          "col-span-10":
+            hideManageColumns && hideFilterColumns && hideExportOptions,
+        })}
+      >
         <Input
           value={table.getState().globalFilter || ""}
           onChange={(e) => table.setGlobalFilter(String(e.target.value))}
@@ -88,13 +96,15 @@ export function DataTableToolbar<TData>({
           className="h-8"
         />
       </div>
-      <div className="col-span-6 flex">
-        {!hideManageColumns && manageColumnContent}
-        {!hideFilterColumns && <DataTableFilter table={table} />}
-      </div>
-      <div className="col-span-1 text-right">
-        {!hideExportOptions && exportContent}
-      </div>
+      {!hideManageColumns || !hideFilterColumns ? (
+        <div className="col-span-6 flex">
+          {!hideManageColumns && manageColumnContent}
+          {!hideFilterColumns && <DataTableFilter table={table} />}
+        </div>
+      ) : null}
+      {!hideExportOptions && (
+        <div className="col-span-1 text-right">{exportContent}</div>
+      )}
     </div>
   );
 }

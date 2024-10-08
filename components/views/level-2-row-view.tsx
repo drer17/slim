@@ -40,6 +40,7 @@ import Notes from "../core/text/notes";
 import DescriptionComponent from "../core/text/description";
 import { Tags } from "../core/tag/tags";
 import Attributes from "../core/attributes/attributes";
+import Documents from "../core/documents/documents";
 
 export interface Level2RowViewProps {
   pathToResource: string[];
@@ -161,9 +162,11 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
                   save={saveAttribute}
                 />
               </Container>
-              <Container title="Documents" expandable={true}>
-                {description}
-              </Container>
+              <Documents
+                documents={documents}
+                save={() => console.log("saved")}
+                readonly={isInDialog}
+              />
             </div>
             <Container title="Notes" expandable={true}>
               <Notes notes={notes} save={saveNote} readOnly={isInDialog} />
