@@ -61,6 +61,7 @@ export abstract class BaseModel {
         data,
       });
       console.log(`An entry to ${this.tableName} was created successfully`);
+      revalidatePath("/portfolio/");
       return newRow;
     } catch (error) {
       console.error("Error creating row:", error);

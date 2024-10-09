@@ -118,6 +118,14 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
     if (res) toast(res as ToastProps);
   };
 
+  const saveDocument = async (data: Record<string, string>, id?: string) => {
+    const res = await upsertLevel7(slug, "document", data, id, {
+      linkingTable: "documentLink",
+      key: "documentId",
+    });
+    if (res) toast(res as ToastProps);
+  };
+
   return (
     <div className="w-full flex flex-col">
       <PathToResource path={pathToResource} className="ml-2" />
@@ -163,8 +171,9 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
                 />
               </Container>
               <Documents
+                parentSlug={slug}
                 documents={documents}
-                save={() => console.log("saved")}
+                save={saveDocument}
                 readonly={isInDialog}
               />
             </div>
