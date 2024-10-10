@@ -347,7 +347,7 @@ model ObligationRule {
   startDate      DateTime
   endDate        DateTime?
 
-  obligation Obligation? @relation(fields: [obligationId], references: [id])
+  obligation Obligation? @relation(fields: [obligationId], references: [id], onDelete: Cascade)
 }
 
 // Linking Tables
@@ -360,7 +360,7 @@ model PortfolioUsers {
 
   role String
 
-  portfolio Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id])
 }
 
@@ -376,7 +376,7 @@ model AttributeLink {
   entityId         String?
   obligationId     String?
 
-  attribute          Attribute           @relation(fields: [attributeId], references: [id])
+  attribute          Attribute           @relation(fields: [attributeId], references: [id], onDelete: Cascade)
   assetLiability     AssetLiability?     @relation(fields: [assetLiabilityId], references: [id])
   assetLiabilityType AssetLiabilityType? @relation(fields: [assetLiabilityTypeId], references: [id])
   entity             Entity?             @relation(fields: [entityId], references: [id])
@@ -394,7 +394,7 @@ model NoteLink {
   occurrenceId     String?
   valuationId      String?
 
-  note           Note            @relation(fields: [noteId], references: [id])
+  note           Note            @relation(fields: [noteId], references: [id], onDelete: Cascade)
   assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
   entity         Entity?         @relation(fields: [entityId], references: [id])
   obligation     Obligation?     @relation(fields: [obligationId], references: [id])
@@ -414,7 +414,7 @@ model DocumentLink {
   occurrenceId     String?
   valuationId      String?
 
-  document       Document        @relation(fields: [documentId], references: [id])
+  document       Document        @relation(fields: [documentId], references: [id], onDelete: Cascade)
   assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
   entity         Entity?         @relation(fields: [entityId], references: [id])
   obligation     Obligation?     @relation(fields: [obligationId], references: [id])
@@ -436,7 +436,7 @@ model TagLink {
   documentId       String?
   noteId           String?
 
-  tag            Tag             @relation(fields: [tagId], references: [id])
+  tag            Tag             @relation(fields: [tagId], references: [id], onDelete: Cascade)
   assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
   entity         Entity?         @relation(fields: [entityId], references: [id])
   obligation     Obligation?     @relation(fields: [obligationId], references: [id])

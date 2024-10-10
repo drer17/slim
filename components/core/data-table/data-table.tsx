@@ -51,8 +51,6 @@ import { DataTableToolbar } from "./data-table-toolbar";
 import { defaultColumn } from "./data-table-cell-edit";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "@/components/ui/toast";
-import { AnimatePresence, motion } from "framer-motion";
-import ExpandedContent from "../expanded-content/expanded-content";
 import InViewPort from "@/components/invisible/in-view-port";
 import { Status } from "@/lib/definitions/response";
 import { generateToast } from "@/lib/utilities/response";
@@ -85,7 +83,7 @@ export interface DataTableProps<TData, TValue> {
   ) => Promise<Status>;
   dataRetriever?: (numOfRows: number, forPage: number) => Promise<TData[]>;
 
-  expandedContent?: (row: TData) => React.ReactNode;
+  setFocussedRow?: (row: TData) => void;
 
   hideToolbar?: boolean;
   hideManageColumns?: boolean;
@@ -103,7 +101,7 @@ export function DataTable<TData, TValue>({
   rows,
   dataModifier,
   dataRetriever,
-  expandedContent,
+  setFocussedRow,
   hideManageColumns,
   hideFilterColumns,
   hideExportOptions,
@@ -122,9 +120,7 @@ export function DataTable<TData, TValue>({
     );
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState<TData[]>(rows);
-  const [focussedRow, setFocussedRow] = React.useState<TData | undefined>(
-    undefined,
-  );
+
   const [page, setPage] = React.useState(1);
   const [isDone, setIsDone] = React.useState(false);
 
@@ -217,7 +213,9 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => setFocussedRow(row as TData)}
+                  onClick={() =>
+                    setFocussedRow && setFocussedRow(row.original as TData)
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className={cn(condensed && "h-8")}>
@@ -247,31 +245,6 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <AnimatePresence>
-        {focussedRow && expandedContent && (
-          <motion.div
-            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <ExpandedContent
-              height={"500px"}
-              expanded={focussedRow !== undefined}
-              onOutsideClick={() => setFocussedRow(undefined)}
-            >
-              <motion.div
-                className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.9 }}
-              >
-                {expandedContent(focussedRow)}
-              </motion.div>
-            </ExpandedContent>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

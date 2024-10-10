@@ -5,7 +5,6 @@ import { ModelFactory } from "../models/model-factory";
 import { Slug, Status, ToastProps } from "../definitions/response";
 import { generateToast } from "../utilities/response";
 import { TableNames } from "../models/base";
-import { revalidatePath } from "next/cache";
 
 export async function updateColor(
   slug: Slug,
