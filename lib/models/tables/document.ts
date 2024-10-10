@@ -13,4 +13,9 @@ export class Document extends Level1Model {
     const dataWithPortfolio = { ...data, portfolioId: this.portfolioId };
     super.create(dataWithPortfolio);
   }
+
+  async delete() {
+    // TODO delete file from document store SLIM-16
+    super.delete();
+  }
 }

@@ -174,7 +174,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
                 parentSlug={slug}
                 documents={documents}
                 save={saveDocument}
-                readonly={isInDialog}
+                readOnly={isInDialog}
               />
             </div>
             <Container title="Notes" expandable={true}>
