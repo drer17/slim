@@ -70,7 +70,7 @@ const NoteComponent: React.FC<NoteComponentProps> = ({
           {note?.createdAt &&
             format(note?.createdAt as Date, "MMMM dd, yyyy hh:mm a")}
         </p>
-        <div className="h-24 p-2">
+        <div className="p-2">
           {editing && !readOnly ? (
             <>
               <Textarea

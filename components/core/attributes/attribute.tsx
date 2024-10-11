@@ -62,14 +62,14 @@ const AttributeComponent: React.FC<AttributeComponentProps> = ({
   }, [newAttribute, updateAttribute]);
 
   return (
-    <div className="flex space-x-2 w-full items-center my-2">
+    <div className="flex space-x-2 w-full items-center my-2 pr-2">
       {!props.id ? (
         <div className="flex space-x-2 w-full items-center">
           <InputSwitcher
             value={newAttribute.label as string}
             placeholder="Label"
             type={InputSwitcherType.string}
-            onChange={(value) =>
+            onValueChange={(value) =>
               setNewAttribute((prev) => ({ ...prev, label: value }))
             }
           />
@@ -77,7 +77,7 @@ const AttributeComponent: React.FC<AttributeComponentProps> = ({
             value={newAttribute.value as string}
             placeholder="Value"
             type={(props.type || InputSwitcherType.string) as InputSwitcherType}
-            onChange={(value) =>
+            onValueChange={(value) =>
               setNewAttribute((prev) => ({ ...prev, value: value }))
             }
             onBlur={() => setEditing(false)}
@@ -113,33 +113,38 @@ const AttributeComponent: React.FC<AttributeComponentProps> = ({
           </Button>
         </div>
       ) : (
-        <div className="flex w-full space-x-2 items-center">
-          <p className="min-w-1/2 w-full text-zinc-500 font-medium">
-            {props.label}
-          </p>
+        <div className="flex w-full space-x-3 items-center">
+          <p className="w-1/2 text-zinc-500 font-medium">{props.label}</p>
           {editing && !disabled ? (
-            <InputSwitcher
-              value={newAttribute.value as string}
-              placeholder="Value"
-              type={
-                (props.type || InputSwitcherType.string) as InputSwitcherType
-              }
-              onChange={(value) =>
-                setNewAttribute((prev) => ({ ...prev, value: value }))
-              }
-              onBlur={() => setEditing(false)}
-            />
+            <div className="w-1/2 px-2">
+              <InputSwitcher
+                value={newAttribute.value as string}
+                placeholder="Value"
+                autoFocus
+                type={
+                  (props.type || InputSwitcherType.string) as InputSwitcherType
+                }
+                onValueChange={(value) =>
+                  setNewAttribute((prev) => ({ ...prev, value: value }))
+                }
+                onBlur={() => setEditing(false)}
+              />
+            </div>
           ) : (
-            <p onClick={() => setEditing(true)} className="text-right">
+            <p
+              onClick={() => setEditing(true)}
+              className="w-1/2 text-right my-1 items-center"
+            >
               {props.value}
             </p>
           )}
           {expanded !== undefined && (
             <>
-              <div className="w-16"></div>
-              <Button variant="ghost" size="icon" className="h-8">
-                <IconX className="w-4 h-4 text-zinc-500" />
-              </Button>
+              <div className="w-16">
+                <Button variant="ghost" size="icon" className="h-8">
+                  <IconX className="w-4 h-4 text-zinc-500" />
+                </Button>
+              </div>
             </>
           )}
         </div>
