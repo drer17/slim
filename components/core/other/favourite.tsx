@@ -1,5 +1,15 @@
 "use client";
 
+/*
+ * Favourite
+ *
+ * Author: Andre Repanich
+ * Date: 9-10-24
+ *
+ * Component Requirements:
+ * [X]- Show if item is or isn't starred
+ */
+
 import { IconStar, IconStarFilled } from "@tabler/icons-react";
 
 interface FavouriteProps {

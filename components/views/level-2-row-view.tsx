@@ -21,17 +21,26 @@ import { IconArchive } from "@tabler/icons-react";
 import { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
-import TagComponent from "../core/tag/tag";
 import { Attribute, Document, Note, Tag } from "@prisma/client";
 import Favourite from "../core/other/favourite";
 import Container from "../core/container/container";
 import Link from "next/link";
-import { archive, updateStar } from "@/lib/actions/update";
+import {
+  archive,
+  createOrRemoveLink,
+  updateStar,
+  upsertLevel7,
+} from "@/lib/actions/update";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "../ui/toast";
 import { useExpandedContext } from "../core/expanded-content/expanded-content";
 import PathToResource from "../core/other/path-to-resource";
 import ViewOptions from "../core/other/view-options";
+import Notes from "../core/text/notes";
+import DescriptionComponent from "../core/text/description";
+import { Tags } from "../core/tag/tags";
+import Attributes from "../core/attributes/attributes";
+import Documents from "../core/documents/documents";
 
 export interface Level2RowViewProps {
   pathToResource: string[];
@@ -88,6 +97,35 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
     },
   };
 
+  const saveNote = async (data: Record<string, string>, id?: string) => {
+    const res = await upsertLevel7(slug, "note", data, id, {
+      linkingTable: "noteLink",
+      key: "noteId",
+    });
+    if (res) toast(res as ToastProps);
+  };
+
+  const upsertTag = async (add: boolean, id: string) => {
+    const res = await createOrRemoveLink(slug, "tagLink", id, "tagId", !add);
+    if (res) toast(res as ToastProps);
+  };
+
+  const saveAttribute = async (data: Record<string, string>, id?: string) => {
+    const res = await upsertLevel7(slug, "attribute", data, id, {
+      linkingTable: "attributeLink",
+      key: "attributeId",
+    });
+    if (res) toast(res as ToastProps);
+  };
+
+  const saveDocument = async (data: Record<string, string>, id?: string) => {
+    const res = await upsertLevel7(slug, "document", data, id, {
+      linkingTable: "documentLink",
+      key: "documentId",
+    });
+    if (res) toast(res as ToastProps);
+  };
+
   return (
     <div className="w-full flex flex-col">
       <PathToResource path={pathToResource} className="ml-2" />
@@ -97,10 +135,8 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
           <span style={{ color }}>{icon}</span>
           <h1 className="font-bold text-3xl">{title}</h1>
         </div>
-        <div className="flex-1 flex space-x-2 items-end h-6">
-          {tags.map((tag, idx) => (
-            <TagComponent key={`Tag${idx}`} {...tag} />
-          ))}
+        <div className="flex-1">
+          <Tags appliedTags={tags} upsertTag={upsertTag} />
         </div>
         <div className="space-x-2 flex group">
           <Favourite
@@ -118,19 +154,31 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
       <ScrollArea className="w-full">
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
           <div className="flex flex-col space-y-4">
-            <Container title="Description" expandable={true}>
-              {description}
-            </Container>
+            <div className="p-2 space-y-2 min-h-28">
+              <h2 className="text-xl font-bold">Description</h2>
+              <DescriptionComponent
+                text={description}
+                slug={slug}
+                readOnly={isInDialog}
+              />
+            </div>
             <div className="grid-cols-2 grid gap-2">
               <Container title="Attributes" expandable={true}>
-                {description}
+                <Attributes
+                  attributes={attributes}
+                  readOnly={isInDialog}
+                  save={saveAttribute}
+                />
               </Container>
-              <Container title="Documents" expandable={true}>
-                {description}
-              </Container>
+              <Documents
+                parentSlug={slug}
+                documents={documents}
+                save={saveDocument}
+                readOnly={isInDialog}
+              />
             </div>
             <Container title="Notes" expandable={true}>
-              {description}
+              <Notes notes={notes} save={saveNote} readOnly={isInDialog} />
             </Container>
           </div>
           <div className="flex flex-col space-y-4">

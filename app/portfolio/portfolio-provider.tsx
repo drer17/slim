@@ -1,10 +1,21 @@
 "use client";
 
+import { AssetLiabilityType, Tag, TransactionCategory } from "@prisma/client";
 import { createContext, useContext, useState } from "react";
+
+export interface PortfolioState {
+  tags: Tag[];
+  colorPresets: string[];
+  author: string;
+
+  assetLiabilityTypes: AssetLiabilityType[];
+  transactionCategories: TransactionCategory[];
+}
 
 interface PortfolioContextProps {
   target: string | undefined;
-  setTarget: (target: string | undefined) => void;
+  setTarget: React.Dispatch<React.SetStateAction<string | undefined>>;
+  portfolioState: PortfolioState;
 }
 
 const PortfolioContext = createContext<PortfolioContextProps | undefined>(
@@ -18,11 +29,39 @@ export const usePortfolioContext = () => {
   return context;
 };
 
-export function PortfolioProvider({ children }: { children: React.ReactNode }) {
+interface PortfolioProviderProps {
+  tags: Tag[];
+  author: string;
+  colorPresets: string[];
+  assetLiabilityTypes: AssetLiabilityType[];
+  transactionCategories: TransactionCategory[];
+  children: React.ReactNode;
+}
+
+export function PortfolioProvider({
+  tags,
+  author,
+  colorPresets,
+  assetLiabilityTypes,
+  transactionCategories,
+  children,
+}: PortfolioProviderProps) {
   const [target, setTarget] = useState<string | undefined>(undefined);
 
   return (
-    <PortfolioContext.Provider value={{ target, setTarget }}>
+    <PortfolioContext.Provider
+      value={{
+        target,
+        setTarget,
+        portfolioState: {
+          author,
+          tags,
+          colorPresets,
+          assetLiabilityTypes,
+          transactionCategories,
+        },
+      }}
+    >
       {children}
     </PortfolioContext.Provider>
   );

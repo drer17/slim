@@ -5,29 +5,23 @@
 import { DataTableProps } from "@/components/core/data-table/data-table";
 import { Level2RowViewProps } from "@/components/views/level-2-row-view";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
-import { BaseModelView } from "../base";
+import { BaseModel } from "../base";
 
-export class Level1ModelView extends BaseModelView {
-  public viewClass = "level-1";
-
-  public typeProps!: any;
-}
-
-export abstract class Level3ModelView extends BaseModelView {
+export abstract class Level3Model extends BaseModel {
   public viewClass = "level-3";
 
   public abstract getDataForRow(): Promise<Level2RowViewProps>;
   public abstract getDataForTable(): Promise<Level2TableViewProps>;
 }
 
-export class Level4ModelView<TData, TValue> extends BaseModelView {
+export class Level4Model<TData, TValue> extends BaseModel {
   public viewClass = "level-4";
 
   public tableProps!: DataTableProps<TData, TValue>;
   public pageProps!: any;
 }
 
-export class Level5ModelView extends BaseModelView {
+export class Level5Model extends BaseModel {
   public viewClass = "level-5";
   public calendarProps!: any;
 }

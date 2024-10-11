@@ -1,11 +1,11 @@
 import { getIcon } from "@/components/global/icons";
 import { prisma } from "@/lib/prisma";
 import { Level2RowViewProps } from "@/components/views/level-2-row-view";
-import { Level2ModelView } from "../levels/level-2";
+import { Level2Model } from "../levels/level-2";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { CardProps } from "@/components/core/card/card";
 
-export class AssetLiabilityModel extends Level2ModelView {
+export class AssetLiabilityModel extends Level2Model {
   private asset?: boolean;
 
   constructor(type?: string, id?: string) {
@@ -100,7 +100,15 @@ export class AssetLiabilityModel extends Level2ModelView {
         },
         NoteLink: {
           include: {
-            note: true,
+            note: {
+              include: {
+                user: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
           },
         },
         DocumentLink: {
@@ -131,7 +139,10 @@ export class AssetLiabilityModel extends Level2ModelView {
       description: asset.description ?? "",
       attributes: asset.attributes.map((attr) => attr.attribute),
       documents: asset.DocumentLink.map((doc) => doc.document),
-      notes: asset.NoteLink.map((note) => note.note),
+      notes: asset.NoteLink.map((noteLink) => ({
+        ...noteLink.note,
+        author: noteLink.note.user.name,
+      })),
       slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
       actionButtons: [],
       level2Children: asset.children.map((child) => ({

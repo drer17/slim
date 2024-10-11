@@ -47,7 +47,7 @@ const Container: React.FC<ContainerProps> = ({
         <div className="flex justify-between mb-2">
           <div className="flex items-center space-x-2">
             {icon}
-            <h1 className="text-xl font-bold">{title}</h1>
+            <h2 className="text-xl font-bold">{title}</h2>
           </div>
           {checkInDialog === undefined && (
             <button onClick={() => setFocussed(true)}>
@@ -71,7 +71,7 @@ const Container: React.FC<ContainerProps> = ({
               onOutsideClick={() => setFocussed(false)}
             >
               <motion.div
-                className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
+                className="backdrop-blur dark:bg-zinc-900/60 bg-zinc-100 rounded-md w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
@@ -79,7 +79,7 @@ const Container: React.FC<ContainerProps> = ({
                 <div className="flex justify-between mb-2">
                   <div className="flex items-center space-x-2">
                     {icon}
-                    <h1 className="text-2xl font-bold">{title}</h1>
+                    <h2 className="text-2xl font-bold">{title}</h2>
                   </div>
                 </div>
                 {children}
