@@ -1,3 +1,13 @@
+/*
+ * Path To Resource
+ *
+ * Author: Andre Repanich
+ * Date: 9-10-24
+ *
+ * Component Requirements:
+ * [X]- enable up the tree routing
+ */
+
 import {
   Breadcrumb,
   BreadcrumbItem,

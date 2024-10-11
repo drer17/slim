@@ -7,9 +7,9 @@
  * Date: 7-10-24
  *
  * Component Requirements:
- * [ ]- Show Attribute Label and value in line
- * [ ]- Show the value as per the attribute type
- * [ ]- Edit value on click
+ * [X]- Show Attribute Label and value in line
+ * [X]- Show the value as per the attribute type
+ * [X]- Edit value on click
  */
 
 import { Attribute } from "@prisma/client";
@@ -117,7 +117,7 @@ const AttributeComponent: React.FC<AttributeComponentProps> = ({
           <p className="min-w-1/2 w-full text-zinc-500 font-medium">
             {props.label}
           </p>
-          {editing ? (
+          {editing && !disabled ? (
             <InputSwitcher
               value={newAttribute.value as string}
               placeholder="Value"

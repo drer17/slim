@@ -1,11 +1,24 @@
 "use client";
 
+/*
+ * Documents
+ *
+ * Author: Andre Repanich
+ * Date: 9-10-24
+ *
+ * Component Requirements:
+ * [X]- Show the documents
+ * [X]- Search / filter documents
+ * [X]- Add documents
+ * [X]- Relevant document properties
+ */
+
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "../data-table/data-table";
 import { Document } from "@prisma/client";
 import { DataTableColumnHeader } from "../data-table/data-table-column-header";
 import React, { useRef } from "react";
-import { IconPlus, IconX } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Slug, Status } from "@/lib/definitions/response";
 import { createFile } from "@/lib/actions/create";
@@ -16,8 +29,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import ExpandedContent from "../expanded-content/expanded-content";
 import DocumentComponent from "./document";
 import useUpdateEffect from "@/hooks/use-update-effect";
-import ViewOptions from "../other/view-options";
-import { deleteItem } from "@/lib/actions/delete";
 
 interface DocumentProps {
   save: (data: Record<string, any>, id?: string) => void;
@@ -85,16 +96,6 @@ const Documents: React.FC<DocumentProps> = (props) => {
     get();
   }, [focussedRow, toast]);
 
-  const availableMenuOptions = {
-    delete: {
-      icon: <IconX className="text-red-500 mr-2 w-4 h-4" />,
-      callable: async () => {
-        const res = await deleteItem(["document", focussedRow?.id]);
-        if (res) toast(res as ToastProps);
-      },
-    },
-  };
-
   return (
     <div className="p-2">
       <div className="w-full flex justify-between items-center space-x-4">
@@ -152,18 +153,12 @@ const Documents: React.FC<DocumentProps> = (props) => {
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
               >
-                <div className="flex justify-between w-full space-x-2">
-                  <h3>{focussedRow.label}</h3>
-                  <ViewOptions
-                    menuOptions={["delete"]}
-                    availableMenuOptions={availableMenuOptions}
-                  />
-                </div>
                 <DocumentComponent
                   {...focussedRow}
                   fileBlob={fileBlob}
                   save={props.save}
                   parentSlug={props.parentSlug}
+                  toastCallback={(m) => toast(m)}
                 />
               </motion.div>
             </ExpandedContent>

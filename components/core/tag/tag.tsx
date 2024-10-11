@@ -1,5 +1,20 @@
 "use client";
 
+/*
+ * Tag
+ *
+ * Author: Andre Repanich
+ * Date: 29-09-24
+ *
+ * Component Requirements
+ *  - Display
+ *    - Label
+ *  - Highlight a color
+ *  - OnHover
+ *    - If condensed, show tooltip
+ *  - OnRightClick show options to change color and remove
+ */
+
 import {
   Tooltip,
   TooltipContent,
@@ -27,21 +42,6 @@ import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { useDebouncedCallback } from "use-debounce";
 import useUpdateEffect from "@/hooks/use-update-effect";
 import { deleteItem } from "@/lib/actions/delete";
-
-/*
- * Tag
- *
- * Author: Andre Repanich
- * Date: 29-09-24
- *
- * Component Requirements
- *  - Display
- *    - Label
- *  - Highlight a color
- *  - OnHover
- *    - If condensed, show tooltip
- *  - OnRightClick show options to change color and remove
- */
 
 const TagComponent: React.FC<
   Tag & {

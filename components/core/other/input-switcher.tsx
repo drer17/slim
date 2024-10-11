@@ -1,3 +1,16 @@
+"use client";
+
+/*
+ * Input Switcher
+ *
+ * Author: Andre Repanich
+ * Date: 9-10-24
+ *
+ * Component Requirements:
+ * [X]- Switch input option based on the type
+ *    - used in the attribute component
+ */
+
 import { Input } from "@/components/ui/input";
 
 export enum InputSwitcherType {

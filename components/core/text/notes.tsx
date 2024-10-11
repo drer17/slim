@@ -1,5 +1,15 @@
 "use client";
 
+/*
+ * Notes
+ *
+ * Author: Andre Repanich
+ * Date: 9-10-24
+ *
+ * Component Requirements:
+ * [X]- Render Notes in a scrollable component
+ */
+
 import { Note } from "@prisma/client";
 import NoteComponent from "./note";
 import { ScrollArea } from "@/components/ui/scroll-area";

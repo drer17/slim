@@ -1,5 +1,17 @@
 "use client";
 
+/*
+ * Note Component
+ *
+ * Author: Andre Repanich
+ * Date: 9-10-24
+ *
+ * Component Requirements:
+ * [X]- Show author, time, text
+ * [ ]- Markdown editing [mdx-editor/editor: A rich text editor React component for markdown (github.com)](https://github.com/mdx-editor/editor)
+ * [X]- Save
+ */
+
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
