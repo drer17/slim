@@ -1,3 +1,16 @@
+"use client";
+
+/*
+ * Description
+ *
+ * Author: Andre Repanich
+ * Date: 09-10-24
+ *
+ * Component Requirements
+ * [X]- Show the description
+ * [X]- Click to edit
+ */
+
 import { Textarea } from "@/components/ui/textarea";
 import { update } from "@/lib/actions/update";
 import React from "react";

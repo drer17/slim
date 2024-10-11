@@ -1,3 +1,15 @@
+"use client";
+/*
+ * Attributes
+ *
+ * Author: Andre Repanich
+ * Date: 7-10-24
+ *
+ * Component Requirements:
+ * [X]- Display the attributes in a scroll area
+ * [X]- Add attribute
+ */
+
 import { Attribute } from "@prisma/client";
 import AttributeComponent from "./attribute";
 import { ScrollArea } from "@/components/ui/scroll-area";

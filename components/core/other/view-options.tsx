@@ -1,5 +1,17 @@
 "use client";
 
+/*
+ * ViewOptions
+ *
+ * Common drop down menu for view models
+ *
+ * Author: Andre Repanich
+ * Date: 9-10-24
+ *
+ * Component Requirements:
+ * [X]- Render different options for a view
+ */
+
 import {
   DropdownMenu,
   DropdownMenuContent,
