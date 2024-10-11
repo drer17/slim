@@ -18,10 +18,11 @@ export enum InputSwitcherType {
   number = "number",
 }
 
-interface InputSwitcherProps {
+interface InputSwitcherProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
   type: InputSwitcherType;
-  onChange: (value: string) => void;
+  onValueChange: (value: string) => void;
   onBlur?: () => void;
   placeholder?: string;
 }
@@ -29,9 +30,10 @@ interface InputSwitcherProps {
 const InputSwitcher: React.FC<InputSwitcherProps> = ({
   value,
   type,
-  onChange,
+  onValueChange,
   onBlur,
   placeholder,
+  ...rest
 }) => {
   switch (type) {
     case InputSwitcherType.string:
@@ -40,8 +42,9 @@ const InputSwitcher: React.FC<InputSwitcherProps> = ({
           className="h-8 capitalize"
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e.currentTarget.value)}
+          onChange={(e) => onValueChange(e.currentTarget.value)}
           onBlur={() => onBlur && onBlur()}
+          {...rest}
         />
       );
     case InputSwitcherType.number:
@@ -50,9 +53,10 @@ const InputSwitcher: React.FC<InputSwitcherProps> = ({
           className="h-8 capitalize"
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e.currentTarget.value)}
+          onChange={(e) => onValueChange(e.currentTarget.value)}
           type="number"
           onBlur={() => onBlur && onBlur()}
+          {...rest}
         />
       );
   }
