@@ -149,14 +149,23 @@ const Card: React.FC<CardProps> = ({
       <div className="col-span-3 flex items-center">
         <Tooltip>
           <TooltipTrigger>
-            <p className="font-bold text-left">{title}</p>
+            {href ? (
+              <Link
+                href={href + slug?.join("/")}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="font-bold text-left">{title}</p>
+              </Link>
+            ) : (
+              <p className="font-bold text-left">{title}</p>
+            )}
           </TooltipTrigger>
           {secondary && <TooltipContent>{secondary}</TooltipContent>}
         </Tooltip>
       </div>
       <Favourite
         starred={starred}
-        changeStarCallback={(star) => changeStar(star)}
+        changeStarCallback={(star: boolean) => changeStar(star)}
       />
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
@@ -174,7 +183,16 @@ const Card: React.FC<CardProps> = ({
   const condensedContents = (
     <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md min-w-44 h-24 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div className="col-span-4 flex items-center">
-        <div className="font-bold">{title}</div>
+        {href ? (
+          <Link
+            href={href + slug?.join("/")}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="font-bold text-left">{title}</p>
+          </Link>
+        ) : (
+          <p className="font-bold text-left">{title}</p>
+        )}
       </div>
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
@@ -229,12 +247,12 @@ const Card: React.FC<CardProps> = ({
             exit={{ opacity: 0 }}
           >
             <ExpandedContent
-              height={"500px"}
+              height={""}
               expanded={focussed}
               onOutsideClick={() => setFocussed(false)}
             >
               <motion.div
-                className="dark:bg-zinc-900 bg-zinc-100 rounded-lg w-full h-[500px] max-w-screen-md max-h-screen-md p-4"
+                className="dark:bg-zinc-900/60 backdrop-blur bg-zinc-100 rounded-lg w-full max-w-screen-md max-h-screen-md p-4"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}

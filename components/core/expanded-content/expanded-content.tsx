@@ -56,7 +56,7 @@ const ExpandedContent: React.FC<ExpandedContentProps> = ({
   return (
     <ExpandedContext.Provider value={{ expanded }}>
       <div
-        className="w-full flex justify-center"
+        className="w-auto flex justify-center"
         style={{ height: height }}
         ref={cardRef}
       >

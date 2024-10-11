@@ -1,4 +1,4 @@
-import { Status, ToastProps } from "../interfaces/response";
+import { Status, ToastProps } from "../definitions/response";
 
 export const generateToast = (status: Status): ToastProps => ({
   title: status,
