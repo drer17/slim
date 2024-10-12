@@ -120,8 +120,8 @@ model AssetLiability {
   portfolio Portfolio          @relation(fields: [portfolioId], references: [id])
   assetType AssetLiabilityType @relation(fields: [assetTypeId], references: [id])
   parent    AssetLiability?    @relation("AssetLiabilityToParent", fields: [parentId], references: [id])
-  children  AssetLiability[]   @relation("AssetLiabilityToParent")
 
+  children              AssetLiability[]      @relation("AssetLiabilityToParent")
   transactionCategories TransactionCategory[]
   obligations           Obligation[]
   transactions          Transaction[]
