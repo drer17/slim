@@ -37,7 +37,8 @@ const ViewOptions: React.FC<ViewOptionProps> = ({
   availableMenuOptions,
   isInDialog,
 }) => {
-  if (!menuOptions || isInDialog !== undefined) return null;
+  if (!menuOptions || menuOptions.length === 0 || isInDialog !== undefined)
+    return null;
 
   return (
     <DropdownMenu>
