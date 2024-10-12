@@ -66,6 +66,10 @@ export class AssetLiabilityModel extends Level2Model {
         type: { label: string; icon?: React.ReactNode };
       })[],
       menuOptions: [],
+      commandActions: [
+        this.asset ? "addNewAsset" : "addNewLiability",
+        "addNewType",
+      ],
     };
 
     return data;

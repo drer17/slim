@@ -7,6 +7,7 @@ import { PortfolioProvider } from "./portfolio-provider";
 import { get } from "@/lib/actions/get";
 import { AssetLiabilityType, Tag, TransactionCategory } from "@prisma/client";
 import { getUser } from "@/lib/actions/auth";
+import MediaRendering from "@/components/ui/media-rendering";
 
 export default async function Layout({
   children,
@@ -36,10 +37,18 @@ export default async function Layout({
           "h-svh",
         )}
       >
-        <Navigation mobileHeader={<Header />} />
+        <Navigation
+          mobileHeader={
+            <MediaRendering maxWidth="md">
+              <Header />
+            </MediaRendering>
+          }
+        />
         <div className="w-full p-4">
           <div className="hidden md:flex">
-            <Header />
+            <MediaRendering minWidth="md">
+              <Header />
+            </MediaRendering>
           </div>
           <div className="mt-8">{children}</div>
         </div>

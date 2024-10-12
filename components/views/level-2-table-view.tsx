@@ -15,12 +15,16 @@ import { ScrollArea } from "../ui/scroll-area";
 import PathToResource from "../core/other/path-to-resource";
 import { useToast } from "@/hooks/use-toast";
 import ViewOptions from "../core/other/view-options";
+import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
+import React from "react";
+import { CommandAction } from "../global/header/command-menu";
 
 export interface Level2TableViewProps {
   pathToResource: string[];
   title: string;
   items: (CardProps & { type: { label: string; icon?: React.ReactNode } })[];
   menuOptions: string[];
+  commandActions: string[];
 }
 
 const Level2TableView: React.FC<Level2TableViewProps> = ({
@@ -28,8 +32,11 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
   title,
   items,
   menuOptions,
+  commandActions,
 }) => {
+  const { commandState } = usePortfolioContext();
   const { toast } = useToast();
+
   const groupedByStarredAndType = items.reduce(
     (acc, item) => {
       const key = item.starred ? "starred" : item.type.label;
@@ -48,7 +55,20 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
     >,
   );
 
-  const availableMenuOptions = {};
+  const availableCommandActions: CommandAction[] = [
+    { id: "addNewAsset", label: "Add New Asset" },
+    { id: "addNewLiability", label: "Add New Liability" },
+    { id: "addNewType", label: "Add New Type" },
+  ];
+
+  React.useEffect(() => {
+    commandState.setCommandActions(
+      availableCommandActions.filter((command) =>
+        commandActions.includes(command.id),
+      ),
+    );
+    commandState.setFilterOn(false);
+  }, [commandActions]);
 
   return (
     <div className="w-full flex-col">
@@ -57,10 +77,7 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
       <div className="flex w-full justify-between p-2">
         <h1 className="font-bold text-3xl">{title}</h1>
         <div>
-          <ViewOptions
-            menuOptions={menuOptions}
-            availableMenuOptions={availableMenuOptions}
-          />
+          <ViewOptions menuOptions={menuOptions} availableMenuOptions={{}} />
         </div>
       </div>
       <div className="mt-7"></div>

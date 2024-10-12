@@ -1,5 +1,6 @@
 "use client";
 
+import { CommandAction } from "@/components/global/header/command-menu";
 import { AssetLiabilityType, Tag, TransactionCategory } from "@prisma/client";
 import { createContext, useContext, useState } from "react";
 
@@ -12,9 +13,17 @@ export interface PortfolioState {
   transactionCategories: TransactionCategory[];
 }
 
+export interface CommandState {
+  commandActions: CommandAction[];
+  setCommandActions: React.Dispatch<React.SetStateAction<CommandAction[]>>;
+  filterOn: boolean;
+  setFilterOn: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 interface PortfolioContextProps {
   target: string | undefined;
   setTarget: React.Dispatch<React.SetStateAction<string | undefined>>;
+  commandState: CommandState;
   portfolioState: PortfolioState;
 }
 
@@ -47,12 +56,20 @@ export function PortfolioProvider({
   children,
 }: PortfolioProviderProps) {
   const [target, setTarget] = useState<string | undefined>(undefined);
+  const [commandActions, setCommandActions] = useState<CommandAction[]>([]);
+  const [filterOn, setFilterOn] = useState<boolean>(true);
 
   return (
     <PortfolioContext.Provider
       value={{
         target,
         setTarget,
+        commandState: {
+          commandActions,
+          setCommandActions,
+          filterOn,
+          setFilterOn,
+        },
         portfolioState: {
           author,
           tags,
