@@ -7,21 +7,21 @@ import { Level2RowViewProps } from "@/components/views/level-2-row-view";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { BaseModel } from "../base";
 
-export abstract class Level3Model extends BaseModel {
+export abstract class Level3Model<T> extends BaseModel<T> {
   public viewClass = "level-3";
 
   public abstract getDataForRow(): Promise<Level2RowViewProps>;
   public abstract getDataForTable(): Promise<Level2TableViewProps>;
 }
 
-export class Level4Model<TData, TValue> extends BaseModel {
+export class Level4Model<TData, TValue> extends BaseModel<TData> {
   public viewClass = "level-4";
 
   public tableProps!: DataTableProps<TData, TValue>;
   public pageProps!: any;
 }
 
-export class Level5Model extends BaseModel {
+export class Level5Model<T> extends BaseModel<T> {
   public viewClass = "level-5";
   public calendarProps!: any;
 }

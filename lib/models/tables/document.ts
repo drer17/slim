@@ -1,7 +1,7 @@
 import { TableNames } from "../base";
 import { Level1Model } from "../levels/level-1";
 
-export class Document extends Level1Model {
+export class DocumentModel<Document> extends Level1Model<Document> {
   tableName: TableNames = "document";
 
   constructor(id?: string) {
@@ -9,9 +9,9 @@ export class Document extends Level1Model {
     this.id = id;
   }
 
-  async create(data: Record<string, any>) {
+  async create(data: Partial<Document>) {
     const dataWithPortfolio = { ...data, portfolioId: this.portfolioId };
-    super.create(dataWithPortfolio);
+    return super.create(dataWithPortfolio);
   }
 
   async delete() {

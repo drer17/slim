@@ -5,7 +5,9 @@ import { Level2Model } from "../levels/level-2";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { CardProps } from "@/components/core/card/card";
 
-export class AssetLiabilityModel extends Level2Model {
+export class AssetLiabilityModel<
+  AssetLiability,
+> extends Level2Model<AssetLiability> {
   private asset?: boolean;
 
   constructor(type?: string, id?: string) {

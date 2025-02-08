@@ -6,7 +6,7 @@ import { generateToast } from "@/lib/utilities/response";
 import { Status } from "@/lib/definitions/response";
 import { revalidatePath } from "next/cache";
 
-export abstract class Level2Model extends BaseModel {
+export abstract class Level2Model<T> extends BaseModel<T> {
   viewClass = "level-2";
   id?: string;
 

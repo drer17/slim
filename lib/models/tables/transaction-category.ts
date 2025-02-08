@@ -1,7 +1,7 @@
 import { TableNames } from "../base";
 import { Level1Model } from "../levels/level-1";
 
-export class TagModel<Tag> extends Level1Model<Tag> {
+export class TransactionCategory extends Level1Model {
   tableName: TableNames = "tag";
 
   constructor(id?: string) {
@@ -9,8 +9,8 @@ export class TagModel<Tag> extends Level1Model<Tag> {
     this.id = id;
   }
 
-  async create(data: Partial<Tag>) {
+  async create(data: Record<string, any>) {
     const dataWithPortfolio = { ...data, portfolioId: this.portfolioId };
-    return super.create(dataWithPortfolio);
+    super.create(dataWithPortfolio);
   }
 }
