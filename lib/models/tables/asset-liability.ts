@@ -4,6 +4,7 @@ import { Level2RowViewProps } from "@/components/views/level-2-row-view";
 import { Level2Model } from "../levels/level-2";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { CardProps } from "@/components/core/card/card";
+import { ToastProps } from "@/lib/definitions/response";
 
 export class AssetLiabilityModel<
   AssetLiability,
@@ -16,6 +17,13 @@ export class AssetLiabilityModel<
     this.asset = type === "liability" ? false : true;
     this.id = id;
     this.getDataForRow();
+  }
+
+  public async create(
+    data: Partial<AssetLiability>,
+  ): Promise<any | ToastProps> {
+    console.log(data);
+    super.create({ portfolioId: this.portfolioId, ...data });
   }
 
   public async getDataForTable(): Promise<Level2TableViewProps> {
@@ -193,8 +201,9 @@ export class AssetLiabilityModel<
         tags: asset.TagLink.map((tag) => tag.tag),
         starred: asset.starred,
         color: asset.color as string | undefined,
-        href: asset.id,
+        href: `/portfolio/assets/${asset.id}`,
         slug: [],
+        category: asset.assetType.label,
       });
     });
 

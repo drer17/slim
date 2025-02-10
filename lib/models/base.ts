@@ -4,6 +4,7 @@ import { prisma } from "../prisma";
 import { generateToast } from "../utilities/response";
 
 export type TableNames =
+  | "assetLiabilityType"
   | "assetLiability"
   | "note"
   | "noteLink"
@@ -49,6 +50,7 @@ export abstract class BaseModel<T> {
       });
       console.log(`${this.tableName} with ID ${this.id} updated successfully`);
       revalidatePath("/portfolio/");
+      return generateToast(Status.success);
     } catch (error) {
       console.error("Error archiving asset:", error);
       return generateToast(Status.failed);
@@ -62,7 +64,7 @@ export abstract class BaseModel<T> {
       });
       console.log(`An entry to ${this.tableName} was created successfully`);
       revalidatePath("/portfolio/");
-      return newRow;
+      return { ...generateToast(Status.success), data: newRow };
     } catch (error) {
       console.error("Error creating row:", error);
       return generateToast(Status.failed);

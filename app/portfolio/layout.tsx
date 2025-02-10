@@ -16,7 +16,7 @@ export default async function Layout({
   const author = await getUser();
   const tags = (await get(["tag"])) as Tag[];
   const assetLiabilityTypes = (await get([
-    "assetLiabilityTypes",
+    "assetLiabilityType",
   ])) as AssetLiabilityType[];
   const transactionCategories = (await get([
     "transactionCategories",

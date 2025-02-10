@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import ViewOptions from "@/components/core/other/view-options";
 import { FormDialog } from "../forms";
 import { usePortfolioContext } from "../portfolio-provider";
+import { useMemo } from "react";
 
 interface AssetsProps {
   assets: CardProps[];
@@ -12,6 +13,23 @@ interface AssetsProps {
 
 const Assets: React.FC<AssetsProps> = ({ assets }) => {
   const { setOpenForm } = usePortfolioContext();
+
+  const sortedAssets = useMemo(() => {
+    const newAssets: Record<string, CardProps[]> = {};
+    assets.forEach((asset) => {
+      if (asset.starred) {
+        if (!newAssets?.favourites) newAssets["favourites"] = [];
+        newAssets["favourites"].push(asset);
+        return;
+      }
+      if (asset.category) {
+        if (!newAssets[asset.category]) newAssets[asset.category] = [];
+        newAssets[asset.category].push(asset);
+      }
+    });
+    return newAssets;
+  }, [assets]);
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between w-full">
@@ -31,9 +49,16 @@ const Assets: React.FC<AssetsProps> = ({ assets }) => {
           <ViewOptions menuOptions={[]} availableMenuOptions={{}} />
         </div>
       </div>
-      <div className="flex gap-2">
-        {assets.map((asset, index) => (
-          <Card key={index} {...asset}></Card>
+      <div className="flex gap-3 flex-col">
+        {Object.entries(sortedAssets).map(([category, assets]) => (
+          <div key={category} className="gap-2 flex flex-col">
+            <h2 className="capitalize text-muted-foreground">{category}</h2>
+            <div className="flex flex-col gap-2">
+              {assets.map((asset, index) => (
+                <Card key={index} {...asset}></Card>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>

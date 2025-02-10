@@ -10,7 +10,7 @@ import { Document } from "@prisma/client";
 
 export async function create(slug: Slug, data: Record<string, any>) {
   const model = ModelFactory.create(slug);
-  model.create(data);
+  return model.create(data);
 }
 
 export async function createFile(

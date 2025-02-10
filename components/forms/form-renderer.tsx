@@ -121,7 +121,7 @@ const FormRenderer = <T,>({
     const filteredData = filterValues(data);
     if (data.id) {
     }
-    const response = data.id
+    const response = !data.id
       ? await create([tableName], {
           ...model,
           ...filteredData,
@@ -129,6 +129,7 @@ const FormRenderer = <T,>({
       : await update([tableName], { ...model, ...filteredData });
     if (response && response.title === Status.success)
       callback && callback(response.data);
+
     toast(response as ToastProps);
     setLoading(false);
   };

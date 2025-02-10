@@ -72,6 +72,7 @@ export interface CardProps {
   primary: React.ReactNode | string;
   tags: Tag[];
   starred?: boolean;
+  category?: string;
   condensed?: boolean;
   color?: string;
   presetColors?: string[];
@@ -213,7 +214,7 @@ const Card: React.FC<CardProps> = ({
   );
 
   return (
-    <div className="flex w-full">
+    <div className="flex">
       <ContextMenu>
         <ContextMenuTrigger className="w-full">
           <div onClick={() => setFocussed(true)}>
@@ -227,7 +228,7 @@ const Card: React.FC<CardProps> = ({
               <SwatchesPicker
                 color={newColor}
                 onChange={setColor}
-                presetColors={presetColors}
+                presetColors={presetColors || []}
               />
             </ContextMenuSubContent>
           </ContextMenuSub>
