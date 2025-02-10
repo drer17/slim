@@ -7,6 +7,7 @@ export interface ToastProps {
   title: Status;
   description: string;
   variant?: "defualt" | "destructive";
+  data?: any;
 }
 
 // used to instantiate models

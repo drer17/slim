@@ -12,7 +12,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sidebar, SidebarBody, SidebarLink } from "../../ui/sidebar";
+import { Sidebar, SidebarBody, SidebarLink } from "../../ui/side-bar";
 import { IconPin } from "@tabler/icons-react";
 import Link from "next/link";
 
