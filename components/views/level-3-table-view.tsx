@@ -1,3 +1,5 @@
+"use client";
+
 /*
  * Level 3 Table Model View
  *
@@ -8,8 +10,7 @@
  * [x]- View as per ui design doc
  */
 
-import { IconDots } from "@tabler/icons-react";
-import Card, { CardProps } from "../core/card/card";
+import { IconDots, IconPlus } from "@tabler/icons-react";
 import { ScrollArea } from "../ui/scroll-area";
 import {
   DropdownMenu,
@@ -21,40 +22,49 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "../ui/button";
 import PathToResource from "../core/other/path-to-resource";
+import { FormDialog } from "../forms/types";
+import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
+import { DataTable } from "../core/data-table/data-table";
+import { modelColumnDefs } from "../column-defs/model-column-defs";
 
 export interface Level3TableViewProps {
   pathToResource: string[];
   title: string;
-  items: CardProps[];
+  columnDefinitionKey: string;
+  rows: any[];
   menuOptions: { label: string; callback: () => any }[];
+  formDialog: FormDialog;
 }
 
 const Level3TableView: React.FC<Level3TableViewProps> = ({
   pathToResource,
   title,
-  items,
+  rows,
+  columns,
   menuOptions,
+  formDialog,
+  columnDefinitionKey,
 }) => {
-  const groupedByStarredAndType = items.reduce(
-    (acc, item) => {
-      const key = item.starred ? "starred" : "other";
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-    },
-    {} as Record<string, CardProps[]>,
-  );
+  const { setOpenForm } = usePortfolioContext();
 
   return (
     <div className="w-full flex-col">
       <PathToResource path={pathToResource} className="ml-2" />
       <div className="h-2" />
       <div className="flex w-full justify-between p-2">
-        <h1 className="font-bold text-3xl">{title}</h1>
-        <div>
+        <h1 className="font-bold">{title}</h1>
+        <div className="gap-2 flex">
+          <Button
+            className="h-8"
+            variant="outline"
+            onClick={() => setOpenForm(formDialog)}
+          >
+            <IconPlus className="w-5 h-5" /> Create
+          </Button>
+
           {menuOptions && (
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
                 <Button variant="secondary" size="icon" className="h-8">
                   <IconDots />
                 </Button>
@@ -75,21 +85,7 @@ const Level3TableView: React.FC<Level3TableViewProps> = ({
           )}
         </div>
       </div>
-      <ScrollArea className="w-full">
-        {Object.entries(groupedByStarredAndType).map(([key, item], idx) => (
-          <div key={`Type${idx}`} className="mt-10">
-            <div className="flex space-x-2 uppercase font-bold text-zinc-500">
-              {key === "starred" && key}
-            </div>
-            <div className="grid gap-2 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 p-2">
-              {item.map((card, idx) => (
-                <Card {...card} condensed={true} key={`Card${idx}`}></Card>
-              ))}
-            </div>
-          </div>
-        ))}
-        <div className="h-[100px]" />
-      </ScrollArea>
+      <DataTable columns={modelColumnDefs[columnDefinitionKey]} rows={rows} />
     </div>
   );
 };

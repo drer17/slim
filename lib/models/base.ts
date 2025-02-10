@@ -6,6 +6,8 @@ import { generateToast } from "../utilities/response";
 export type TableNames =
   | "assetLiabilityType"
   | "assetLiability"
+  | "entity"
+  | "obligation"
   | "note"
   | "noteLink"
   | "tag"

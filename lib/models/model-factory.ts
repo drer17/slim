@@ -4,6 +4,8 @@ import { AssetLiabilityModel } from "./tables/asset-liability";
 import { AssetLiabilityTypeModel } from "./tables/asset-liability-type";
 import { Attribute } from "./tables/attribute";
 import { Document } from "./tables/document";
+import { EntityModel } from "./tables/entity";
+import { ObligationModel } from "./tables/obligation";
 import { TagModel } from "./tables/tag";
 
 export class ModelFactory {
@@ -32,6 +34,14 @@ export class ModelFactory {
       case "document": {
         const id = slug[1];
         return new Document(id);
+      }
+      case "obligation": {
+        const id = slug[1];
+        return new ObligationModel(id);
+      }
+      case "entity": {
+        const id = slug[1];
+        return new EntityModel(id);
       }
       default:
         return new AssetLiabilityModel();

@@ -63,7 +63,7 @@ export const coreLinks = [
   },
   {
     label: "Obligations",
-    href: "/portfolio/table/obligations/{asset}",
+    href: "/portfolio/table/obligation/{asset}",
     icon: (
       <IconChecklist className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -71,7 +71,7 @@ export const coreLinks = [
   },
   {
     label: "Entities",
-    href: "/portfolio/table/entities/{asset}",
+    href: "/portfolio/table/entity/{asset}",
     icon: (
       <IconUsers className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),

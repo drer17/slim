@@ -17,6 +17,7 @@ import ViewOptions from "../core/other/view-options";
 import { Button } from "../ui/button";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { FormDialog } from "../forms/types";
+import { IconPlus } from "@tabler/icons-react";
 
 export interface Level2TableViewProps {
   pathToResource: string[];
@@ -68,7 +69,7 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
             variant="outline"
             onClick={() => setOpenForm(formDialog)}
           >
-            Create New
+            <IconPlus className="w-5 h-5" /> Create
           </Button>
 
           <ViewOptions
@@ -88,7 +89,7 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
                 {item.type.label}
               </h2>
             </div>
-            <div className="grid gap-2 grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 p-2">
+            <div className="flex gap-2">
               {item.cards.map((card, idx) => (
                 <Card {...card} key={`Card${idx}`}></Card>
               ))}

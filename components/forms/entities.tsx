@@ -1,11 +1,11 @@
+import { Entity } from "@prisma/client";
+import { FormDialog, FormProps } from "./types";
+import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import DialogWrapper from "../core/other/dialog-wrapper";
 import { ScrollArea } from "../ui/scroll-area";
-import { FormDialog, FormProps } from "./types";
 import FormRenderer from "./form-renderer";
-import { AssetLiability } from "@prisma/client";
-import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 
-const AssetLiabilityForm: React.FC<FormProps<AssetLiability>> = ({
+const EntityForm: React.FC<FormProps<Entity>> = ({
   title,
   label,
   trigger,
@@ -16,41 +16,38 @@ const AssetLiabilityForm: React.FC<FormProps<AssetLiability>> = ({
   callback,
   defaults,
 }) => {
-  const {
-    portfolioState,
-    openForm: controlledOpen,
-    setOpenForm: onOpenChanged,
-  } = usePortfolioContext();
+  const { openForm: controlledOpen, setOpenForm: onOpenChanged } =
+    usePortfolioContext();
 
   return (
     <DialogWrapper
       className="h-8"
       variant="secondary"
-      title={title || "Create Asset Liability"}
+      title={title || "Create Entity"}
       label={label || "Create"}
       trigger={trigger}
       invisible={invisible}
       tooltip={tooltip}
       disabled={disabled}
-      open={controlledOpen === FormDialog.ASSET_LIABILITY || open}
+      open={controlledOpen === FormDialog.ENTITY || open}
       onOpenChange={() =>
         onOpenChanged(
-          controlledOpen === undefined ? FormDialog.ASSET_LIABILITY : undefined,
+          controlledOpen === undefined ? FormDialog.ENTITY : undefined,
         )
       }
     >
       <ScrollArea className="max-h-[calc(100vh-100px)]">
         <FormRenderer
-          tableName="assetLiability"
+          tableName="entity"
           callback={callback}
           model={defaults}
           columns={[
             {
-              column: "label",
+              column: "name",
               label: "Label",
               type: "string",
-              placeholder: "Name your Asset or Liability",
-              defaultValue: defaults && defaults.label,
+              placeholder: "Name your Entity",
+              defaultValue: defaults && defaults.name,
             },
             {
               column: "description",
@@ -60,14 +57,6 @@ const AssetLiabilityForm: React.FC<FormProps<AssetLiability>> = ({
               placeholder: "Add a description",
               defaultValue: defaults && defaults.description,
             },
-            {
-              column: "assetTypeId",
-              label: "Type",
-              type: "select",
-              placeholder: "Select the type",
-              possibleValues: portfolioState.assetLiabilityTypes,
-              defaultValue: defaults && defaults.assetTypeId,
-            },
           ]}
         />
       </ScrollArea>
@@ -75,4 +64,4 @@ const AssetLiabilityForm: React.FC<FormProps<AssetLiability>> = ({
   );
 };
 
-export default AssetLiabilityForm;
+export default EntityForm;

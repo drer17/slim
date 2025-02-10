@@ -24,7 +24,6 @@
  * [x]- Editable cells
  */
 
-import { motion, AnimatePresence } from "framer-motion";
 import * as React from "react";
 import "@tanstack/react-table";
 import {
@@ -56,7 +55,6 @@ import InViewPort from "@/components/invisible/in-view-port";
 import { Status } from "@/lib/definitions/response";
 import { generateToast } from "@/lib/utilities/response";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -86,7 +84,6 @@ export interface DataTableProps<TData, TValue> {
   dataRetriever?: (numOfRows: number, forPage: number) => Promise<TData[]>;
 
   setFocussedRow?: (row: TData) => void;
-  expandingRowContent?: (data: TData) => React.ReactNode;
 
   hideToolbar?: boolean;
   hideManageColumns?: boolean;
@@ -94,13 +91,7 @@ export interface DataTableProps<TData, TValue> {
   hideExportOptions?: boolean;
 
   initColumnVisibility?: Partial<Record<keyof TData, boolean>>;
-  initSortingState?: SortingState;
-
   condensed?: boolean;
-  height?: string; // to take up height. If both height and height offset are defined, height will be used
-  heightOffset?: string; // to take up full height - offset
-
-  dominantHeader?: boolean;
 }
 
 const ROW_LIMIT = 50;
@@ -111,22 +102,15 @@ export function DataTable<TData, TValue>({
   dataModifier,
   dataRetriever,
   setFocussedRow,
-  expandingRowContent,
   hideManageColumns,
   hideFilterColumns,
-  initSortingState,
   hideExportOptions,
   hideToolbar,
   initColumnVisibility,
   condensed,
-  heightOffset,
-  height,
-  dominantHeader,
 }: DataTableProps<TData, TValue>) {
   const { toast } = useToast();
-  const [sorting, setSorting] = React.useState<SortingState>(
-    initSortingState || [],
-  );
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
@@ -136,22 +120,9 @@ export function DataTable<TData, TValue>({
     );
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState<TData[]>(rows);
-  React.useEffect(() => {
-    setData(rows);
-  }, [rows]);
 
   const [page, setPage] = React.useState(1);
   const [isDone, setIsDone] = React.useState(false);
-
-  const [expandedRows, setExpandedRows] = React.useState(new Set());
-  const toggleRow = (rowId: string) => {
-    setExpandedRows((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(rowId)) newSet.delete(rowId);
-      else newSet.add(rowId);
-      return newSet;
-    });
-  };
 
   const table = useReactTable({
     data,
@@ -211,23 +182,11 @@ export function DataTable<TData, TValue>({
   );
 
   return (
-    <div className="sticky max-w-full">
+    <div>
       {!hideToolbar && toolbar}
-      <ScrollArea
-        className="rounded-md border overflow-auto relative"
-        style={{
-          maxWidth: "100%",
-          height: `calc(100vh - ${heightOffset})`,
-          maxHeight: height,
-        }}
-      >
+      <div className="rounded-md border">
         <Table className="border-zinc-500">
-          <TableHeader
-            className={cn(
-              "bg-background/50 backdrop-blur sticky top-0",
-              dominantHeader && "z-50",
-            )}
-          >
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -251,46 +210,22 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <React.Fragment key={row.id}>
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onClick={() => {
-                      setFocussedRow && setFocussedRow(row.original as TData);
-                      expandingRowContent && toggleRow(row.id);
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(condensed && "h-8")}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-
-                  {/* Collapsible Content */}
-                  <AnimatePresence>
-                    {expandedRows.has(row.id) && (
-                      <motion.tr
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="w-full bg-card/50"
-                      >
-                        <TableCell colSpan={columns.length} className="p-4">
-                          {expandingRowContent &&
-                            expandingRowContent(row.original)}
-                        </TableCell>
-                      </motion.tr>
-                    )}
-                  </AnimatePresence>
-                </React.Fragment>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  onClick={() =>
+                    setFocussedRow && setFocussedRow(row.original as TData)
+                  }
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className={cn(condensed && "h-8")}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))
             ) : (
               <TableRow>
@@ -309,7 +244,7 @@ export function DataTable<TData, TValue>({
             </TableRow>
           </TableBody>
         </Table>
-      </ScrollArea>
+      </div>
     </div>
   );
 }

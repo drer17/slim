@@ -33,7 +33,9 @@ const PathToResource: React.FC<PathToResourceProps> = ({
           <React.Fragment key={`Path${idx}`}>
             {idx > 0 && <BreadcrumbSeparator />}
             <BreadcrumbItem>
-              <BreadcrumbLink href={p}>{p}</BreadcrumbLink>
+              <BreadcrumbLink href={p} className="capitalize">
+                {p}
+              </BreadcrumbLink>
             </BreadcrumbItem>
           </React.Fragment>
         ))}
