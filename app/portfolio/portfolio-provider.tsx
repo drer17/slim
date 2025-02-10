@@ -13,8 +13,8 @@ export interface PortfolioState {
 }
 
 interface PortfolioContextProps {
-  target: string | undefined;
-  setTarget: React.Dispatch<React.SetStateAction<string | undefined>>;
+  portfolioId: string | undefined;
+  setPortfolioId: React.Dispatch<React.SetStateAction<string | undefined>>;
   portfolioState: PortfolioState;
 }
 
@@ -46,13 +46,13 @@ export function PortfolioProvider({
   transactionCategories,
   children,
 }: PortfolioProviderProps) {
-  const [target, setTarget] = useState<string | undefined>(undefined);
+  const [portfolioId, setPortfolioId] = useState<string | undefined>(undefined);
 
   return (
     <PortfolioContext.Provider
       value={{
-        target,
-        setTarget,
+        portfolioId,
+        setPortfolioId,
         portfolioState: {
           author,
           tags,

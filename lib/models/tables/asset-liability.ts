@@ -5,7 +5,9 @@ import { Level2Model } from "../levels/level-2";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { CardProps } from "@/components/core/card/card";
 
-export class AssetLiabilityModel extends Level2Model {
+export class AssetLiabilityModel<
+  AssetLiability,
+> extends Level2Model<AssetLiability> {
   private asset?: boolean;
 
   constructor(type?: string, id?: string) {
@@ -165,5 +167,37 @@ export class AssetLiabilityModel extends Level2Model {
       level3Children: [],
       menuOptions: ["archive"],
     }))[0] as Level2RowViewProps;
+  }
+
+  public async getCards(): Promise<CardProps[]> {
+    const assets = await prisma.assetLiability.findMany({
+      where: { portfolioId: this.portfolioId },
+      include: {
+        valuations: { orderBy: { createdAt: "desc" }, take: 1 },
+        TagLink: { include: { tag: true } },
+        assetType: true,
+      },
+    });
+
+    const cards: CardProps[] = [];
+    assets.forEach((asset) => {
+      if (asset.assetType.asset !== this.asset) return;
+      cards.push({
+        icon: asset.icon,
+        title: asset.label,
+        secondary: asset.description as string | undefined,
+        primary: (asset.valuations[0]?.value || 0.0).toLocaleString("en-AU", {
+          style: "currency",
+          currency: "AUD",
+        }),
+        tags: asset.TagLink.map((tag) => tag.tag),
+        starred: asset.starred,
+        color: asset.color as string | undefined,
+        href: asset.id,
+        slug: [],
+      });
+    });
+
+    return cards;
   }
 }

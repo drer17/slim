@@ -14,7 +14,7 @@ export type TableNames =
   | "document"
   | "documentLink";
 
-export abstract class BaseModel {
+export abstract class BaseModel<T> {
   userId: string;
   portfolioId: string;
   viewClass!: string;
@@ -26,7 +26,7 @@ export abstract class BaseModel {
     this.portfolioId = "4e2fd80e-4233-4bbd-bd2c-355ab6072a2f";
   }
 
-  public async get(): Promise<any[] | ToastProps> {
+  public async get(): Promise<T[] | ToastProps> {
     try {
       const result = await prisma[this.tableName].findMany({
         where: { id: this.id },
@@ -41,7 +41,7 @@ export abstract class BaseModel {
     }
   }
 
-  public async update(data: Record<string, any>): Promise<void | ToastProps> {
+  public async update(data: Partial<T>): Promise<void | ToastProps> {
     try {
       await prisma[this.tableName].update({
         where: { id: this.id },
@@ -55,7 +55,7 @@ export abstract class BaseModel {
     }
   }
 
-  public async create(data: Record<string, any>): Promise<any | ToastProps> {
+  public async create(data: Partial<T>): Promise<any | ToastProps> {
     try {
       const newRow = await prisma[this.tableName].create({
         data,

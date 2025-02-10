@@ -19,3 +19,8 @@ export async function get(slug: Slug): Promise<any[] | ToastProps> {
   const model = ModelFactory.create(slug);
   return model.get();
 }
+
+export async function getCards(slug: Slug) {
+  const model = ModelFactory.create(slug);
+  return model.getCards();
+}

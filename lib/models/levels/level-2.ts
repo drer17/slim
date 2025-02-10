@@ -5,13 +5,16 @@ import { prisma } from "@/lib/prisma";
 import { generateToast } from "@/lib/utilities/response";
 import { Status } from "@/lib/definitions/response";
 import { revalidatePath } from "next/cache";
+import { CardProps } from "@/components/core/card/card";
 
-export abstract class Level2Model extends BaseModel {
+export abstract class Level2Model<T> extends BaseModel<T> {
   viewClass = "level-2";
   id?: string;
 
   public abstract getDataForRow(): Promise<Level2RowViewProps>;
   public abstract getDataForTable(): Promise<Level2TableViewProps>;
+
+  public abstract getCards(): Promise<CardProps[]>;
 
   public async changeColor(newColor: string) {
     try {
