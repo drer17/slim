@@ -12,11 +12,11 @@ export class ModelFactory {
 
     const model = slug[0];
     switch (model) {
-      case "assetLiabilityType": {
+      case "asset-liability-type": {
         const id = slug[1];
         return new AssetLiabilityTypeModel(id);
       }
-      case "assetLiability": {
+      case "asset-liability": {
         const assetOrLiability = slug[1];
         const id = slug[2];
         return new AssetLiabilityModel(assetOrLiability, id);

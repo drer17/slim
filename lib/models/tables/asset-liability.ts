@@ -71,7 +71,7 @@ export class AssetLiabilityModel<
         starred: asset.starred,
         presetColors: [],
         href: "/portfolio/row/",
-        slug: ["assetLiability", this.asset ? "asset" : "liability", asset.id],
+        slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
         children: "",
         getRowAsChild: true,
       })) as (CardProps & {
@@ -155,7 +155,7 @@ export class AssetLiabilityModel<
         ...noteLink.note,
         author: noteLink.note.user.name,
       })),
-      slug: ["assetLiability", this.asset ? "asset" : "liability", asset.id],
+      slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
       actionButtons: [],
       level2Children: asset.children.map((child) => ({
         icon: getIcon(child.icon),
@@ -167,7 +167,7 @@ export class AssetLiabilityModel<
         starred: child.starred,
         presetColors: [],
         slug: [
-          "assetLiability",
+          "asset-liability",
           child.assetType.asset ? "asset" : "liability",
           asset.id,
         ],
@@ -177,38 +177,5 @@ export class AssetLiabilityModel<
       level3Children: [],
       menuOptions: ["archive"],
     }))[0] as Level2RowViewProps;
-  }
-
-  public async getCards(): Promise<CardProps[]> {
-    const assets = await prisma.assetLiability.findMany({
-      where: { portfolioId: this.portfolioId },
-      include: {
-        valuations: { orderBy: { createdAt: "desc" }, take: 1 },
-        TagLink: { include: { tag: true } },
-        assetType: true,
-      },
-    });
-
-    const cards: CardProps[] = [];
-    assets.forEach((asset) => {
-      if (asset.assetType.asset !== this.asset) return;
-      cards.push({
-        icon: asset.icon,
-        title: asset.label,
-        secondary: asset.description as string | undefined,
-        primary: (asset.valuations[0]?.value || 0.0).toLocaleString("en-AU", {
-          style: "currency",
-          currency: "AUD",
-        }),
-        tags: asset.TagLink.map((tag) => tag.tag),
-        starred: asset.starred,
-        color: asset.color as string | undefined,
-        href: `/portfolio/assets/${asset.id}`,
-        slug: [],
-        category: asset.assetType.label,
-      });
-    });
-
-    return cards;
   }
 }

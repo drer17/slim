@@ -8,6 +8,7 @@ import { ModelFactory } from "@/lib/models/model-factory";
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
   const model = ModelFactory.create(params.slug);
+  console.log(params.slug);
 
   if (model instanceof Level2Model)
     return <Level2TableView {...await model.getDataForTable()} />;
