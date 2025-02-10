@@ -16,7 +16,7 @@ export class ModelFactory {
         const id = slug[1];
         return new AssetLiabilityTypeModel(id);
       }
-      case "asset-liability": {
+      case "assetLiability": {
         const assetOrLiability = slug[1];
         const id = slug[2];
         return new AssetLiabilityModel(assetOrLiability, id);

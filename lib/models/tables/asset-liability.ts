@@ -5,6 +5,7 @@ import { Level2Model } from "../levels/level-2";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { CardProps } from "@/components/core/card/card";
 import { ToastProps } from "@/lib/definitions/response";
+import { FormDialog } from "@/components/forms/types";
 
 export class AssetLiabilityModel<
   AssetLiability,
@@ -54,6 +55,7 @@ export class AssetLiabilityModel<
 
     const data: Level2TableViewProps = {
       pathToResource: ["portfolio", "assets"],
+      formDialog: FormDialog.ASSET_LIABILITY,
       title: this.asset ? "Assets" : "Liabilites",
       items: res.map((asset) => ({
         type: {
@@ -69,7 +71,7 @@ export class AssetLiabilityModel<
         starred: asset.starred,
         presetColors: [],
         href: "/portfolio/row/",
-        slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
+        slug: ["assetLiability", this.asset ? "asset" : "liability", asset.id],
         children: "",
         getRowAsChild: true,
       })) as (CardProps & {
@@ -153,7 +155,7 @@ export class AssetLiabilityModel<
         ...noteLink.note,
         author: noteLink.note.user.name,
       })),
-      slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
+      slug: ["assetLiability", this.asset ? "asset" : "liability", asset.id],
       actionButtons: [],
       level2Children: asset.children.map((child) => ({
         icon: getIcon(child.icon),
@@ -165,7 +167,7 @@ export class AssetLiabilityModel<
         starred: child.starred,
         presetColors: [],
         slug: [
-          "asset-liability",
+          "assetLiability",
           child.assetType.asset ? "asset" : "liability",
           asset.id,
         ],

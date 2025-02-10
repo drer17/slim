@@ -7,3 +7,7 @@ export type FormKwargs<T> = {
 };
 
 export type FormProps<T> = DialogWrapperProps & FormKwargs<T>;
+
+export enum FormDialog {
+  ASSET_LIABILITY,
+}

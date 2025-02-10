@@ -1,7 +1,6 @@
-import { FormDialog } from "@/app/portfolio/forms";
 import DialogWrapper from "../core/other/dialog-wrapper";
 import { ScrollArea } from "../ui/scroll-area";
-import { FormProps } from "./types";
+import { FormDialog, FormProps } from "./types";
 import FormRenderer from "./form-renderer";
 import { AssetLiability } from "@prisma/client";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";

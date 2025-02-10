@@ -3,9 +3,9 @@
 import Card, { CardProps } from "@/components/core/card/card";
 import { Button } from "@/components/ui/button";
 import ViewOptions from "@/components/core/other/view-options";
-import { FormDialog } from "../forms";
 import { usePortfolioContext } from "../portfolio-provider";
 import { useMemo } from "react";
+import { FormDialog } from "@/components/forms/types";
 
 interface AssetsProps {
   assets: CardProps[];
