@@ -17,8 +17,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import React from "react";
 
+export type PathSlug = {
+  label: string;
+  href: string;
+};
+
 interface PathToResourceProps {
-  path: string[];
+  path: PathSlug[];
   className?: string;
 }
 
@@ -33,8 +38,8 @@ const PathToResource: React.FC<PathToResourceProps> = ({
           <React.Fragment key={`Path${idx}`}>
             {idx > 0 && <BreadcrumbSeparator />}
             <BreadcrumbItem>
-              <BreadcrumbLink href={p} className="capitalize">
-                {p}
+              <BreadcrumbLink href={p.href} className="capitalize">
+                {p.label}
               </BreadcrumbLink>
             </BreadcrumbItem>
           </React.Fragment>

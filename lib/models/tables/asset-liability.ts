@@ -54,7 +54,7 @@ export class AssetLiabilityModel<
     });
 
     const data: Level2TableViewProps = {
-      pathToResource: ["portfolio", "assets"],
+      pathToResource: [{ label: "portfolio", href: "/portfolio/dashboard" }],
       formDialog: FormDialog.ASSET_LIABILITY,
       title: this.asset ? "Assets" : "Liabilites",
       items: res.map((asset) => ({
@@ -141,8 +141,14 @@ export class AssetLiabilityModel<
     });
 
     return assetLiabilityData.map((asset) => ({
-      pathToResource: [],
-      icon: getIcon(asset.icon),
+      pathToResource: [
+        { label: "portfolio", href: "/portfolio/dashboard" },
+        {
+          label: "assets",
+          href: `/portfolio/table/${this.asset ? "asset" : "liability"}`,
+        },
+      ],
+      icon: asset.icon,
       title: asset.label,
       tags: asset.TagLink.map((tag) => tag.tag),
       starred: asset.starred,
@@ -156,9 +162,20 @@ export class AssetLiabilityModel<
         author: noteLink.note.user.name,
       })),
       slug: ["asset-liability", this.asset ? "asset" : "liability", asset.id],
-      actionButtons: [],
+      actionButtons: [
+        {
+          label: "Transactions",
+          href: `/portfolio/table/transaction/${asset.id}`,
+          icon: "transactions",
+        },
+        {
+          label: "Obligations",
+          href: `/portfolio/table/obligation/${asset.id}`,
+          icon: "obligations",
+        },
+      ],
       level2Children: asset.children.map((child) => ({
-        icon: getIcon(child.icon),
+        icon: child.icon,
         title: child.label,
         secondary: child.assetType.label,
         primary: child.valuations[0].value,

@@ -7,6 +7,7 @@ import { Document } from "./tables/document";
 import { EntityModel } from "./tables/entity";
 import { ObligationModel } from "./tables/obligation";
 import { TagModel } from "./tables/tag";
+import { TransactionModel } from "./tables/transaction";
 
 export class ModelFactory {
   public static create(slug: Slug): BaseModel {
@@ -36,12 +37,18 @@ export class ModelFactory {
         return new Document(id);
       }
       case "obligation": {
-        const id = slug[1];
-        return new ObligationModel(id);
+        const assetLiabilityId = slug[1];
+        const id = slug[2];
+        return new ObligationModel(assetLiabilityId, id);
       }
       case "entity": {
         const id = slug[1];
         return new EntityModel(id);
+      }
+      case "transaction": {
+        const assetLiabilityId = slug[1];
+        const id = slug[2];
+        return new TransactionModel(assetLiabilityId, id);
       }
       default:
         return new AssetLiabilityModel();

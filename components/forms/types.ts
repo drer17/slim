@@ -12,4 +12,5 @@ export enum FormDialog {
   ASSET_LIABILITY,
   OBLIGATION,
   ENTITY,
+  TRANSACTION,
 }

@@ -7,6 +7,7 @@ export type TableNames =
   | "assetLiabilityType"
   | "assetLiability"
   | "entity"
+  | "transaction"
   | "obligation"
   | "note"
   | "noteLink"

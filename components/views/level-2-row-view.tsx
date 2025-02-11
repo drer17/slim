@@ -34,17 +34,18 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "../ui/toast";
 import { useExpandedContext } from "../core/expanded-content/expanded-content";
-import PathToResource from "../core/other/path-to-resource";
+import PathToResource, { PathSlug } from "../core/other/path-to-resource";
 import ViewOptions from "../core/other/view-options";
 import Notes from "../core/text/notes";
 import DescriptionComponent from "../core/text/description";
 import { Tags } from "../core/tag/tags";
 import Attributes from "../core/attributes/attributes";
 import Documents from "../core/documents/documents";
+import { getIcon } from "../global/icons";
 
 export interface Level2RowViewProps {
-  pathToResource: string[];
-  icon: React.ReactNode;
+  pathToResource: PathSlug[];
+  icon: string;
   title: string;
   tags: Tag[];
   starred: boolean;
@@ -54,7 +55,11 @@ export interface Level2RowViewProps {
   attributes: Attribute[];
   documents: Document[];
   notes: Note[];
-  actionButtons: { icon: React.ReactNode; label: string; href: string }[];
+  actionButtons: {
+    icon: string;
+    label: string;
+    href: string;
+  }[];
   slug: string[];
   level2Children: CardProps[];
   level3Children: CardProps[];
@@ -132,7 +137,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
       <div className="h-2" />
       <div className="flex w-full justify-between items-center p-2 space-x-4">
         <div className="flex items-center space-x-2">
-          <span style={{ color }}>{icon}</span>
+          <span style={{ color }}>{getIcon(icon)}</span>
           <h1 className="font-bold text-3xl">{title}</h1>
         </div>
         <div className="flex-1">
@@ -181,20 +186,16 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
               <Notes notes={notes} save={saveNote} readOnly={isInDialog} />
             </Container>
           </div>
-          <div className="flex flex-col space-y-4">
-            <div className="flex space-x-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
               {actionButtons &&
                 actionButtons.map((button, idx) => (
-                  <Link
-                    key={`ActionButton${idx}`}
-                    className="flex-1"
-                    href={button.href}
-                  >
+                  <Link key={`ActionButton${idx}`} href={button.href}>
                     <Button
-                      className="flex-1 w-full justify-start items-center"
+                      className="flex-1 max-w-40 justify-start items-center"
                       variant="secondary"
                     >
-                      {button.icon}
+                      {getIcon(button.icon)}
                       <span className="w-full font-bold items-center">
                         {button.label}
                       </span>

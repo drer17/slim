@@ -1,16 +1,16 @@
 "use client";
 
 /*
- * Level 3 Table Model View
+ * Level 4 Table Model View
  *
  * Author: Andre Repanich
- * Date: 05-10-24
+ * Date: 10-02-25
  *
  * Component Requirements
  * [x]- View as per ui design doc
  */
 
-import { IconDots, IconPlus } from "@tabler/icons-react";
+import { IconDatabaseImport, IconDots, IconPlus } from "@tabler/icons-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +26,7 @@ import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { DataTable } from "../core/data-table/data-table";
 import { modelColumnDefs } from "../column-defs/model-column-defs";
 
-export interface Level3TableViewProps {
+export interface Level4TableViewProps {
   pathToResource: PathSlug[];
   title: string;
   columnDefinitionKey: string;
@@ -35,7 +35,7 @@ export interface Level3TableViewProps {
   formDialog: FormDialog;
 }
 
-const Level3TableView: React.FC<Level3TableViewProps> = ({
+const Level4TableView: React.FC<Level4TableViewProps> = ({
   pathToResource,
   title,
   rows,
@@ -53,6 +53,14 @@ const Level3TableView: React.FC<Level3TableViewProps> = ({
       <div className="flex w-full justify-between p-2">
         <h1 className="font-bold">{title}</h1>
         <div className="gap-2 flex">
+          <Button
+            className="h-8"
+            variant="outline"
+            onClick={() => setOpenForm(formDialog)}
+          >
+            <IconDatabaseImport className="w-5 h-5" /> Import
+          </Button>
+
           <Button
             className="h-8"
             variant="outline"
@@ -89,4 +97,4 @@ const Level3TableView: React.FC<Level3TableViewProps> = ({
   );
 };
 
-export default Level3TableView;
+export default Level4TableView;

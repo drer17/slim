@@ -12,17 +12,18 @@
 
 import Card, { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
-import PathToResource from "../core/other/path-to-resource";
+import PathToResource, { PathSlug } from "../core/other/path-to-resource";
 import ViewOptions from "../core/other/view-options";
 import { Button } from "../ui/button";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { FormDialog } from "../forms/types";
 import { IconPlus } from "@tabler/icons-react";
+import { getIcon } from "../global/icons";
 
 export interface Level2TableViewProps {
-  pathToResource: string[];
+  pathToResource: PathSlug[];
   title: string;
-  items: (CardProps & { type: { label: string; icon?: React.ReactNode } })[];
+  items: (CardProps & { type: { label: string; icon?: string } })[];
   menuOptions: string[];
   formDialog: FormDialog;
 }
@@ -47,9 +48,9 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
     {} as Record<
       string,
       {
-        type: { label: string; icon?: React.ReactNode };
+        type: { label: string; icon?: string };
         cards: (CardProps & {
-          type: { label: string; icon?: React.ReactNode };
+          type: { label: string; icon?: string };
         })[];
       }
     >,
@@ -84,7 +85,7 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
           <div key={`Type${idx}`} className="">
             {idx > 0 && <div className="h-10" />}
             <div className="flex gap-2 mb-2">
-              {item.type.icon}
+              {getIcon(item.type.icon)}
               <h2 className="ml-2 text-muted-foreground uppercase">
                 {item.type.label}
               </h2>
