@@ -46,6 +46,18 @@ const Level4TableView: React.FC<Level4TableViewProps> = ({
 }) => {
   const { setOpenForm } = usePortfolioContext();
 
+  const handleImport = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const csvText = reader.result;
+        const parsedData = parseCSVToJSON(csvText);
+      };
+      reader.readAsText(file);
+    }
+  };
+
   return (
     <div className="w-full flex-col">
       <PathToResource path={pathToResource} className="ml-2" />

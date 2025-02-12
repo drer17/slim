@@ -1,5 +1,10 @@
 import { Level4TableViewProps } from "@/components/views/level-4-table-view";
 import { BaseModel } from "../base";
+import { Status, ToastProps } from "@/lib/definitions/response";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import { getPartial } from "@/lib/utilities/object";
+import { generateToast } from "@/lib/utilities/response";
 
 export abstract class Level4Model<T> extends BaseModel<T> {
   public viewClass = "level-4";
@@ -9,4 +14,25 @@ export abstract class Level4Model<T> extends BaseModel<T> {
     limit: number,
     page: number,
   ): Promise<Level4TableViewProps>;
+
+  public async importData(data: Record<string, string>[]): Promise<ToastProps> {
+    const capitalizedTableName =
+      this.tableName.charAt(0).toUpperCase() + this.tableName.slice(1);
+    const columns: string[] = Object.values(
+      Prisma[`${capitalizedTableName}ScalarFieldEnum`],
+    );
+
+    const extractedData = [];
+    for (const row of data) {
+      const extractedRow: Record<string, string> = {};
+      for (const key of columns) {
+        extractedRow[key] = getPartial(row, key);
+      }
+      extractedData.push(extractedRow);
+    }
+
+    prisma[this.tableName].createMany({ data: extractedData });
+
+    return generateToast(Status.success);
+  }
 }
