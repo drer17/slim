@@ -10,6 +10,7 @@ export abstract class Level4Model<T> extends BaseModel<T> {
   public viewClass = "level-4";
 
   public abstract getDataForRow(): Promise<Level4RowViewProps>;
+
   public abstract getDataForTable(
     limit: number,
     page: number,
@@ -18,11 +19,13 @@ export abstract class Level4Model<T> extends BaseModel<T> {
   public async importData(data: Record<string, string>[]): Promise<ToastProps> {
     const capitalizedTableName =
       this.tableName.charAt(0).toUpperCase() + this.tableName.slice(1);
+
     const columns: string[] = Object.values(
       Prisma[`${capitalizedTableName}ScalarFieldEnum`],
     );
 
     const extractedData = [];
+
     for (const row of data) {
       const extractedRow: Record<string, string> = {};
       for (const key of columns) {
