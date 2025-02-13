@@ -1,24 +1,21 @@
-import { Level3TableViewProps } from "@/components/views/level-3-table-view";
-import { prisma } from "@/lib/prisma";
+import { Level5Model } from "../levels/level-5";
+import { Level5TableViewProps } from "@/components/views/level-5-table-view";
 import { FormDialog } from "@/components/forms/types";
-import { Level4Model } from "../levels/level-4";
+import { prisma } from "@/lib/prisma";
 
-export class TransactionModel<Obligation> extends Level4Model<Obligation> {
-  assetLiabilityId: string | undefined;
+export class ValuationModel<Valuation> extends Level5Model<Valuation> {
+  assetLiabilityId?: string;
 
   constructor(assetLiabilityId?: string, id?: string) {
     super();
+    this.tableName = "valuation";
     this.id = id;
-    this.tableName = "transaction";
     this.assetLiabilityId = assetLiabilityId;
   }
-
-  async getDataForRow(): Promise<Level3RowViewProps> {}
-
   async getDataForTable(
     limit: number,
     page: number,
-  ): Promise<Level3TableViewProps> {
+  ): Promise<Level5TableViewProps> {
     const rows = await prisma.transaction.findMany({
       where: {
         assetLiabilityId: this.assetLiabilityId,
@@ -33,9 +30,9 @@ export class TransactionModel<Obligation> extends Level4Model<Obligation> {
       include: { assetType: { select: { asset: true } } },
     });
 
-    const obligations: Level3TableViewProps = {
-      title: "Transactions",
-      columnDefinitionKey: "transactions",
+    const obligations: Level5TableViewProps = {
+      title: "Valuations",
+      columnDefinitionKey: "valuations",
       pathToResource: [
         { label: "portfolio", href: "/portfolio/dashboard" },
         ...(assetLiability
@@ -52,7 +49,7 @@ export class TransactionModel<Obligation> extends Level4Model<Obligation> {
           : []),
       ],
       rows: rows,
-      formDialog: FormDialog.TRANSACTION,
+      formDialog: FormDialog.VALUATION,
       menuOptions: [],
     };
 

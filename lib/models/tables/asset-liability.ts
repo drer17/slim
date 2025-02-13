@@ -173,6 +173,11 @@ export class AssetLiabilityModel<
           href: `/portfolio/table/obligation/${asset.id}`,
           icon: "obligations",
         },
+        {
+          label: "Valuations",
+          href: `/portfolio/table/valuation/${asset.id}`,
+          icon: "valuations",
+        },
       ],
       level2Children: asset.children.map((child) => ({
         icon: child.icon,

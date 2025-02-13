@@ -1,10 +1,10 @@
 "use client";
 
 /*
- * Level 4 Table Model View
+ * Level 5 Table Model View
  *
  * Author: Andre Repanich
- * Date: 10-02-25
+ * Date: 13-02-25
  *
  * Component Requirements
  * [x]- View as per ui design doc
@@ -28,11 +28,8 @@ import {
   modelColumnDefs,
   modelColumnVisibilities,
 } from "../column-defs/model-column-defs";
-import { importData } from "@/lib/actions/create";
-import { Slug } from "@/lib/definitions/response";
-import React from "react";
 
-export interface Level4TableViewProps {
+export interface Level5TableViewProps {
   pathToResource: PathSlug[];
   title: string;
   columnDefinitionKey: string;
@@ -41,17 +38,15 @@ export interface Level4TableViewProps {
   formDialog: FormDialog;
 }
 
-const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
+const Level5TableView: React.FC<Level5TableViewProps> = ({
   pathToResource,
   title,
   rows,
   menuOptions,
   formDialog,
   columnDefinitionKey,
-  slug,
 }) => {
   const { setOpenForm } = usePortfolioContext();
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleImport = (e) => {
     const file = e.target.files[0];
@@ -60,7 +55,6 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
       reader.onload = () => {
         const csvText = reader.result;
         const parsedData = parseCSVToJSON(csvText);
-        importData(parsedData, slug);
       };
       reader.readAsText(file);
     }
@@ -73,18 +67,10 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
       <div className="flex w-full justify-between p-2">
         <h1 className="font-bold">{title}</h1>
         <div className="gap-2 flex">
-          <input
-            ref={fileInputRef}
-            id="file-upload-handle"
-            accept={".csv"}
-            type="file"
-            onChange={(e) => handleImport(e)}
-            className="hidden"
-          />
           <Button
             className="h-8"
             variant="outline"
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => setOpenForm(formDialog)}
           >
             <IconDatabaseImport className="w-5 h-5" /> Import
           </Button>
@@ -129,4 +115,4 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
   );
 };
 
-export default Level4TableView;
+export default Level5TableView;

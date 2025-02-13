@@ -2,7 +2,9 @@ import { Obligation } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
 
-export const obligationColumns: ColumnDef<Obligation>[] = [
+export const obligationColumns: ColumnDef<
+  Obligation & { entity: { name: string } }
+>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -10,7 +12,7 @@ export const obligationColumns: ColumnDef<Obligation>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Portfolio ID" />
+      <DataTableColumnHeader column={column} title="Created At" />
     ),
     cell: ({ row }) =>
       row.original.createdAt.toLocaleString("en-AU", {
@@ -26,7 +28,7 @@ export const obligationColumns: ColumnDef<Obligation>[] = [
   {
     accessorKey: "label",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Obligation Label" />
     ),
   },
   {
@@ -38,7 +40,14 @@ export const obligationColumns: ColumnDef<Obligation>[] = [
   {
     accessorKey: "entityId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Entity ID" />
+      <DataTableColumnHeader column={column} title="To" />
     ),
+    cell: ({ row }) => row.original.entity.name,
   },
 ];
+
+export const obligationVisibility = {
+  id: false,
+  createdAt: false,
+  portfolioId: false,
+};

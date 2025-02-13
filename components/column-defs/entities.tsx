@@ -54,3 +54,9 @@ export const entitiesColumns: ColumnDef<Entity>[] = [
     ),
   },
 ];
+
+export const entitiesVisibility = {
+  id: false,
+  createdAt: false,
+  portfolioId: false,
+};

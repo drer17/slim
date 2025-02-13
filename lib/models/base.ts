@@ -8,6 +8,8 @@ export type TableNames =
   | "assetLiability"
   | "entity"
   | "transaction"
+  | "valuation"
+  | "occurrence"
   | "obligation"
   | "note"
   | "noteLink"

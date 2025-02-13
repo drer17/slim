@@ -1,9 +1,11 @@
-import { Transaction } from "@prisma/client";
+import { Occurrence } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
-import { Select, SelectTrigger } from "../ui/select";
+import { title } from "process";
 
-export const transactionColumns: ColumnDef<Transaction>[] = [
+export const occurrenceColumns: ColumnDef<
+  Occurrence & { obligation: { name: string } }
+>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -19,21 +21,16 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
       }),
   },
   {
-    accessorKey: "date",
+    accessorKey: "obligationId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
+      <DataTableColumnHeader column={column} title="Obligation" />
     ),
+    cell: ({ row }) => row.original.obligation.name,
   },
   {
-    accessorKey: "assetLiabilityId",
+    accessorKey: "subject",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Asset Liability Id" />
-    ),
-  },
-  {
-    accessorKey: "label",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Subject" />
     ),
   },
   {
@@ -54,22 +51,15 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
       }),
   },
   {
-    accessorKey: "categoryId",
+    accessorKey: "transactionId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
+      <DataTableColumnHeader column={column} title="Transaction Id" />
     ),
-    cell: ({ row }) => {
-      return (
-        <Select>
-          <SelectTrigger>Select Category</SelectTrigger>
-        </Select>
-      );
-    },
   },
 ];
 
-export const transactionVisibility = {
+export const occurrenceVisibility = {
   id: false,
-  createdAt: false,
-  assetLiabilityId: false,
+  obligationId: false,
+  transactionId: false,
 };

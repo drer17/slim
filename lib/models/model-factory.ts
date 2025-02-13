@@ -6,8 +6,10 @@ import { Attribute } from "./tables/attribute";
 import { Document } from "./tables/document";
 import { EntityModel } from "./tables/entity";
 import { ObligationModel } from "./tables/obligation";
+import { OccurrenceModel } from "./tables/occurrence";
 import { TagModel } from "./tables/tag";
 import { TransactionModel } from "./tables/transaction";
+import { ValuationModel } from "./tables/valuation";
 
 export class ModelFactory {
   public static create(slug: Slug): BaseModel {
@@ -49,6 +51,16 @@ export class ModelFactory {
         const assetLiabilityId = slug[1];
         const id = slug[2];
         return new TransactionModel(assetLiabilityId, id);
+      }
+      case "valuation": {
+        const assetLiabilityId = slug[1];
+        const id = slug[2];
+        return new ValuationModel(assetLiabilityId, id);
+      }
+      case "occurrence": {
+        const obligationId = slug[1];
+        const id = slug[2];
+        return new OccurrenceModel(obligationId, id);
       }
       default:
         return new AssetLiabilityModel();

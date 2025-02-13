@@ -29,6 +29,9 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
           },
         },
       },
+      include: {
+        entity: { select: { name: true } },
+      },
     });
 
     const asset = this.assetLiabilityId

@@ -24,7 +24,10 @@ import PathToResource, { PathSlug } from "../core/other/path-to-resource";
 import { FormDialog } from "../forms/types";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { DataTable } from "../core/data-table/data-table";
-import { modelColumnDefs } from "../column-defs/model-column-defs";
+import {
+  modelColumnDefs,
+  modelColumnVisibilities,
+} from "../column-defs/model-column-defs";
 
 export interface Level3TableViewProps {
   pathToResource: PathSlug[];
@@ -84,7 +87,11 @@ const Level3TableView: React.FC<Level3TableViewProps> = ({
           )}
         </div>
       </div>
-      <DataTable columns={modelColumnDefs[columnDefinitionKey]} rows={rows} />
+      <DataTable
+        rows={rows}
+        columns={modelColumnDefs[columnDefinitionKey]}
+        initColumnVisibility={modelColumnVisibilities[columnDefinitionKey]}
+      />
     </div>
   );
 };

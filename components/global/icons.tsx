@@ -1,5 +1,6 @@
 import {
   IconBuildingBank,
+  IconChartLine,
   IconChecklist,
   IconDatabaseDollar,
   IconHome,
@@ -11,6 +12,7 @@ const icons: Record<string, React.ReactNode> = {
   bank: <IconBuildingBank />,
   transactions: <IconDatabaseDollar />,
   obligations: <IconChecklist />,
+  valuations: <IconChartLine />,
 };
 
 export const getIcon = (key: string | null | undefined) => {

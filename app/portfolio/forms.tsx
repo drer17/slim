@@ -8,10 +8,12 @@ import {
   Entity,
   Obligation,
   Transaction,
+  Valuation,
 } from "@prisma/client";
 import ObligationForm from "@/components/forms/obligations";
 import EntityForm from "@/components/forms/entities";
 import TransactionForm from "@/components/forms/transaction";
+import ValuationForm from "@/components/forms/valuation";
 
 const Forms: React.FC = () => {
   const { formKwargs } = usePortfolioContext();
@@ -29,6 +31,10 @@ const Forms: React.FC = () => {
       <TransactionForm
         invisible={true}
         {...(formKwargs as FormProps<Transaction>)}
+      />
+      <ValuationForm
+        invisible={true}
+        {...(formKwargs as FormProps<Valuation>)}
       />
     </>
   );

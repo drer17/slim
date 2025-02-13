@@ -13,4 +13,6 @@ export enum FormDialog {
   OBLIGATION,
   ENTITY,
   TRANSACTION,
+  VALUATION,
+  OCCURRENCE,
 }

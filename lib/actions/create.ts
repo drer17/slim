@@ -7,6 +7,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { upsertLevel7 } from "./update";
 import { Document } from "@prisma/client";
+import { Level4Model } from "../models/levels/level-4";
 
 export async function create(slug: Slug, data: Record<string, any>) {
   const model = ModelFactory.create(slug);
@@ -58,4 +59,16 @@ export async function createFile(
   );
 
   return generateToast(Status.success);
+}
+
+export async function importData(
+  data: Record<string, string>[],
+  slug: Slug,
+): Promise<ToastProps> {
+  const model = ModelFactory.create(slug);
+  if (model instanceof Level4Model) {
+    model.importData(data);
+    return generateToast(Status.success);
+  }
+  return generateToast(Status.failed);
 }
