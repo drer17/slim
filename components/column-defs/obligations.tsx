@@ -1,6 +1,8 @@
-import { Obligation } from "@prisma/client";
+import { Obligation, Occurrence } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 export const obligationColumns: ColumnDef<
   Obligation & { entity: { name: string } }
@@ -28,7 +30,7 @@ export const obligationColumns: ColumnDef<
   {
     accessorKey: "label",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Obligation Label" />
+      <DataTableColumnHeader column={column} title="Label" />
     ),
   },
   {
@@ -43,6 +45,17 @@ export const obligationColumns: ColumnDef<
       <DataTableColumnHeader column={column} title="To" />
     ),
     cell: ({ row }) => row.original.entity.name,
+  },
+  {
+    accessorKey: "ocurrences",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Action" />
+    ),
+    cell: ({ row }) => (
+      <Link href={`/portfolio/table/occurrence/${row.original.id}`}>
+        <Button className="w-full h-full">See Occurrences</Button>
+      </Link>
+    ),
   },
 ];
 
