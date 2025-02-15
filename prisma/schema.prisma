@@ -145,6 +145,9 @@ model Obligation {
   // belonging to an asset or liability, an asset or liability owns the obligation
   assetLiabilityId String?
 
+  // rule
+  obligationRuleId String?
+
   starred Boolean @default(false)
   icon    String?
   color   String?
@@ -158,13 +161,13 @@ model Obligation {
   portfolio      Portfolio       @relation(fields: [portfolioId], references: [id])
   assetLiability AssetLiability? @relation(fields: [assetLiabilityId], references: [id])
   entity         Entity?         @relation(fields: [entityId], references: [id])
+  obligationRule ObligationRule? @relation(fields: [obligationRuleId], references: [id])
 
-  AttributeLink  AttributeLink[]
-  NoteLink       NoteLink[]
-  TagLink        TagLink[]
-  DocumentLink   DocumentLink[]
-  Occurrence     Occurrence[]
-  ObligationRule ObligationRule[]
+  AttributeLink AttributeLink[]
+  NoteLink      NoteLink[]
+  TagLink       TagLink[]
+  DocumentLink  DocumentLink[]
+  Occurrence    Occurrence[]
 }
 
 model Entity {
@@ -338,16 +341,14 @@ model Document {
 
 model ObligationRule {
   // obligation rule helps to automatically create occurrences
-  id           String @id @default(uuid())
-  obligationId String
+  id String @id @default(uuid())
 
   amount         Float
   frequency      Int
   frequencyUnits String
   startDate      DateTime
   endDate        DateTime?
-
-  obligation Obligation? @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+  Obligation     Obligation[]
 }
 
 // Linking Tables

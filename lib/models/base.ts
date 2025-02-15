@@ -11,6 +11,7 @@ export type TableNames =
   | "valuation"
   | "occurrence"
   | "obligation"
+  | "obligationRule"
   | "note"
   | "noteLink"
   | "tag"

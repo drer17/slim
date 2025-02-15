@@ -6,7 +6,7 @@ import Link from "next/link";
 import ObligationRuleForm from "../forms/obligation-rule";
 
 export const obligationColumns: ColumnDef<
-  Obligation & { entity: { name: string }; ObligationRule: ObligationRule }
+  Obligation & { entity: { name: string }; obligationRule: ObligationRule }
 >[] = [
   {
     accessorKey: "id",
@@ -68,8 +68,9 @@ export const obligationColumns: ColumnDef<
         label="Edit Rule"
         title="Edit Rule"
         defaults={{
-          ...row.original.ObligationRule,
-          obligationId: row.original.id,
+          ...row.original.obligationRule,
+          obligationRuleId: row.original.obligationRuleId || undefined,
+          obligationId: row.original.id || undefined,
         }}
       />
     ),

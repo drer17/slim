@@ -45,7 +45,7 @@ const generateZodSchema = <T,>(
   columns.forEach((field) => {
     let zodField;
 
-    if (["string", "select", "textarea"].includes(field.type)) {
+    if (["string", "select", "textarea", "number"].includes(field.type)) {
       zodField = z.string();
       if (!field.optional) {
         zodField = zodField.min(1, `${String(field.column)} is required`);
@@ -56,8 +56,6 @@ const generateZodSchema = <T,>(
         .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
           message: `${String(field.column)} must be a valid date`,
         });
-    } else if (field.type === "number") {
-      zodField = z.number().int(`${String(field.column)} must be a number`);
     }
 
     if (field.optional) {
@@ -119,10 +117,12 @@ const FormRenderer = <T,>({
   };
 
   const onSubmit = async (data: FormSchemaType) => {
+    console.log("SUBMITTING");
     setLoading(true);
     const filteredData = filterValues(data);
     if (data.id) {
     }
+    console.log(data);
     const response = !data.id
       ? await create(formKwargs.slug ?? [tableName], {
           ...model,
@@ -149,7 +149,7 @@ const FormRenderer = <T,>({
           className="space-y-4"
         >
           {columns.map((column, index) =>
-            ["string", "number"].includes(column.type) ? (
+            ["string"].includes(column.type) ? (
               <FormField
                 key={index}
                 control={form.control}
@@ -166,6 +166,30 @@ const FormRenderer = <T,>({
                       id={String(column.column)}
                       placeholder={column.placeholder}
                       disabled={column.disabled}
+                      {...field}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : ["number"].includes(column.type) ? (
+              <FormField
+                key={index}
+                control={form.control}
+                name={String(column.column)}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {column.label}
+                      <span className="text-xs">
+                        {column.optional && " (optional)"}
+                      </span>
+                    </FormLabel>
+                    <Input
+                      id={String(column.column)}
+                      placeholder={column.placeholder}
+                      disabled={column.disabled}
+                      type="number"
                       {...field}
                     />
                     <FormMessage />

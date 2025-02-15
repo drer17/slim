@@ -10,6 +10,7 @@ import { Document } from "@prisma/client";
 import { Level4Model } from "../models/levels/level-4";
 
 export async function create(slug: Slug, data: Record<string, any>) {
+  console.log("CREATING", slug);
   const model = ModelFactory.create(slug);
   return model.create(data);
 }

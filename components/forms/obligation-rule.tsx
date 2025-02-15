@@ -4,8 +4,13 @@ import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import DialogWrapper from "../core/other/dialog-wrapper";
 import { ScrollArea } from "../ui/scroll-area";
 import FormRenderer from "./form-renderer";
+import React from "react";
 
-const ObligationRuleForm: React.FC<FormProps<ObligationRule>> = ({
+const ObligationRuleForm: React.FC<
+  FormProps<
+    ObligationRule & { obligationRuleId?: string; obligationId?: string }
+  >
+> = ({
   title,
   label,
   trigger,
@@ -16,12 +21,25 @@ const ObligationRuleForm: React.FC<FormProps<ObligationRule>> = ({
   callback,
   defaults,
 }) => {
-  const { openForm: controlledOpen, setOpenForm: onOpenChanged } =
-    usePortfolioContext();
+  const {
+    openForm: controlledOpen,
+    setOpenForm: onOpenChanged,
+    setFormKwargs,
+  } = usePortfolioContext();
+
+  React.useEffect(() => {
+    setFormKwargs({
+      slug: [
+        "obligation-rule",
+        defaults?.obligationId,
+        defaults?.obligationRuleId,
+      ],
+    });
+  }, [setFormKwargs, defaults?.obligationRuleId, defaults?.obligationId]);
 
   return (
     <DialogWrapper
-      className="h-8"
+      className="h-8 w-full"
       variant="secondary"
       title={title || "Edit Obligation Rule"}
       label={label || "Edit"}
@@ -42,14 +60,6 @@ const ObligationRuleForm: React.FC<FormProps<ObligationRule>> = ({
           callback={callback}
           model={defaults}
           columns={[
-            {
-              column: "obligationId",
-              label: "Obligation Id",
-              type: "string",
-              disabled: true,
-              placeholder: "Obligation Id",
-              defaultValue: defaults && defaults.obligationId,
-            },
             {
               column: "amount",
               label: "Amount",

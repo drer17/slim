@@ -6,6 +6,7 @@ import { Attribute } from "./tables/attribute";
 import { Document } from "./tables/document";
 import { EntityModel } from "./tables/entity";
 import { ObligationModel } from "./tables/obligation";
+import { ObligationRuleModel } from "./tables/obligation-rule";
 import { OccurrenceModel } from "./tables/occurrence";
 import { TagModel } from "./tables/tag";
 import { TransactionModel } from "./tables/transaction";
@@ -42,6 +43,11 @@ export class ModelFactory {
         const assetLiabilityId = slug[1];
         const id = slug[2];
         return new ObligationModel(assetLiabilityId, id);
+      }
+      case "obligation-rule": {
+        const obligationId = slug[1];
+        const obligationRuleId = slug[2];
+        return new ObligationRuleModel(obligationId, obligationRuleId);
       }
       case "entity": {
         const id = slug[1];
