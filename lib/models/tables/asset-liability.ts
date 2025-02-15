@@ -24,7 +24,7 @@ export class AssetLiabilityModel<
     data: Partial<AssetLiability>,
   ): Promise<any | ToastProps> {
     console.log(data);
-    super.create({ portfolioId: this.portfolioId, ...data });
+    return super.create({ portfolioId: this.portfolioId, ...data });
   }
 
   public async getDataForTable(): Promise<Level2TableViewProps> {

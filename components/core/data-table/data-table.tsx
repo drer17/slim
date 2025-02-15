@@ -86,6 +86,7 @@ export interface DataTableProps<TData, TValue> {
   dataRetriever?: (numOfRows: number, forPage: number) => Promise<TData[]>;
 
   setFocussedRow?: (row: TData) => void;
+  onRowClick?: (row: TData) => void;
   expandingRowContent?: (data: TData) => React.ReactNode;
 
   hideToolbar?: boolean;
@@ -111,6 +112,7 @@ export function DataTable<TData, TValue>({
   dataModifier,
   dataRetriever,
   setFocussedRow,
+  onRowClick,
   expandingRowContent,
   hideManageColumns,
   hideFilterColumns,
@@ -211,10 +213,10 @@ export function DataTable<TData, TValue>({
   );
 
   return (
-    <div className="sticky max-w-full">
+    <div className="max-w-full">
       {!hideToolbar && toolbar}
       <ScrollArea
-        className="rounded-md border overflow-auto relative"
+        className="rounded-md border relative"
         style={{
           maxWidth: "100%",
           height: `calc(100vh - ${heightOffset})`,
@@ -224,7 +226,7 @@ export function DataTable<TData, TValue>({
         <Table className="border-zinc-500">
           <TableHeader
             className={cn(
-              "bg-background/50 backdrop-blur sticky top-0",
+              "bg-background/50 backdrop-blur",
               dominantHeader && "z-50",
             )}
           >
@@ -257,6 +259,7 @@ export function DataTable<TData, TValue>({
                     data-state={row.getIsSelected() && "selected"}
                     onClick={() => {
                       setFocussedRow && setFocussedRow(row.original as TData);
+                      onRowClick && onRowClick(row.original as TData);
                       expandingRowContent && toggleRow(row.id);
                     }}
                   >

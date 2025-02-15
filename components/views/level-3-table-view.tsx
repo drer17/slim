@@ -28,6 +28,7 @@ import {
   modelColumnDefs,
   modelColumnVisibilities,
 } from "../column-defs/model-column-defs";
+import { Slug } from "@/lib/definitions/response";
 
 export interface Level3TableViewProps {
   pathToResource: PathSlug[];
@@ -38,16 +39,17 @@ export interface Level3TableViewProps {
   formDialog: FormDialog;
 }
 
-const Level3TableView: React.FC<Level3TableViewProps> = ({
+const Level3TableView: React.FC<Level3TableViewProps & { slug: Slug }> = ({
   pathToResource,
   title,
   rows,
+  slug,
   columns,
   menuOptions,
   formDialog,
   columnDefinitionKey,
 }) => {
-  const { setOpenForm } = usePortfolioContext();
+  const { setOpenForm, setFormKwargs } = usePortfolioContext();
 
   return (
     <div className="w-full flex-col">
@@ -59,7 +61,10 @@ const Level3TableView: React.FC<Level3TableViewProps> = ({
           <Button
             className="h-8"
             variant="outline"
-            onClick={() => setOpenForm(formDialog)}
+            onClick={() => {
+              setFormKwargs({ slug });
+              setOpenForm(formDialog);
+            }}
           >
             <IconPlus className="w-5 h-5" /> Create
           </Button>

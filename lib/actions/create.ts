@@ -65,8 +65,10 @@ export async function importData(
   data: Record<string, string>[],
   slug: Slug,
 ): Promise<ToastProps> {
+  console.log("IMporting", slug, data);
   const model = ModelFactory.create(slug);
   if (model instanceof Level4Model) {
+    console.log("HERE");
     model.importData(data);
     return generateToast(Status.success);
   }

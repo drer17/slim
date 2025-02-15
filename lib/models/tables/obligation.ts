@@ -2,15 +2,26 @@ import { Level3TableViewProps } from "@/components/views/level-3-table-view";
 import { Level3Model } from "../levels/level-3";
 import { prisma } from "@/lib/prisma";
 import { FormDialog } from "@/components/forms/types";
+import { ToastProps } from "@/lib/definitions/response";
 
 export class ObligationModel<Obligation> extends Level3Model<Obligation> {
   assetLiabilityId?: string;
 
   constructor(assetLiabilityId?: string, id?: string) {
+    console.log("HERE", assetLiabilityId);
     super();
     this.tableName = "obligation";
     this.id = id;
     this.assetLiabilityId = assetLiabilityId;
+  }
+
+  public async create(data: Partial<Obligation>): Promise<any | ToastProps> {
+    console.log(data, this.portfolioId, this.assetLiabilityId);
+    return super.create({
+      portfolioId: this.portfolioId,
+      assetLiabilityId: this.assetLiabilityId,
+      ...data,
+    });
   }
 
   async getDataForRow(): Promise<Level3RowViewProps> {}
@@ -31,6 +42,7 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
       },
       include: {
         entity: { select: { name: true } },
+        ObligationRule: true,
       },
     });
 

@@ -2,6 +2,7 @@ import { Level5Model } from "../levels/level-5";
 import { Level5TableViewProps } from "@/components/views/level-5-table-view";
 import { FormDialog } from "@/components/forms/types";
 import { prisma } from "@/lib/prisma";
+import { ToastProps } from "@/lib/definitions/response";
 
 export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
   obligationId?: string;
@@ -12,6 +13,12 @@ export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
     this.id = id;
     this.obligationId = obligationId;
   }
+
+  public async create(data: Partial<Occurrence>): Promise<any | ToastProps> {
+    console.log(data);
+    return super.create({ obligationId: this.obligationId, ...data });
+  }
+
   async getDataForTable(
     limit: number,
     page: number,
@@ -46,7 +53,7 @@ export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
               },
               {
                 label: obligation.label,
-                href: `/portfolio/row/obligation/${this.obligationId}`,
+                href: `/portfolio/table/obligation/${this.obligationId}`,
               },
             ]
           : []),

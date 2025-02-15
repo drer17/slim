@@ -28,6 +28,7 @@ import {
   modelColumnDefs,
   modelColumnVisibilities,
 } from "../column-defs/model-column-defs";
+import { Slug } from "@/lib/definitions/response";
 
 export interface Level5TableViewProps {
   pathToResource: PathSlug[];
@@ -38,9 +39,10 @@ export interface Level5TableViewProps {
   formDialog: FormDialog;
 }
 
-const Level5TableView: React.FC<Level5TableViewProps> = ({
+const Level5TableView: React.FC<Level5TableViewProps & { slug: Slug }> = ({
   pathToResource,
   title,
+  slug,
   rows,
   menuOptions,
   formDialog,
@@ -78,7 +80,10 @@ const Level5TableView: React.FC<Level5TableViewProps> = ({
           <Button
             className="h-8"
             variant="outline"
-            onClick={() => setOpenForm(formDialog)}
+            onClick={() => {
+              setFormKwargs({ slug });
+              setOpenForm(formDialog);
+            }}
           >
             <IconPlus className="w-5 h-5" /> Create
           </Button>

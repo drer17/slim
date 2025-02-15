@@ -19,6 +19,7 @@ import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { FormDialog } from "../forms/types";
 import { IconPlus } from "@tabler/icons-react";
 import { getIcon } from "../global/icons";
+import { Slug } from "@/lib/definitions/response";
 
 export interface Level2TableViewProps {
   pathToResource: PathSlug[];
@@ -28,14 +29,15 @@ export interface Level2TableViewProps {
   formDialog: FormDialog;
 }
 
-const Level2TableView: React.FC<Level2TableViewProps> = ({
+const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
   pathToResource,
   title,
   items,
+  slug,
   menuOptions,
   formDialog,
 }) => {
-  const { setOpenForm } = usePortfolioContext();
+  const { setOpenForm, setFormKwargs } = usePortfolioContext();
 
   const groupedByStarredAndType = items.reduce(
     (acc, item) => {
@@ -68,7 +70,10 @@ const Level2TableView: React.FC<Level2TableViewProps> = ({
           <Button
             className="h-8"
             variant="outline"
-            onClick={() => setOpenForm(formDialog)}
+            onClick={() => {
+              setFormKwargs({ slug });
+              setOpenForm(formDialog);
+            }}
           >
             <IconPlus className="w-5 h-5" /> Create
           </Button>

@@ -1,7 +1,8 @@
 export function getPartial(
   object: Record<string, any>,
   key: string,
-): any | undefined {
+  fallbackIdx?: number,
+): any {
   for (const i in object) {
     if (
       object.hasOwnProperty(i) &&
@@ -10,5 +11,5 @@ export function getPartial(
       return object[i];
     }
   }
-  return undefined;
+  return object[String(fallbackIdx)];
 }

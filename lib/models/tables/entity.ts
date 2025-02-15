@@ -2,12 +2,18 @@ import { Level3TableViewProps } from "@/components/views/level-3-table-view";
 import { Level3Model } from "../levels/level-3";
 import { prisma } from "@/lib/prisma";
 import { FormDialog } from "@/components/forms/types";
+import { ToastProps } from "@/lib/definitions/response";
 
-export class EntityModel<Obligation> extends Level3Model<Obligation> {
+export class EntityModel<Entity> extends Level3Model<Entity> {
   constructor(id?: string) {
     super();
     this.tableName = "entity";
     this.id = id;
+  }
+
+  public async create(data: Partial<Entity>): Promise<any | ToastProps> {
+    console.log(data);
+    return super.create({ portfolioId: this.portfolioId, ...data });
   }
 
   async getDataForRow(): Promise<Level3RowViewProps> {}

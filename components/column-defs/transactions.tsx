@@ -23,6 +23,13 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Date" />
     ),
+    cell: ({ row }) =>
+      row.original.date.toLocaleString("en-AU", {
+        timeZone: "Australia/Adelaide",
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      }),
   },
   {
     accessorKey: "assetLiabilityId",
@@ -33,7 +40,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "label",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Label" />
     ),
   },
   {

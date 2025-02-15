@@ -35,6 +35,7 @@ import { Status } from "@/lib/definitions/response";
 import { Calendar } from "../ui/calendar";
 import { create } from "@/lib/actions/create";
 import { update } from "@/lib/actions/update";
+import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 
 const generateZodSchema = <T,>(
   columns: { column: keyof T; type: string; optional?: boolean }[],
@@ -92,6 +93,7 @@ const FormRenderer = <T,>({
   model,
 }: UpsertRowFormProps<T>) => {
   const { toast } = useToast();
+  const { formKwargs } = usePortfolioContext();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -122,11 +124,14 @@ const FormRenderer = <T,>({
     if (data.id) {
     }
     const response = !data.id
-      ? await create([tableName], {
+      ? await create(formKwargs.slug ?? [tableName], {
           ...model,
           ...filteredData,
         })
-      : await update([tableName], { ...model, ...filteredData });
+      : await update(formKwargs.slug ?? [tableName], {
+          ...model,
+          ...filteredData,
+        });
     if (response && response.title === Status.success)
       callback && callback(response.data);
 

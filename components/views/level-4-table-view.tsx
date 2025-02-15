@@ -31,6 +31,7 @@ import {
 import { importData } from "@/lib/actions/create";
 import { Slug } from "@/lib/definitions/response";
 import React from "react";
+import { parseCSVToJSON } from "@/lib/utilities/csv";
 
 export interface Level4TableViewProps {
   pathToResource: PathSlug[];
@@ -50,7 +51,7 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
   columnDefinitionKey,
   slug,
 }) => {
-  const { setOpenForm } = usePortfolioContext();
+  const { setOpenForm, setFormKwargs } = usePortfolioContext();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleImport = (e) => {
@@ -60,6 +61,7 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
       reader.onload = () => {
         const csvText = reader.result;
         const parsedData = parseCSVToJSON(csvText);
+        console.log(parsedData);
         importData(parsedData, slug);
       };
       reader.readAsText(file);
@@ -92,7 +94,10 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
           <Button
             className="h-8"
             variant="outline"
-            onClick={() => setOpenForm(formDialog)}
+            onClick={() => {
+              setFormKwargs({ slug });
+              setOpenForm(formDialog);
+            }}
           >
             <IconPlus className="w-5 h-5" /> Create
           </Button>
@@ -124,6 +129,7 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
         rows={rows}
         columns={modelColumnDefs[columnDefinitionKey]}
         initColumnVisibility={modelColumnVisibilities[columnDefinitionKey]}
+        heightOffset="220px"
       />
     </div>
   );

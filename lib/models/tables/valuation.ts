@@ -2,6 +2,7 @@ import { Level5Model } from "../levels/level-5";
 import { Level5TableViewProps } from "@/components/views/level-5-table-view";
 import { FormDialog } from "@/components/forms/types";
 import { prisma } from "@/lib/prisma";
+import { ToastProps } from "@/lib/definitions/response";
 
 export class ValuationModel<Valuation> extends Level5Model<Valuation> {
   assetLiabilityId?: string;
@@ -12,6 +13,12 @@ export class ValuationModel<Valuation> extends Level5Model<Valuation> {
     this.id = id;
     this.assetLiabilityId = assetLiabilityId;
   }
+
+  public async create(data: Partial<Valuation>): Promise<any | ToastProps> {
+    console.log(data);
+    return super.create({ assetLiabilityId: this.assetLiabilityId, ...data });
+  }
+
   async getDataForTable(
     limit: number,
     page: number,

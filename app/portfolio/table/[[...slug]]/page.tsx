@@ -14,16 +14,25 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   const model = ModelFactory.create(params.slug);
 
   if (model instanceof Level2Model)
-    return <Level2TableView {...await model.getDataForTable()} />;
+    return (
+      <Level2TableView {...await model.getDataForTable()} slug={params.slug} />
+    );
   if (model instanceof Level3Model)
-    return <Level3TableView {...await model.getDataForTable()} />;
+    return (
+      <Level3TableView {...await model.getDataForTable()} slug={params.slug} />
+    );
   if (model instanceof Level4Model)
     return (
       <Level4TableView
-        {...await model.getDataForTable(0, 20)}
+        {...await model.getDataForTable(20, 0)}
         slug={params.slug}
       />
     );
   if (model instanceof Level5Model)
-    return <Level5TableView {...await model.getDataForTable(0, 20)} />;
+    return (
+      <Level5TableView
+        {...await model.getDataForTable(20, 0)}
+        slug={params.slug}
+      />
+    );
 }
