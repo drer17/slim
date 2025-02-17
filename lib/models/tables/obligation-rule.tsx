@@ -14,7 +14,11 @@ export class ObligationRuleModel<
     this.tableName = "obligationRule";
   }
 
-  public async create(data: Partial<ObligationRule>): Promise<any> {
+  public async create(
+    data: Partial<
+      ObligationRule & { obligationId?: string; obligationRuleId?: string }
+    >,
+  ): Promise<any> {
     data = {
       ...data,
       amount: parseFloat(data?.amount || "0"),
@@ -25,10 +29,8 @@ export class ObligationRuleModel<
     delete data?.obligationRuleId;
 
     const resp = await super.create(data);
-    console.log(resp);
 
     if (resp.title === Status.failed) return resp;
-    console.log("UPDATING", this.obligationId, resp.data.id);
 
     await prisma.obligation.update({
       where: { id: this.obligationId },

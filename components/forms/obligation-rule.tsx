@@ -62,7 +62,7 @@ const ObligationRuleForm: React.FC<
           columns={[
             {
               column: "amount",
-              label: "Amount",
+              label: "Amount ($)",
               type: "number",
               placeholder: "Add the obligation amount",
               defaultValue: defaults && defaults.amount,

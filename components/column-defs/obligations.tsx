@@ -1,9 +1,122 @@
+"use client";
+
 import { Obligation, ObligationRule } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import ObligationRuleForm from "../forms/obligation-rule";
+import { Entity } from "@prisma/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import React from "react";
+import { get } from "@/lib/actions/get";
+import { update } from "@/lib/actions/update";
+import HiddenInput from "../core/other/hidden-input";
+import { useDebouncedCallback } from "use-debounce";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { IconArchive, IconDots, IconTrash } from "@tabler/icons-react";
+import { deleteItem } from "@/lib/actions/delete";
+
+const EntitySelection: React.FC<{
+  entityId: string | null;
+  obligationId: string;
+}> = ({ entityId, obligationId }) => {
+  const [entities, setEntities] = React.useState<Entity[] | undefined>(
+    undefined,
+  );
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const data = await get(["entity"]);
+      Array.isArray(data) && setEntities(data as Entity[]);
+    };
+    getData();
+  }, []);
+
+  const updateData = async (entityId: string) => {
+    update(["obligation", undefined, obligationId], { entity: entityId });
+  };
+
+  return (
+    <Select
+      value={entityId || undefined}
+      onValueChange={(id) => updateData(id)}
+    >
+      <SelectTrigger>Select Entity</SelectTrigger>
+      <SelectContent>
+        {entities &&
+          entities.map((ent) => (
+            <SelectItem key={ent.id} value={ent.id}>
+              {ent.name}
+            </SelectItem>
+          ))}
+      </SelectContent>
+    </Select>
+  );
+};
+
+const Description: React.FC<{
+  initDescription: string | null;
+  obligationId: string;
+}> = ({ initDescription, obligationId }) => {
+  const [description, setDescription] = React.useState(initDescription);
+
+  const updateData = async (description: string) => {
+    update(["obligation", undefined, obligationId], {
+      description: description,
+    });
+  };
+
+  const updateDataDebounced = useDebouncedCallback((d) => updateData(d), 500);
+
+  return (
+    <HiddenInput
+      value={description || "Add description"}
+      onChange={(e) => {
+        setDescription(e.target.value);
+        updateDataDebounced(e.target.value);
+      }}
+      className="w-full h-full"
+    />
+  );
+};
+
+const Options: React.FC<{ obligationId: string }> = ({ obligationId }) => {
+  const archive = async () => {
+    update(["obligation", undefined, obligationId], {
+      archivedAt: new Date().toISOString(),
+    });
+  };
+  const deleteObligation = async () => {
+    deleteItem(["obligation", undefined, obligationId]);
+  };
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <IconDots className="h-4 w-4" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem onClick={() => archive()}>
+          <IconArchive className="w-4 h-4 mr-2" />
+          Archive
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => deleteObligation()}>
+          <IconTrash className="text-red-500 w-4 h-4 mr-2" /> Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 export const obligationColumns: ColumnDef<
   Obligation & { entity: { name: string }; obligationRule: ObligationRule }
@@ -39,13 +152,24 @@ export const obligationColumns: ColumnDef<
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
     ),
+    cell: ({ row }) => (
+      <Description
+        initDescription={row.original.description}
+        obligationId={row.original.id}
+      />
+    ),
   },
   {
     accessorKey: "entityId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="To" />
     ),
-    cell: ({ row }) => row.original.entity?.name,
+    cell: ({ row }) => (
+      <EntitySelection
+        entityId={row.original.entityId}
+        obligationId={row.original.id}
+      />
+    ),
   },
   {
     accessorKey: "ocurrences",
@@ -74,6 +198,13 @@ export const obligationColumns: ColumnDef<
         }}
       />
     ),
+  },
+  {
+    accessorKey: "options",
+    header: () => <></>,
+    enableResizing: true,
+    cell: ({ row }) => <Options obligationId={row.original.id} />,
+    size: 290,
   },
 ];
 
