@@ -167,7 +167,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
                 readOnly={isInDialog}
               />
             </div>
-            <div className="grid-cols-2 grid gap-2">
+            <div className="grid-cols-1 grid gap-2">
               <Container title="Attributes" expandable={true}>
                 <Attributes
                   attributes={attributes}
@@ -175,19 +175,13 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
                   save={saveAttribute}
                 />
               </Container>
-              <Documents
-                parentSlug={slug}
-                documents={documents}
-                save={saveDocument}
-                readOnly={isInDialog}
-              />
             </div>
             <Container title="Notes" expandable={true}>
               <Notes notes={notes} save={saveNote} readOnly={isInDialog} />
             </Container>
           </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
+          <ScrollArea className="flex flex-col gap-2 max-h-96">
+            <div className="flex gap-2 flex-wrap">
               {actionButtons &&
                 actionButtons.map((button, idx) => (
                   <Link key={`ActionButton${idx}`} href={button.href}>
@@ -209,7 +203,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
             <Container title="" expandable={true}>
               {description}
             </Container>
-          </div>
+          </ScrollArea>
         </div>
       </ScrollArea>
     </div>
