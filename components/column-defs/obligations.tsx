@@ -34,6 +34,12 @@ const EntitySelection: React.FC<{
   const [entities, setEntities] = React.useState<Entity[] | undefined>(
     undefined,
   );
+  const [selectedEnt, setSelectedEntity] = React.useState<string | null>(
+    entityId,
+  );
+  const [selectedName, setSelectedName] = React.useState<string | undefined>(
+    undefined,
+  );
 
   React.useEffect(() => {
     const getData = async () => {
@@ -43,8 +49,20 @@ const EntitySelection: React.FC<{
     getData();
   }, []);
 
+  React.useEffect(() => {
+    const getEntity = async () => {
+      if (!selectedEnt) return;
+      const entity = (await get(["entity", selectedEnt])) as Entity[];
+      setSelectedName(entity[0].name);
+    };
+    getEntity();
+  }, [selectedEnt]);
+
   const updateData = async (entityId: string) => {
-    update(["obligation", undefined, obligationId], { entity: entityId });
+    await update(["obligation", undefined, obligationId], {
+      entityId: entityId,
+    });
+    setSelectedEntity(entityId);
   };
 
   return (
@@ -52,7 +70,7 @@ const EntitySelection: React.FC<{
       value={entityId || undefined}
       onValueChange={(id) => updateData(id)}
     >
-      <SelectTrigger>Select Entity</SelectTrigger>
+      <SelectTrigger>{selectedName || "Select Entity"}</SelectTrigger>
       <SelectContent>
         {entities &&
           entities.map((ent) => (
@@ -178,7 +196,9 @@ export const obligationColumns: ColumnDef<
     ),
     cell: ({ row }) => (
       <Link href={`/portfolio/table/occurrence/${row.original.id}`}>
-        <Button className="w-full h-full">See Occurrences</Button>
+        <Button className="w-full h-full" variant="outline">
+          See Occurrences
+        </Button>
       </Link>
     ),
   },
