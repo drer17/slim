@@ -26,9 +26,13 @@ import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { DataTable } from "../core/data-table/data-table";
 import {
   modelColumnDefs,
+  modelColumnFilters,
   modelColumnVisibilities,
 } from "../column-defs/model-column-defs";
 import { Slug } from "@/lib/definitions/response";
+import { importData } from "@/lib/actions/create";
+import React from "react";
+import { parseCSVToJSON } from "@/lib/utilities/csv";
 
 export interface Level5TableViewProps {
   pathToResource: PathSlug[];
@@ -48,15 +52,18 @@ const Level5TableView: React.FC<Level5TableViewProps & { slug: Slug }> = ({
   formDialog,
   columnDefinitionKey,
 }) => {
-  const { setOpenForm } = usePortfolioContext();
+  const { setOpenForm, setFormKwargs } = usePortfolioContext();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleImport = (e) => {
+  const handleImport = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         const csvText = reader.result;
-        const parsedData = parseCSVToJSON(csvText);
+        const parsedData = parseCSVToJSON(csvText as string);
+        console.log(parsedData);
+        importData(parsedData, slug);
       };
       reader.readAsText(file);
     }
@@ -69,10 +76,18 @@ const Level5TableView: React.FC<Level5TableViewProps & { slug: Slug }> = ({
       <div className="flex w-full justify-between p-2">
         <h1 className="font-bold">{title}</h1>
         <div className="gap-2 flex">
+          <input
+            ref={fileInputRef}
+            id="file-upload-handle"
+            accept={".csv"}
+            type="file"
+            onChange={(e) => handleImport(e)}
+            className="hidden"
+          />
           <Button
             className="h-8"
             variant="outline"
-            onClick={() => setOpenForm(formDialog)}
+            onClick={() => fileInputRef.current?.click()}
           >
             <IconDatabaseImport className="w-5 h-5" /> Import
           </Button>
@@ -115,6 +130,8 @@ const Level5TableView: React.FC<Level5TableViewProps & { slug: Slug }> = ({
         rows={rows}
         columns={modelColumnDefs[columnDefinitionKey]}
         initColumnVisibility={modelColumnVisibilities[columnDefinitionKey]}
+        initFilterState={modelColumnFilters[columnDefinitionKey]}
+        heightOffset="220px"
       />
     </div>
   );

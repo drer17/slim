@@ -26,6 +26,7 @@ import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { DataTable } from "../core/data-table/data-table";
 import {
   modelColumnDefs,
+  modelColumnFilters,
   modelColumnVisibilities,
 } from "../column-defs/model-column-defs";
 import { importData } from "@/lib/actions/create";
@@ -54,13 +55,13 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
   const { setOpenForm, setFormKwargs } = usePortfolioContext();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleImport = (e) => {
+  const handleImport = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         const csvText = reader.result;
-        const parsedData = parseCSVToJSON(csvText);
+        const parsedData = parseCSVToJSON(csvText as string);
         console.log(parsedData);
         importData(parsedData, slug);
       };
@@ -129,6 +130,7 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
         rows={rows}
         columns={modelColumnDefs[columnDefinitionKey]}
         initColumnVisibility={modelColumnVisibilities[columnDefinitionKey]}
+        initFilterState={modelColumnFilters[columnDefinitionKey]}
         heightOffset="220px"
       />
     </div>

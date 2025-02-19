@@ -1,7 +1,7 @@
 "use client";
 
 import { Obligation, ObligationRule } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -226,10 +226,27 @@ export const obligationColumns: ColumnDef<
     cell: ({ row }) => <Options obligationId={row.original.id} />,
     size: 290,
   },
+  {
+    accessorKey: "archivedAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Archived At" />
+    ),
+    cell: ({ row }) =>
+      row.original.archivedAt
+        ? row.original.archivedAt.toLocaleString("en-AU", {
+            timeZone: "Australia/Adelaide",
+          })
+        : "",
+  },
 ];
 
 export const obligationVisibility = {
   id: false,
   createdAt: false,
   portfolioId: false,
+  archivedAt: false,
 };
+
+export const obligationFilter: ColumnFiltersState = [
+  { id: "archivedAt", value: undefined },
+];

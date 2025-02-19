@@ -96,6 +96,7 @@ export interface DataTableProps<TData, TValue> {
 
   initColumnVisibility?: Partial<Record<keyof TData, boolean>>;
   initSortingState?: SortingState;
+  initFilterState?: ColumnFiltersState;
 
   condensed?: boolean;
   height?: string; // to take up height. If both height and height offset are defined, height will be used
@@ -120,6 +121,7 @@ export function DataTable<TData, TValue>({
   hideExportOptions,
   hideToolbar,
   initColumnVisibility,
+  initFilterState,
   condensed,
   heightOffset,
   height,
@@ -130,7 +132,7 @@ export function DataTable<TData, TValue>({
     initSortingState || [],
   );
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
+    initFilterState || [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>(
