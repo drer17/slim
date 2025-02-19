@@ -101,7 +101,7 @@ const NoteComponent: React.FC<NoteComponentProps> = ({
             </>
           ) : (
             <p
-              className="w-full mt-1 text-zinc-200"
+              className="w-full mt-1 text-foreground"
               onClick={() => setEditing(true)}
             >
               {note?.text || (
