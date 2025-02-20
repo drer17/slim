@@ -37,7 +37,6 @@ import { Calendar } from "../ui/calendar";
 import { create } from "@/lib/actions/create";
 import { update } from "@/lib/actions/update";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
-import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
 
 const generateZodSchema = <T,>(
@@ -297,17 +296,21 @@ const FormRenderer = <T,>({
                 control={form.control}
                 name={String(column.column)}
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                  <FormItem>
                     <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <div className="items-center leading-none">
+                        <FormLabel>{column.label}</FormLabel>
+                        <div className="flex items-center gap-2 leading-none mt-2">
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                          <FormDescription>
+                            {column.placeholder}
+                          </FormDescription>
+                        </div>
+                      </div>
                     </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>{column.label}</FormLabel>
-                      <FormDescription>{column.placeholder}</FormDescription>
-                    </div>
                   </FormItem>
                 )}
               />

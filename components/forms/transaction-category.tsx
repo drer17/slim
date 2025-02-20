@@ -7,7 +7,7 @@ import FormRenderer from "./form-renderer";
 import React from "react";
 import { get } from "@/lib/actions/get";
 
-const TransactionForm: React.FC<FormProps<TransactionCategory>> = ({
+const TransactionCategoryForm: React.FC<FormProps<TransactionCategory>> = ({
   title,
   label,
   trigger,
@@ -62,7 +62,7 @@ const TransactionForm: React.FC<FormProps<TransactionCategory>> = ({
               column: "label",
               label: "Label",
               type: "string",
-              placeholder: "Name your Entity",
+              placeholder: "Name your Category",
               defaultValue: defaults && defaults.label,
             },
             {
@@ -86,7 +86,7 @@ const TransactionForm: React.FC<FormProps<TransactionCategory>> = ({
               column: "expense",
               label: "Expense",
               type: "boolean",
-              placeholder: " transaction amount",
+              placeholder: "Is this an expense category?",
               defaultValue: defaults && defaults.expense,
             },
           ]}
@@ -96,4 +96,4 @@ const TransactionForm: React.FC<FormProps<TransactionCategory>> = ({
   );
 };
 
-export default TransactionForm;
+export default TransactionCategoryForm;
