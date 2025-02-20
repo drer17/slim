@@ -40,7 +40,6 @@ import Notes from "../core/text/notes";
 import DescriptionComponent from "../core/text/description";
 import { Tags } from "../core/tag/tags";
 import Attributes from "../core/attributes/attributes";
-import Documents from "../core/documents/documents";
 import { getIcon } from "../global/icons";
 
 export interface Level2RowViewProps {

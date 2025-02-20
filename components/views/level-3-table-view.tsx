@@ -10,15 +10,7 @@
  * [x]- View as per ui design doc
  */
 
-import { IconDots, IconPlus } from "@tabler/icons-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { IconPlus } from "@tabler/icons-react";
 import { Button } from "../ui/button";
 import PathToResource, { PathSlug } from "../core/other/path-to-resource";
 import { FormDialog } from "../forms/types";
@@ -29,13 +21,14 @@ import {
   modelColumnVisibilities,
 } from "../column-defs/model-column-defs";
 import { Slug } from "@/lib/definitions/response";
+import ViewOptions, { MenuOption } from "../core/other/view-options";
 
 export interface Level3TableViewProps {
   pathToResource: PathSlug[];
   title: string;
   columnDefinitionKey: string;
   rows: any[];
-  menuOptions: { label: string; callback: () => any }[];
+  menuOptions: MenuOption;
   formDialog: FormDialog;
 }
 
@@ -69,27 +62,7 @@ const Level3TableView: React.FC<Level3TableViewProps & { slug: Slug }> = ({
             <IconPlus className="w-5 h-5" /> Create
           </Button>
 
-          {menuOptions && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="icon" className="h-8">
-                  <IconDots />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>{title} Options</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {menuOptions.map((option, idx) => (
-                  <DropdownMenuItem
-                    key={`Menu${idx}`}
-                    onClick={() => option.callback}
-                  >
-                    {option.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <ViewOptions menuOptions={menuOptions} availableMenuOptions={{}} />
         </div>
       </div>
       <DataTable

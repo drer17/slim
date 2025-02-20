@@ -1,5 +1,6 @@
 "use client";
 
+import { getIcon } from "@/components/global/icons";
 /*
  * ViewOptions
  *
@@ -19,10 +20,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { IconDots } from "@tabler/icons-react";
+import Link from "next/link";
 import React from "react";
 
+export type MenuOption = (string | { label: string; href: string })[];
 interface ViewOptionProps {
-  menuOptions: string[];
+  menuOptions: MenuOption;
   availableMenuOptions: {
     [key: string]: {
       icon: React.ReactNode;
@@ -38,6 +41,7 @@ const ViewOptions: React.FC<ViewOptionProps> = ({
   isInDialog,
 }) => {
   if (!menuOptions || isInDialog !== undefined) return null;
+  console.log(menuOptions, isInDialog);
 
   return (
     <DropdownMenu>
@@ -47,24 +51,30 @@ const ViewOptions: React.FC<ViewOptionProps> = ({
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {menuOptions.map((option, idx) => (
-          <DropdownMenuItem
-            key={`Menu${idx}`}
-            className="capitalize"
-            onClick={() =>
-              option in availableMenuOptions &&
-              availableMenuOptions[
-                option as keyof typeof availableMenuOptions
-              ].callable()
-            }
-          >
-            {
-              availableMenuOptions[option as keyof typeof availableMenuOptions]
-                .icon
-            }
-            {option}
-          </DropdownMenuItem>
-        ))}
+        {menuOptions.map((option, idx) =>
+          typeof option === "object" ? (
+            <Link href={option?.href} key={option.label}>
+              <DropdownMenuItem key={`Menu${idx}`} className="capitalize">
+                {getIcon(option.label)}
+                {option.label}
+              </DropdownMenuItem>
+            </Link>
+          ) : (
+            <DropdownMenuItem
+              key={`Menu${idx}`}
+              className="capitalize"
+              onClick={() =>
+                option in availableMenuOptions &&
+                availableMenuOptions[
+                  option as keyof typeof availableMenuOptions
+                ].callable()
+              }
+            >
+              {getIcon(option)}
+              {option}
+            </DropdownMenuItem>
+          ),
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

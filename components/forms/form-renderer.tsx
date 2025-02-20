@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,6 +37,8 @@ import { Calendar } from "../ui/calendar";
 import { create } from "@/lib/actions/create";
 import { update } from "@/lib/actions/update";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
+import Link from "next/link";
+import { Checkbox } from "../ui/checkbox";
 
 const generateZodSchema = <T,>(
   columns: { column: keyof T; type: string; optional?: boolean }[],
@@ -74,7 +77,7 @@ interface UpsertRowFormProps<T> {
     column: keyof T;
     label: string;
     type: string;
-    placeholder: string;
+    placeholder?: string;
     defaultValue?: any;
     possibleValues?: { label: string; id?: string; value?: string }[];
     optional?: boolean;
@@ -117,12 +120,10 @@ const FormRenderer = <T,>({
   };
 
   const onSubmit = async (data: FormSchemaType) => {
-    console.log("SUBMITTING");
     setLoading(true);
     const filteredData = filterValues(data);
     if (data.id) {
     }
-    console.log(data);
     const response = !data.id
       ? await create(formKwargs.slug ?? [tableName], {
           ...model,
@@ -287,6 +288,26 @@ const FormRenderer = <T,>({
                       </SelectContent>
                     </Select>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : column.type === "boolean" ? (
+              <FormField
+                key={index}
+                control={form.control}
+                name={String(column.column)}
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>{column.label}</FormLabel>
+                      <FormDescription>{column.placeholder}</FormDescription>
+                    </div>
                   </FormItem>
                 )}
               />

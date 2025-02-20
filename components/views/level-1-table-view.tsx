@@ -1,10 +1,10 @@
 "use client";
 
 /*
- * Level 4 Table Model View
+ * Level 1 Table Model View
  *
  * Author: Andre Repanich
- * Date: 10-02-25
+ * Date: 20-02-25
  *
  * Component Requirements
  * [x]- View as per ui design doc
@@ -21,26 +21,23 @@ import {
   modelColumnFilters,
   modelColumnVisibilities,
 } from "../column-defs/model-column-defs";
-import { importData } from "@/lib/actions/create";
 import { Slug } from "@/lib/definitions/response";
 import React from "react";
 import { parseCSVToJSON } from "@/lib/utilities/csv";
-import ViewOptions, { MenuOption } from "../core/other/view-options";
+import { importData } from "@/lib/actions/create";
 
-export interface Level4TableViewProps {
+export interface Level1TableViewProps {
   pathToResource: PathSlug[];
   title: string;
   columnDefinitionKey: string;
   rows: any[];
-  menuOptions: MenuOption;
   formDialog: FormDialog;
 }
 
-const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
+const Level1TableView: React.FC<Level1TableViewProps & { slug: Slug }> = ({
   pathToResource,
   title,
   rows,
-  menuOptions,
   formDialog,
   columnDefinitionKey,
   slug,
@@ -55,7 +52,6 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
       reader.onload = () => {
         const csvText = reader.result;
         const parsedData = parseCSVToJSON(csvText as string);
-        console.log(parsedData);
         importData(parsedData, slug);
       };
       reader.readAsText(file);
@@ -95,8 +91,6 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
           >
             <IconPlus className="w-5 h-5" /> Create
           </Button>
-
-          <ViewOptions menuOptions={menuOptions} availableMenuOptions={{}} />
         </div>
       </div>
       <DataTable
@@ -110,4 +104,4 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
   );
 };
 
-export default Level4TableView;
+export default Level1TableView;

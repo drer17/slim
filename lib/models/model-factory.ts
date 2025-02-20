@@ -10,6 +10,7 @@ import { ObligationRuleModel } from "./tables/obligation-rule";
 import { OccurrenceModel } from "./tables/occurrence";
 import { TagModel } from "./tables/tag";
 import { TransactionModel } from "./tables/transaction";
+import { TransactionCategoryModel } from "./tables/transaction-category";
 import { ValuationModel } from "./tables/valuation";
 
 export class ModelFactory {
@@ -57,6 +58,11 @@ export class ModelFactory {
         const assetLiabilityId = slug[1];
         const id = slug[2];
         return new TransactionModel(assetLiabilityId, id);
+      }
+      case "transaction-category": {
+        const parentId = slug[1];
+        const id = slug[2];
+        return new TransactionCategoryModel(parentId, id);
       }
       case "valuation": {
         const assetLiabilityId = slug[1];

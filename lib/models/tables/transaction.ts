@@ -108,7 +108,12 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
       ],
       rows: rows,
       formDialog: FormDialog.TRANSACTION,
-      menuOptions: [],
+      menuOptions: [
+        {
+          label: "Categories",
+          href: "/portfolio/table/transaction-category",
+        },
+      ],
     };
 
     console.log(transactions);
