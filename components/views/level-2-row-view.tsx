@@ -156,7 +156,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
         </div>
       </div>
       <div className="h-8" />
-      <ScrollArea className="w-full">
+      <ScrollArea className="w-full" style={{ height: `calc(100vh - 120px)` }}>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
           <div className="flex flex-col space-y-4">
             <div className="p-2 space-y-2 min-h-28">
