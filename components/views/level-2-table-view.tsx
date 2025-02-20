@@ -86,16 +86,14 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
           />
         </div>
       </div>
-      <div className="mt-7"></div>
+      <div className="mt-4"></div>
       <ScrollArea className="w-full" style={{ height: `calc(100vh - 105px)` }}>
         {Object.values(groupedByStarredAndType).map((item, idx) => (
           <div key={`Type${idx}`} className="">
-            {idx > 0 && <div className="h-10" />}
-            <div className="flex gap-2 mb-2 items-center">
+            {idx > 0 && <div className="h-4" />}
+            <div className="flex gap-3 mb-2 ml-2 items-center text-muted-foreground ">
               {getIcon(item.type.icon)}
-              <h3 className="ml-2 text-muted-foreground uppercase">
-                {item.type.label}
-              </h3>
+              <h3 className="uppercase">{item.type.label}</h3>
             </div>
             <div className="flex gap-2 p-2">
               {item.cards.map((card, idx) => (
