@@ -13,7 +13,7 @@
 import Card, { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
 import PathToResource, { PathSlug } from "../core/other/path-to-resource";
-import ViewOptions from "../core/other/view-options";
+import ViewOptions, { MenuOption } from "../core/other/view-options";
 import { Button } from "../ui/button";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { FormDialog } from "../forms/types";
@@ -25,7 +25,7 @@ export interface Level2TableViewProps {
   pathToResource: PathSlug[];
   title: string;
   items: (CardProps & { type: { label: string; icon?: string } })[];
-  menuOptions: string[];
+  menuOptions: MenuOption;
   formDialog: FormDialog;
   modelKey: string;
 }

@@ -12,6 +12,10 @@ import {
   transactionCategoryColumns,
   transactionCategoryVisibility,
 } from "./transaction-categories";
+import {
+  assetLiabilityTypeColumns,
+  assetLiabilityTypeVisibility,
+} from "./asset-liability-type";
 
 export const modelColumnDefs: Record<string, ColumnDef<any>[]> = {
   obligations: obligationColumns,
@@ -20,6 +24,7 @@ export const modelColumnDefs: Record<string, ColumnDef<any>[]> = {
   transactionCategories: transactionCategoryColumns,
   valuations: valuationColumns,
   occurrences: occurrenceColumns,
+  assetLiabilityTypes: assetLiabilityTypeColumns,
 };
 
 export const modelColumnVisibilities: Record<
@@ -32,6 +37,7 @@ export const modelColumnVisibilities: Record<
   transactionCategories: transactionCategoryVisibility,
   valuations: valuationVisibility,
   occurrences: occurrenceVisibility,
+  assetLiabilityTypes: assetLiabilityTypeVisibility,
 };
 
 export const modelColumnFilters: Record<string, ColumnFiltersState> = {
@@ -41,4 +47,5 @@ export const modelColumnFilters: Record<string, ColumnFiltersState> = {
   valuations: [],
   occurrences: [],
   transactionCategories: [],
+  assetLiabilityTypes: [],
 };

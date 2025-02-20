@@ -77,7 +77,12 @@ export class AssetLiabilityModel<
       })) as (CardProps & {
         type: { label: string; icon?: React.ReactNode };
       })[],
-      menuOptions: [],
+      menuOptions: [
+        {
+          label: "Types",
+          href: "/portfolio/table/asset-liability-type",
+        },
+      ],
       modelKey: "assetLiability",
     };
 
