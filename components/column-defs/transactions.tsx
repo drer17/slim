@@ -1,7 +1,80 @@
-import { Transaction } from "@prisma/client";
+"use client";
+
+import { AssetLiability, Transaction } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
-import { Select, SelectTrigger } from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import HiddenInput from "../core/other/hidden-input";
+import { useDebouncedCallback } from "use-debounce";
+import { update } from "@/lib/actions/update";
+import React from "react";
+import { get } from "@/lib/actions/get";
+import { useToast } from "@/hooks/use-toast";
+import { ToastProps } from "../ui/toast";
+
+const Description: React.FC<{
+  initDescription: string | null;
+  transactionId: string;
+}> = ({ initDescription, transactionId }) => {
+  const [description, setDescription] = React.useState(initDescription);
+
+  const updateData = async (description: string) => {
+    update(["transaction", undefined, transactionId], {
+      description: description,
+    });
+  };
+
+  const updateDataDebounced = useDebouncedCallback((d) => updateData(d), 500);
+
+  return (
+    <HiddenInput
+      value={description || "Add description"}
+      onChange={(e) => {
+        setDescription(e.target.value);
+        updateDataDebounced(e.target.value);
+      }}
+      className="w-full h-full"
+    />
+  );
+};
+
+const MoveTo: React.FC<{ transactionId: string }> = ({ transactionId }) => {
+  const [als, setAls] = React.useState<AssetLiability[]>([]);
+  const { toast } = useToast();
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const data = await get(["asset-liability"]);
+      console.log(data);
+      if (Array.isArray(data)) setAls(data);
+    };
+    getData();
+  }, []);
+
+  const onMove = async (transactionId: string, newAlId: string) => {
+    const result = await update(["transaction", undefined, transactionId], {
+      assetLiabilityId: newAlId,
+    });
+    if (result) toast(result as ToastProps);
+  };
+
+  return (
+    <Select>
+      <SelectTrigger>Select A/L</SelectTrigger>
+      <SelectContent>
+        {als.map((al) => (
+          <SelectItem
+            value={al.id}
+            key={al.id}
+            onClick={() => onMove(transactionId, al.id)}
+          >
+            {al.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
   {
@@ -21,8 +94,9 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "date",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
+      <DataTableColumnHeader column={column} title="Date" className="w-24" />
     ),
+    size: 20,
     cell: ({ row }) =>
       row.original.date.toLocaleString("en-AU", {
         timeZone: "Australia/Adelaide",
@@ -48,12 +122,19 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Description" />
     ),
+    cell: ({ row }) => (
+      <Description
+        initDescription={row.original.description}
+        transactionId={row.original.id}
+      />
+    ),
   },
   {
     accessorKey: "amount",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Amount" />
     ),
+    size: 20,
     cell: ({ row }) =>
       row.original.amount.toLocaleString("en-AU", {
         style: "currency",
@@ -72,6 +153,12 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
         </Select>
       );
     },
+  },
+  {
+    accessorKey: "move",
+    header: () => "Move To",
+    size: 10,
+    cell: ({ row }) => <MoveTo transactionId={row.id} />,
   },
 ];
 
