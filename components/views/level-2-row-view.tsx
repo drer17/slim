@@ -63,6 +63,7 @@ export interface Level2RowViewProps {
   level2Children: CardProps[];
   level3Children: CardProps[];
   menuOptions: string[];
+  modelKey: string;
 }
 
 const Level2RowView: React.FC<Level2RowViewProps> = ({

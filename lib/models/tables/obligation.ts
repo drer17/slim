@@ -56,7 +56,7 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
 
     const obligations: Level3TableViewProps = {
       title: "Obligations",
-      columnDefinitionKey: "obligations",
+      modelKey: "obligations",
       pathToResource: [
         { label: "portfolio", href: "/portfolio/dashboard" },
         ...(asset

@@ -1,5 +1,6 @@
 "use server";
 
+import { ModelContext } from "@/components/contexts/model-contexts";
 import Level1TableView from "@/components/views/level-1-table-view";
 import Level2TableView from "@/components/views/level-2-table-view";
 import Level3TableView from "@/components/views/level-3-table-view";
@@ -15,33 +16,44 @@ import { ModelFactory } from "@/lib/models/model-factory";
 export default async function Page({ params }: { params: { slug: string[] } }) {
   const model = ModelFactory.create(params.slug);
 
-  if (model instanceof Level1Model)
+  if (model instanceof Level1Model) {
+    const data = await model.getDataForTable(20, 0);
     return (
-      <Level1TableView
-        {...await model.getDataForTable(20, 0)}
-        slug={params.slug}
-      />
+      <ModelContext modelKey={data.modelKey}>
+        <Level1TableView {...data} slug={params.slug} />
+      </ModelContext>
     );
-  if (model instanceof Level2Model)
+  }
+  if (model instanceof Level2Model) {
+    const data = await model.getDataForTable();
     return (
-      <Level2TableView {...await model.getDataForTable()} slug={params.slug} />
+      <ModelContext modelKey={data.modelKey}>
+        <Level2TableView {...data} slug={params.slug} />
+      </ModelContext>
     );
-  if (model instanceof Level3Model)
+  }
+  if (model instanceof Level3Model) {
+    const data = await model.getDataForTable();
     return (
-      <Level3TableView {...await model.getDataForTable()} slug={params.slug} />
+      <ModelContext modelKey={data.modelKey}>
+        <Level3TableView {...data} slug={params.slug} />
+      </ModelContext>
     );
-  if (model instanceof Level4Model)
+  }
+  if (model instanceof Level4Model) {
+    const data = await model.getDataForTable(20, 0);
     return (
-      <Level4TableView
-        {...await model.getDataForTable(20, 0)}
-        slug={params.slug}
-      />
+      <ModelContext modelKey={data.modelKey}>
+        <Level4TableView {...data} slug={params.slug} />
+      </ModelContext>
     );
-  if (model instanceof Level5Model)
+  }
+  if (model instanceof Level5Model) {
+    const data = await model.getDataForTable(20, 0);
     return (
-      <Level5TableView
-        {...await model.getDataForTable(20, 0)}
-        slug={params.slug}
-      />
+      <ModelContext modelKey={data.modelKey}>
+        <Level5TableView {...data} slug={params.slug} />
+      </ModelContext>
     );
+  }
 }

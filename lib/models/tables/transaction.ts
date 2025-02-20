@@ -90,7 +90,7 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
 
     const transactions: Level3TableViewProps = {
       title: "Transactions",
-      columnDefinitionKey: "transactions",
+      modelKey: "transactions",
       pathToResource: [
         { label: "portfolio", href: "/portfolio/dashboard" },
         ...(assetLiability

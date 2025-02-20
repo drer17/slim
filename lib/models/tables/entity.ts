@@ -31,15 +31,15 @@ export class EntityModel<Entity> extends Level3Model<Entity> {
       },
     });
 
-    const obligations: Level3TableViewProps = {
+    const ents: Level3TableViewProps = {
       title: "Entities",
-      columnDefinitionKey: "entities",
-      pathToResource: ["portfolio", "entities"],
+      pathToResource: [{ label: "portfolio", href: "/portfolio/dashboard" }],
       rows: rows,
       formDialog: FormDialog.ENTITY,
       menuOptions: [],
+      modelKey: "entities",
     };
 
-    return obligations;
+    return ents;
   }
 }

@@ -30,7 +30,7 @@ import ViewOptions, { MenuOption } from "../core/other/view-options";
 export interface Level5TableViewProps {
   pathToResource: PathSlug[];
   title: string;
-  columnDefinitionKey: string;
+  modelKey: string;
   rows: any[];
   menuOptions: MenuOption;
   formDialog: FormDialog;
@@ -43,7 +43,7 @@ const Level5TableView: React.FC<Level5TableViewProps & { slug: Slug }> = ({
   rows,
   menuOptions,
   formDialog,
-  columnDefinitionKey,
+  modelKey,
 }) => {
   const { setOpenForm, setFormKwargs } = usePortfolioContext();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -101,9 +101,9 @@ const Level5TableView: React.FC<Level5TableViewProps & { slug: Slug }> = ({
       </div>
       <DataTable
         rows={rows}
-        columns={modelColumnDefs[columnDefinitionKey]}
-        initColumnVisibility={modelColumnVisibilities[columnDefinitionKey]}
-        initFilterState={modelColumnFilters[columnDefinitionKey]}
+        columns={modelColumnDefs[modelKey]}
+        initColumnVisibility={modelColumnVisibilities[modelKey]}
+        initFilterState={modelColumnFilters[modelKey]}
         heightOffset="220px"
       />
     </div>

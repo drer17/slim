@@ -30,7 +30,7 @@ import ViewOptions, { MenuOption } from "../core/other/view-options";
 export interface Level4TableViewProps {
   pathToResource: PathSlug[];
   title: string;
-  columnDefinitionKey: string;
+  modelKey: string;
   rows: any[];
   menuOptions: MenuOption;
   formDialog: FormDialog;
@@ -42,7 +42,7 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
   rows,
   menuOptions,
   formDialog,
-  columnDefinitionKey,
+  modelKey,
   slug,
 }) => {
   const { setOpenForm, setFormKwargs } = usePortfolioContext();
@@ -101,9 +101,9 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
       </div>
       <DataTable
         rows={rows}
-        columns={modelColumnDefs[columnDefinitionKey]}
-        initColumnVisibility={modelColumnVisibilities[columnDefinitionKey]}
-        initFilterState={modelColumnFilters[columnDefinitionKey]}
+        columns={modelColumnDefs[modelKey]}
+        initColumnVisibility={modelColumnVisibilities[modelKey]}
+        initFilterState={modelColumnFilters[modelKey]}
         heightOffset="220px"
       />
     </div>

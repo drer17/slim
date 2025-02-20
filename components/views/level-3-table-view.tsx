@@ -26,7 +26,7 @@ import ViewOptions, { MenuOption } from "../core/other/view-options";
 export interface Level3TableViewProps {
   pathToResource: PathSlug[];
   title: string;
-  columnDefinitionKey: string;
+  modelKey: string;
   rows: any[];
   menuOptions: MenuOption;
   formDialog: FormDialog;
@@ -40,7 +40,7 @@ const Level3TableView: React.FC<Level3TableViewProps & { slug: Slug }> = ({
   columns,
   menuOptions,
   formDialog,
-  columnDefinitionKey,
+  modelKey,
 }) => {
   const { setOpenForm, setFormKwargs } = usePortfolioContext();
 
@@ -67,8 +67,8 @@ const Level3TableView: React.FC<Level3TableViewProps & { slug: Slug }> = ({
       </div>
       <DataTable
         rows={rows}
-        columns={modelColumnDefs[columnDefinitionKey]}
-        initColumnVisibility={modelColumnVisibilities[columnDefinitionKey]}
+        columns={modelColumnDefs[modelKey]}
+        initColumnVisibility={modelColumnVisibilities[modelKey]}
       />
     </div>
   );

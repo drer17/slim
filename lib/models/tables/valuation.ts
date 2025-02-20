@@ -39,7 +39,7 @@ export class ValuationModel<Valuation> extends Level5Model<Valuation> {
 
     const obligations: Level5TableViewProps = {
       title: "Valuations",
-      columnDefinitionKey: "valuations",
+      modelKey: "valuations",
       pathToResource: [
         { label: "portfolio", href: "/portfolio/dashboard" },
         ...(assetLiability

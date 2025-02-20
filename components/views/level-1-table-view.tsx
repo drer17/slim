@@ -29,7 +29,7 @@ import { importData } from "@/lib/actions/create";
 export interface Level1TableViewProps {
   pathToResource: PathSlug[];
   title: string;
-  columnDefinitionKey: string;
+  modelKey: string;
   rows: any[];
   formDialog: FormDialog;
 }
@@ -39,7 +39,7 @@ const Level1TableView: React.FC<Level1TableViewProps & { slug: Slug }> = ({
   title,
   rows,
   formDialog,
-  columnDefinitionKey,
+  modelKey,
   slug,
 }) => {
   const { setOpenForm, setFormKwargs } = usePortfolioContext();
@@ -95,9 +95,9 @@ const Level1TableView: React.FC<Level1TableViewProps & { slug: Slug }> = ({
       </div>
       <DataTable
         rows={rows}
-        columns={modelColumnDefs[columnDefinitionKey]}
-        initColumnVisibility={modelColumnVisibilities[columnDefinitionKey]}
-        initFilterState={modelColumnFilters[columnDefinitionKey]}
+        columns={modelColumnDefs[modelKey]}
+        initColumnVisibility={modelColumnVisibilities[modelKey]}
+        initFilterState={modelColumnFilters[modelKey]}
         heightOffset="220px"
       />
     </div>

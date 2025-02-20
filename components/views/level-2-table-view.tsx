@@ -27,6 +27,7 @@ export interface Level2TableViewProps {
   items: (CardProps & { type: { label: string; icon?: string } })[];
   menuOptions: string[];
   formDialog: FormDialog;
+  modelKey: string;
 }
 
 const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({

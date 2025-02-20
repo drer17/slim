@@ -42,7 +42,7 @@ export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
 
     const obligations: Level5TableViewProps = {
       title: "Occurences",
-      columnDefinitionKey: "occurrences",
+      modelKey: "occurrences",
       pathToResource: [
         { label: "portfolio", href: "/portfolio/dashboard" },
         ...(obligation

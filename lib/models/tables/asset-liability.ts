@@ -78,6 +78,7 @@ export class AssetLiabilityModel<
         type: { label: string; icon?: React.ReactNode };
       })[],
       menuOptions: [],
+      modelKey: "assetLiability",
     };
 
     return data;
@@ -198,6 +199,7 @@ export class AssetLiabilityModel<
       })),
       level3Children: [],
       menuOptions: ["archive"],
+      modelKey: "assetLiability",
     }))[0] as Level2RowViewProps;
   }
 }
