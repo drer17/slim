@@ -48,37 +48,30 @@ export function DataTableColumnHeader<TData, TValue>({
   };
 
   return (
-    <div
-      className={cn(
-        "flex items-center space-x-2 w-full justify-between group",
-        className,
-      )}
-    >
-      <div className="flex items-center">
-        <span>{title}</span>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`h-6 data-[state=open]:bg-accent ml-2 ${
-            column.getIsSorted() ? "visible" : "invisible group-hover:visible"
-          }`}
-          onClick={() => handleSortToggle()}
-        >
-          {column.getIsSorted() === "desc" ? (
-            <IconArrowDown className="h-4 w-4 dark:text-white" />
-          ) : column.getIsSorted() === "asc" ? (
-            <IconArrowUp className="h-4 w-4 dark:text-white" />
-          ) : (
-            <IconArrowUp className="h-4 w-4" />
-          )}
-        </Button>
-      </div>
+    <div className={cn("items-center gap-2 group inline-flex", className)}>
+      <p>{title}</p>
+      <Button
+        variant="ghost"
+        size="sm"
+        className={`h-6 w-6 data-[state=open]:bg-accent ml-2 ${
+          column.getIsSorted() ? "visible" : "invisible group-hover:visible"
+        }`}
+        onClick={() => handleSortToggle()}
+      >
+        {column.getIsSorted() === "desc" ? (
+          <IconArrowDown className="h-4 w-4 dark:text-white" />
+        ) : column.getIsSorted() === "asc" ? (
+          <IconArrowUp className="h-4 w-4 dark:text-white" />
+        ) : (
+          <IconArrowUp className="h-4 w-4" />
+        )}
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 data-[state=open]:bg-accent invisible group-hover:visible"
+            className="h-6 w-6 data-[state=open]:bg-accent invisible group-hover:visible"
           >
             <IconDotsVertical className="h-4 w-4" />
           </Button>

@@ -225,7 +225,7 @@ export function DataTable<TData, TValue>({
           maxHeight: height,
         }}
       >
-        <Table className="border-zinc-500">
+        <Table className="border-zinc-500" style={{ tableLayout: "auto" }}>
           <TableHeader
             className={cn(
               "bg-background/50 backdrop-blur",
@@ -239,6 +239,7 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       className={cn(condensed && "h-8")}
+                      style={{ width: `${header.getSize()}px` }}
                     >
                       {header.isPlaceholder
                         ? null
