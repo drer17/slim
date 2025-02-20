@@ -42,13 +42,13 @@ const HiddenInput: React.FC<
           />
         </div>
       ) : (
-        <div
+        <p
           className={cn("mt-0 h-full text-left w-full", props.textClass)}
           onClick={() => setEditing(true)}
           dir={props.dir}
         >
-          <span>{props.value || props.placeholder}</span>
-        </div>
+          {props.value || props.placeholder}
+        </p>
       )}
     </div>
   );

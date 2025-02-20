@@ -79,6 +79,7 @@ const TransactionCategoryForm: React.FC<FormProps<TransactionCategory>> = ({
               label: "Asset",
               type: "select",
               possibleValues: assets,
+              optional: true,
               placeholder: "Create a category for an asset or liability",
               defaultValue: defaults && defaults.assetId,
             },

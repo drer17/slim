@@ -11,6 +11,14 @@ import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "../ui/toast";
 import { useTransactionContext } from "../contexts/transaction";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 const Description: React.FC<{
   initDescription: string | null;
@@ -28,12 +36,13 @@ const Description: React.FC<{
 
   return (
     <HiddenInput
-      value={description || "Add description"}
+      value={description ?? "Add description"}
       onChange={(e) => {
         setDescription(e.target.value);
         updateDataDebounced(e.target.value);
       }}
       className="w-full h-full"
+      textClass={cn(!description && "text-muted-foreground")}
     />
   );
 };
@@ -50,18 +59,64 @@ const MoveTo: React.FC<{ transactionId: string }> = ({ transactionId }) => {
   };
 
   return (
-    <Select>
-      <SelectTrigger>Select A/L</SelectTrigger>
-      <SelectContent>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="secondary" className="font-normal">
+          Select A/L
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
         {assetLiabilities.map((al) => (
-          <SelectItem
-            value={al.id}
+          <DropdownMenuItem
             key={al.id}
             onClick={() => onMove(transactionId, al.id)}
           >
             {al.label}
-          </SelectItem>
+          </DropdownMenuItem>
         ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+const CategorySelect = ({
+  categoryId,
+  transactionId,
+}: {
+  categoryId: string | null;
+  transactionId: string;
+}) => {
+  const { categories } = useTransactionContext();
+  const [selectedCategoryId, setSelectedCategoryId] =
+    React.useState(categoryId);
+
+  const selectedCategory = React.useMemo(
+    () => categories.find((cat) => cat.id === selectedCategoryId),
+    [selectedCategoryId, categories],
+  );
+
+  const updateData = async (category: string) => {
+    await update(["transaction", undefined, transactionId], {
+      categoryId: category,
+    });
+    setSelectedCategoryId(category);
+  };
+
+  return (
+    <Select
+      value={selectedCategoryId || undefined}
+      onValueChange={(id) => updateData(id)}
+    >
+      <SelectTrigger>
+        {selectedCategory?.label ?? "Select Category"}
+      </SelectTrigger>
+      <SelectContent>
+        {categories &&
+          categories.map((cat) => (
+            <SelectItem key={cat.id} value={cat.id}>
+              {cat.label}
+            </SelectItem>
+          ))}
       </SelectContent>
     </Select>
   );
@@ -126,24 +181,31 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
       <DataTableColumnHeader column={column} title="Amount" />
     ),
     size: 20,
-    cell: ({ row }) =>
-      row.original.amount.toLocaleString("en-AU", {
-        style: "currency",
-        currency: "AUD",
-      }),
+    cell: ({ row }) => (
+      <p
+        className={cn(
+          "font-bold",
+          row.original.amount < 0 ? "text-rose-500" : "text-emerald-500",
+        )}
+      >
+        {row.original.amount.toLocaleString("en-AU", {
+          style: "currency",
+          currency: "AUD",
+        })}
+      </p>
+    ),
   },
   {
     accessorKey: "categoryId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
     ),
-    cell: ({ row }) => {
-      return (
-        <Select>
-          <SelectTrigger>Select Category</SelectTrigger>
-        </Select>
-      );
-    },
+    cell: ({ row }) => (
+      <CategorySelect
+        categoryId={row.original.categoryId}
+        transactionId={row.original.id}
+      />
+    ),
   },
   {
     accessorKey: "move",

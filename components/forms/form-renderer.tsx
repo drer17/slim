@@ -58,6 +58,8 @@ const generateZodSchema = <T,>(
         .refine((val) => val instanceof Date && !isNaN(val.getTime()), {
           message: `${String(field.column)} must be a valid date`,
         });
+    } else if (field.type === "boolean") {
+      zodField = z.boolean();
     }
 
     if (field.optional) {
@@ -93,7 +95,7 @@ const FormRenderer = <T,>({
   model,
 }: UpsertRowFormProps<T>) => {
   const { toast } = useToast();
-  const { formKwargs } = usePortfolioContext();
+  const { formKwargs, setOpenForm } = usePortfolioContext();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -121,8 +123,6 @@ const FormRenderer = <T,>({
   const onSubmit = async (data: FormSchemaType) => {
     setLoading(true);
     const filteredData = filterValues(data);
-    if (data.id) {
-    }
     const response = !data.id
       ? await create(formKwargs.slug ?? [tableName], {
           ...model,
@@ -135,8 +135,9 @@ const FormRenderer = <T,>({
     if (response && response.title === Status.success)
       callback && callback(response.data);
 
-    toast(response as ToastProps);
+    if (response) toast(response as ToastProps);
     setLoading(false);
+    setOpenForm(undefined);
   };
 
   return (
