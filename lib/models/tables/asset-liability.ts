@@ -60,12 +60,15 @@ export class AssetLiabilityModel<
       items: res.map((asset) => ({
         type: {
           label: asset.assetType.label,
-          icon: getIcon(asset.assetType.icon),
+          icon: asset.assetType.icon,
         },
-        icon: getIcon(asset.icon),
+        icon: asset.icon || asset.assetType.icon,
         title: asset.label,
         secondary: asset.assetType.label,
-        primary: asset.valuations[0]?.value,
+        primary: asset.valuations[0]?.value.toLocaleString("en-AU", {
+          style: "currency",
+          currency: "AUD",
+        }),
         tags: asset.TagLink.map((tag) => tag.tag),
         color: asset.color,
         starred: asset.starred,
@@ -75,7 +78,7 @@ export class AssetLiabilityModel<
         children: "",
         getRowAsChild: true,
       })) as (CardProps & {
-        type: { label: string; icon?: React.ReactNode };
+        type: { label: string; icon?: string };
       })[],
       menuOptions: [
         {
@@ -143,6 +146,7 @@ export class AssetLiabilityModel<
             },
           },
         },
+        assetType: true,
       },
     });
 
@@ -154,7 +158,7 @@ export class AssetLiabilityModel<
           href: `/portfolio/table/${this.asset ? "asset" : "liability"}`,
         },
       ],
-      icon: asset.icon,
+      icon: asset.icon || asset.assetType.icon,
       title: asset.label,
       tags: asset.TagLink.map((tag) => tag.tag),
       starred: asset.starred,

@@ -12,6 +12,9 @@ import {
 } from "../ui/dropdown-menu";
 import { IconDots, IconTrash } from "@tabler/icons-react";
 import { AssetLiabilityType } from "@prisma/client";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import { iconOptions } from "../global/icons";
+import { update } from "@/lib/actions/update";
 
 const Options: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const deleteCategory = async () => {
@@ -40,6 +43,37 @@ export const assetLiabilityTypeColumns: ColumnDef<AssetLiabilityType>[] = [
     accessorKey: "label",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Label" />
+    ),
+  },
+  {
+    accessorKey: "icon",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Label" />
+    ),
+    cell: ({ row }) => (
+      <Select
+        value={row.original.icon || undefined}
+        onValueChange={async (id) => {
+          await update(["asset-liability-type", row.original.id], {
+            icon: id,
+          });
+        }}
+      >
+        <SelectTrigger className="capitalize">
+          {row.original.icon || "Select icon"}
+        </SelectTrigger>
+        <SelectContent>
+          {iconOptions.map((icon) => (
+            <SelectItem
+              key={icon.value}
+              value={icon.value}
+              className="capitalize"
+            >
+              {icon.value}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     ),
   },
   {

@@ -45,6 +45,7 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
       const key = item.starred ? "starred" : item.type.label;
       if (!acc[key])
         acc[key] = { type: { ...item.type, label: key }, cards: [] };
+      if (key === "starred") acc.starred.type.icon = "starred";
       acc[key].cards.push(item);
       return acc;
     },
@@ -86,19 +87,19 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
         </div>
       </div>
       <div className="mt-7"></div>
-      <ScrollArea className="w-full" style={{ height: `calc(100vh - 120px)` }}>
+      <ScrollArea className="w-full" style={{ height: `calc(100vh - 105px)` }}>
         {Object.values(groupedByStarredAndType).map((item, idx) => (
           <div key={`Type${idx}`} className="">
             {idx > 0 && <div className="h-10" />}
-            <div className="flex gap-2 mb-2">
+            <div className="flex gap-2 mb-2 items-center">
               {getIcon(item.type.icon)}
-              <h2 className="ml-2 text-muted-foreground uppercase">
+              <h3 className="ml-2 text-muted-foreground uppercase">
                 {item.type.label}
-              </h2>
+              </h3>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 p-2">
               {item.cards.map((card, idx) => (
-                <Card {...card} key={`Card${idx}`}></Card>
+                <Card {...card} key={`Card${idx}`} />
               ))}
             </div>
           </div>

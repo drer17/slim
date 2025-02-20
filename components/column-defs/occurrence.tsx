@@ -1,7 +1,6 @@
 import { Occurrence } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
-import { title } from "process";
 
 export const occurrenceColumns: ColumnDef<
   Occurrence & { obligation: { name: string } }

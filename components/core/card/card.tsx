@@ -64,9 +64,10 @@ import useUpdateEffect from "@/hooks/use-update-effect";
 import { archive, updateColor, updateStar } from "@/lib/actions/update";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "@/components/ui/toast";
+import { getIcon } from "@/components/global/icons";
 
 export interface CardProps {
-  icon?: React.ReactNode | string;
+  icon?: string;
   title: string;
   secondary?: string;
   primary: React.ReactNode | string;
@@ -140,14 +141,14 @@ const Card: React.FC<CardProps> = ({
   useUpdateEffect(() => changeColor(newColor), [changeColor, newColor]);
 
   const cardContents = (
-    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-36 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
+    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-28 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
       <div
         className="flex items-center justify-center text-zinc-500"
         style={{ color: newColor }}
       >
-        {icon}
+        {getIcon(icon)}
       </div>
-      <div className="col-span-3 flex items-center ml-1">
+      <div className="col-span-3 flex items-center ml-1 mt-1">
         <Tooltip>
           <TooltipTrigger>
             {href ? (
@@ -155,14 +156,12 @@ const Card: React.FC<CardProps> = ({
                 href={href + slug?.join("/")}
                 onClick={(e) => e.stopPropagation()}
               >
-                <p className="font-extrabold text-left text-sm uppercase">
+                <p className="font-medium text-left text-sm uppercase">
                   {title}
                 </p>
               </Link>
             ) : (
-              <p className="font-extrabold text-left text-sm uppercase">
-                {title}
-              </p>
+              <p className="font-medium text-left text-sm uppercase">{title}</p>
             )}
           </TooltipTrigger>
           {secondary && <TooltipContent>{secondary}</TooltipContent>}
@@ -181,7 +180,7 @@ const Card: React.FC<CardProps> = ({
         ))}
       </ScrollArea>
       <div className="col-span-4"></div>
-      <div className="col-span-4 flex items-end text-lg font-bold">
+      <div className="col-span-4 flex items-end text-lg font-mono font-medium">
         {primary}
       </div>
     </div>
@@ -195,10 +194,10 @@ const Card: React.FC<CardProps> = ({
             href={href + slug?.join("/")}
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="font-bold text-left">{title}</p>
+            <p className="font-medium text-left">{title}</p>
           </Link>
         ) : (
-          <p className="font-bold text-left">{title}</p>
+          <p className="font-medium text-left">{title}</p>
         )}
       </div>
       <ScrollArea className="row-span-2 flex justify-start flex-col">

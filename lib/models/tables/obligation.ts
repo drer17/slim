@@ -8,7 +8,6 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
   assetLiabilityId?: string;
 
   constructor(assetLiabilityId?: string, id?: string) {
-    console.log("HERE", assetLiabilityId);
     super();
     this.tableName = "obligation";
     this.id = id;
@@ -16,7 +15,6 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
   }
 
   public async create(data: Partial<Obligation>): Promise<any | ToastProps> {
-    console.log(data, this.portfolioId, this.assetLiabilityId);
     return super.create({
       portfolioId: this.portfolioId,
       assetLiabilityId: this.assetLiabilityId,
@@ -45,7 +43,6 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
         obligationRule: true,
       },
     });
-    console.log(rows);
 
     const asset = this.assetLiabilityId
       ? await prisma.assetLiability.findUnique({

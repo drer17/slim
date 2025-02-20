@@ -15,15 +15,18 @@ export class ValuationModel<Valuation> extends Level5Model<Valuation> {
   }
 
   public async create(data: Partial<Valuation>): Promise<any | ToastProps> {
-    console.log(data);
-    return super.create({ assetLiabilityId: this.assetLiabilityId, ...data });
+    return super.create({
+      assetLiabilityId: this.assetLiabilityId,
+      ...data,
+      value: parseFloat(data.value),
+    });
   }
 
   async getDataForTable(
     limit: number,
     page: number,
   ): Promise<Level5TableViewProps> {
-    const rows = await prisma.transaction.findMany({
+    const rows = await prisma.valuation.findMany({
       where: {
         assetLiabilityId: this.assetLiabilityId,
       },

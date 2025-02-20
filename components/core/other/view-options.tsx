@@ -54,7 +54,7 @@ const ViewOptions: React.FC<ViewOptionProps> = ({
         {menuOptions.map((option, idx) =>
           typeof option === "object" ? (
             <Link href={option?.href} key={option.label}>
-              <DropdownMenuItem key={`Menu${idx}`} className="capitalize">
+              <DropdownMenuItem key={`Menu${idx}`} className="capitalize gap-2">
                 {getIcon(option.label)}
                 {option.label}
               </DropdownMenuItem>
