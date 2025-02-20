@@ -1,53 +1,138 @@
 "use client";
 
-import { TransactionCategory } from "@prisma/client";
+import { AssetLiability, TransactionCategory } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
-import { Select, SelectTrigger } from "../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import React from "react";
+import { useTransactionCategoryContext } from "../contexts/transaction-categories";
+import { get } from "@/lib/actions/get";
+import { update } from "@/lib/actions/update";
+import { deleteItem } from "@/lib/actions/delete";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { IconDots, IconTrash } from "@tabler/icons-react";
 
-const ParentSelect = () => {
+const ParentSelect = ({ parentId }: { parentId: string | null }) => {
+  const { categories } = useTransactionCategoryContext();
+
+  const [selectedParent, setSelectedParent] = React.useState<string | null>(
+    parentId,
+  );
+  const [selectedName, setSelectedName] = React.useState<string | undefined>(
+    undefined,
+  );
+
+  React.useEffect(() => {
+    const getEntity = async () => {
+      if (!selectedParent) return;
+      const entity = (await get([
+        "transaction-category",
+        selectedParent,
+      ])) as TransactionCategory[];
+      setSelectedName(entity[0].label);
+    };
+    getEntity();
+  }, [selectedParent]);
+
+  const updateData = async (categoryId: string) => {
+    await update(["transaction-category", undefined, categoryId], {
+      parent: categoryId,
+    });
+    setSelectedParent(categoryId);
+  };
+
   return (
-    <Select>
-      <SelectTrigger></SelectTrigger>
+    <Select
+      value={selectedParent || undefined}
+      onValueChange={(id) => updateData(id)}
+    >
+      <SelectTrigger>{selectedName || "Select Category"}</SelectTrigger>
+      <SelectContent>
+        {categories &&
+          categories.map((cat) => (
+            <SelectItem key={cat.id} value={cat.id}>
+              {cat.label}
+            </SelectItem>
+          ))}
+      </SelectContent>
     </Select>
   );
 };
 
-export const transactionColumns: ColumnDef<TransactionCategory>[] = [
+const AssetSelect = ({ assetId }: { assetId: string | null }) => {
+  const { assetLiabilities } = useTransactionCategoryContext();
+
+  const [selectedAsset, setSelectedAsset] = React.useState<string | null>(
+    assetId,
+  );
+  const [selectedName, setSelectedName] = React.useState<string | undefined>(
+    undefined,
+  );
+
+  React.useEffect(() => {
+    const getEntity = async () => {
+      if (!selectedAsset) return;
+      const entity = (await get([
+        "asset-liability",
+        selectedAsset,
+      ])) as AssetLiability[];
+      setSelectedName(entity[0].label);
+    };
+    getEntity();
+  }, [selectedAsset]);
+
+  const updateData = async (alId: string) => {
+    await update(["transaction-category", undefined, alId], {
+      assetId: alId,
+    });
+    setSelectedAsset(alId);
+  };
+
+  return (
+    <Select
+      value={selectedAsset || undefined}
+      onValueChange={(id) => updateData(id)}
+    >
+      <SelectTrigger>{selectedName || "Select Category"}</SelectTrigger>
+      <SelectContent>
+        {assetLiabilities &&
+          assetLiabilities.map((als) => (
+            <SelectItem key={als.id} value={als.id}>
+              {als.label}
+            </SelectItem>
+          ))}
+      </SelectContent>
+    </Select>
+  );
+};
+
+const Options: React.FC<{ categoryId: string }> = ({ categoryId }) => {
+  const deleteCategory = async () => {
+    deleteItem(["transaction-category", undefined, categoryId]);
+  };
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <IconDots className="h-4 w-4" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem onClick={() => deleteCategory()}>
+          <IconTrash className="text-red-500 w-4 h-4 mr-2" /> Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+export const transactionCategoryColumns: ColumnDef<TransactionCategory>[] = [
   {
     accessorKey: "id",
     header: "ID",
-  },
-  {
-    accessorKey: "parentId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Parent Category" />
-    ),
-    cell: ({ row }) =>
-      row.original.createdAt.toLocaleString("en-AU", {
-        timeZone: "Australia/Adelaide",
-      }),
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" className="w-24" />
-    ),
-    size: 20,
-    cell: ({ row }) =>
-      row.original.date.toLocaleString("en-AU", {
-        timeZone: "Australia/Adelaide",
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-      }),
-  },
-  {
-    accessorKey: "assetLiabilityId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Asset Liability Id" />
-    ),
   },
   {
     accessorKey: "label",
@@ -56,52 +141,34 @@ export const transactionColumns: ColumnDef<TransactionCategory>[] = [
     ),
   },
   {
-    accessorKey: "description",
+    accessorKey: "parentId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Description" />
+      <DataTableColumnHeader column={column} title="Parent Category" />
     ),
-    cell: ({ row }) => (
-      <Description
-        initDescription={row.original.description}
-        transactionId={row.original.id}
-      />
+    cell: ({ row }) => <ParentSelect parentId={row.original.parentId} />,
+  },
+  {
+    accessorKey: "assetId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Parent Category" />
+    ),
+    cell: ({ row }) => <AssetSelect assetId={row.original.assetId} />,
+  },
+  {
+    accessorKey: "expense",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Expense" />
     ),
   },
   {
-    accessorKey: "amount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Amount" />
-    ),
-    size: 20,
-    cell: ({ row }) =>
-      row.original.amount.toLocaleString("en-AU", {
-        style: "currency",
-        currency: "AUD",
-      }),
-  },
-  {
-    accessorKey: "categoryId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <Select>
-          <SelectTrigger>Select Category</SelectTrigger>
-        </Select>
-      );
-    },
-  },
-  {
-    accessorKey: "move",
-    header: () => "Move To",
-    size: 10,
-    cell: ({ row }) => <MoveTo transactionId={row.id} />,
+    accessorKey: "options",
+    header: () => <></>,
+    enableResizing: true,
+    cell: ({ row }) => <Options categoryId={row.original.id} />,
+    size: 290,
   },
 ];
 
-export const transactionVisibility = {
+export const transactionCategoryVisibility = {
   id: false,
-  createdAt: false,
-  assetLiabilityId: false,
 };

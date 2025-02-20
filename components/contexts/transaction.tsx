@@ -24,7 +24,6 @@ export const TransactionProvider: React.FC<ModelContextProps> = ({
   React.useEffect(() => {
     const getData = async () => {
       const data = await get(["asset-liability"]);
-      console.log(data);
       if (Array.isArray(data)) setAssetLiabilities(data);
     };
     getData();

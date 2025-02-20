@@ -1,6 +1,6 @@
 "use client";
 
-import { AssetLiability, Transaction } from "@prisma/client";
+import { Transaction } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
@@ -8,9 +8,9 @@ import HiddenInput from "../core/other/hidden-input";
 import { useDebouncedCallback } from "use-debounce";
 import { update } from "@/lib/actions/update";
 import React from "react";
-import { get } from "@/lib/actions/get";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "../ui/toast";
+import { useTransactionContext } from "../contexts/transaction";
 
 const Description: React.FC<{
   initDescription: string | null;
@@ -39,17 +39,8 @@ const Description: React.FC<{
 };
 
 const MoveTo: React.FC<{ transactionId: string }> = ({ transactionId }) => {
-  const [als, setAls] = React.useState<AssetLiability[]>([]);
+  const { assetLiabilities } = useTransactionContext();
   const { toast } = useToast();
-
-  React.useEffect(() => {
-    const getData = async () => {
-      const data = await get(["asset-liability"]);
-      console.log(data);
-      if (Array.isArray(data)) setAls(data);
-    };
-    getData();
-  }, []);
 
   const onMove = async (transactionId: string, newAlId: string) => {
     const result = await update(["transaction", undefined, transactionId], {
@@ -62,7 +53,7 @@ const MoveTo: React.FC<{ transactionId: string }> = ({ transactionId }) => {
     <Select>
       <SelectTrigger>Select A/L</SelectTrigger>
       <SelectContent>
-        {als.map((al) => (
+        {assetLiabilities.map((al) => (
           <SelectItem
             value={al.id}
             key={al.id}

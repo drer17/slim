@@ -8,11 +8,16 @@ import { entitiesColumns, entitiesVisibility } from "./entities";
 import { transactionColumns, transactionVisibility } from "./transactions";
 import { valuationColumns, valuationVisibility } from "./valuations";
 import { occurrenceColumns, occurrenceVisibility } from "./occurrence";
+import {
+  transactionCategoryColumns,
+  transactionCategoryVisibility,
+} from "./transaction-categories";
 
 export const modelColumnDefs: Record<string, ColumnDef<any>[]> = {
   obligations: obligationColumns,
   entities: entitiesColumns,
   transactions: transactionColumns,
+  transactionCategories: transactionCategoryColumns,
   valuations: valuationColumns,
   occurrences: occurrenceColumns,
 };
@@ -24,6 +29,7 @@ export const modelColumnVisibilities: Record<
   obligations: obligationVisibility,
   entities: entitiesVisibility,
   transactions: transactionVisibility,
+  transactionCategories: transactionCategoryVisibility,
   valuations: valuationVisibility,
   occurrences: occurrenceVisibility,
 };
@@ -34,4 +40,5 @@ export const modelColumnFilters: Record<string, ColumnFiltersState> = {
   transactions: [],
   valuations: [],
   occurrences: [],
+  transactionCategories: [],
 };

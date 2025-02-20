@@ -26,28 +26,19 @@ import {
 } from "../ui/dropdown-menu";
 import { IconArchive, IconDots, IconTrash } from "@tabler/icons-react";
 import { deleteItem } from "@/lib/actions/delete";
+import { useObligationContext } from "../contexts/obligations";
 
 const EntitySelection: React.FC<{
   entityId: string | null;
   obligationId: string;
 }> = ({ entityId, obligationId }) => {
-  const [entities, setEntities] = React.useState<Entity[] | undefined>(
-    undefined,
-  );
+  const { entities } = useObligationContext();
   const [selectedEnt, setSelectedEntity] = React.useState<string | null>(
     entityId,
   );
   const [selectedName, setSelectedName] = React.useState<string | undefined>(
     undefined,
   );
-
-  React.useEffect(() => {
-    const getData = async () => {
-      const data = await get(["entity"]);
-      Array.isArray(data) && setEntities(data as Entity[]);
-    };
-    getData();
-  }, []);
 
   React.useEffect(() => {
     const getEntity = async () => {

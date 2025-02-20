@@ -14,6 +14,7 @@ import ObligationForm from "@/components/forms/obligations";
 import EntityForm from "@/components/forms/entities";
 import TransactionForm from "@/components/forms/transaction";
 import ValuationForm from "@/components/forms/valuation";
+import TransactionCategoryForm from "@/components/forms/transaction-category";
 
 const Forms: React.FC = () => {
   const { formKwargs } = usePortfolioContext();
@@ -29,6 +30,10 @@ const Forms: React.FC = () => {
       />
       <EntityForm invisible={true} {...(formKwargs as FormProps<Entity>)} />
       <TransactionForm
+        invisible={true}
+        {...(formKwargs as FormProps<Transaction>)}
+      />
+      <TransactionCategoryForm
         invisible={true}
         {...(formKwargs as FormProps<Transaction>)}
       />
