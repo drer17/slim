@@ -175,7 +175,7 @@ const Card: React.FC<CardProps> = ({
       />
 
       <div className="col-span-4"></div>
-      <div className="col-span-4 flex items-end text-lg font-mono font-medium absolute bottom-[5px] left-4 bg-card/60 px-1 rounded shadow">
+      <div className="col-span-4 flex items-end text-lg font-mono font-medium absolute bottom-[5px] left-4 bg-card/80 px-1 rounded shadow">
         {primary}
       </div>
       <ScrollArea className="row-span-2 flex justify-start flex-col">

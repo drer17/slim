@@ -1,5 +1,6 @@
 import {
   IconArchive,
+  IconBriefcase2,
   IconBuildingBank,
   IconCategory,
   IconChartLine,
@@ -28,6 +29,7 @@ const icons: Record<string, React.ReactNode> = {
   coins: <IconCoins />,
   types: <IconCategory />,
   categories: <IconCategory />,
+  employment: <IconBriefcase2 />,
 };
 
 export const iconOptions = Object.keys(icons).map((icon) => ({

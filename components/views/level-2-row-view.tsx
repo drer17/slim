@@ -18,7 +18,7 @@
  */
 
 import { IconArchive } from "@tabler/icons-react";
-import { CardProps } from "../core/card/card";
+import Card, { CardProps } from "../core/card/card";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
 import { Attribute, Document, Note, Tag } from "@prisma/client";
@@ -28,6 +28,7 @@ import Link from "next/link";
 import {
   archive,
   createOrRemoveLink,
+  update,
   updateStar,
   upsertLevel7,
 } from "@/lib/actions/update";
@@ -38,9 +39,18 @@ import PathToResource, { PathSlug } from "../core/other/path-to-resource";
 import ViewOptions from "../core/other/view-options";
 import Notes from "../core/text/notes";
 import DescriptionComponent from "../core/text/description";
-import { Tags } from "../core/tag/tags";
 import Attributes from "../core/attributes/attributes";
 import { getIcon } from "../global/icons";
+import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export interface Level2RowViewProps {
   pathToResource: PathSlug[];
@@ -61,7 +71,7 @@ export interface Level2RowViewProps {
   }[];
   slug: string[];
   level2Children: CardProps[];
-  level3Children: CardProps[];
+  availableChildren: { id: string; label: string }[];
   menuOptions: string[];
   modelKey: string;
 }
@@ -81,11 +91,12 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
   actionButtons,
   slug,
   level2Children,
-  level3Children,
+  availableChildren,
   menuOptions,
 }) => {
   const { toast } = useToast();
   const { expanded: isInDialog } = useExpandedContext();
+  const { portfolioState } = usePortfolioContext();
 
   const changeStar = async (star: boolean) => {
     const res = await updateStar(slug, star);
@@ -131,17 +142,27 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
     if (res) toast(res as ToastProps);
   };
 
+  const updateChild = async (id: string, checked: boolean) => {
+    update(["asset-liability", undefined, id], {
+      parentId: checked ? slug[slug.length - 1] : null,
+    });
+  };
+
   return (
     <div className="w-full flex flex-col">
       <PathToResource path={pathToResource} className="ml-2" />
       <div className="h-2" />
       <div className="flex w-full justify-between items-center p-2 space-x-4">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <span style={{ color }}>{getIcon(icon)}</span>
+
           <h1 className="font-bold text-3xl">{title}</h1>
-        </div>
-        <div className="flex-1">
-          <Tags appliedTags={tags} upsertTag={upsertTag} />
+
+          <div className="w-2" />
+
+          <div className="flex items-end font-mono text-2xl bg-card/60 px-1 rounded shadow">
+            {primary}
+          </div>
         </div>
         <div className="space-x-2 flex group">
           <Favourite
@@ -183,7 +204,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
               <Notes notes={notes} save={saveNote} readOnly={isInDialog} />
             </Container>
           </div>
-          <ScrollArea className="flex flex-col gap-2 max-h-96">
+          <ScrollArea className="flex flex-col max-h-96">
             <div className="flex gap-2 flex-wrap">
               {actionButtons &&
                 actionButtons.map((button, idx) => (
@@ -200,11 +221,47 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
                   </Link>
                 ))}
             </div>
+            <div className="h-2" />
             <Container title="" expandable={true}>
-              {description}
-            </Container>
-            <Container title="" expandable={true}>
-              {description}
+              {!isInDialog && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <h2 className="cursor-pointer w-32">Edit Children</h2>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="max-h-80 overflow-auto">
+                    <DropdownMenuGroup>
+                      {availableChildren.map((child) => (
+                        <DropdownMenuCheckboxItem
+                          key={child.id}
+                          checked={
+                            level2Children.find(
+                              (checked) =>
+                                checked.slug[checked.slug.length - 1] ===
+                                child.id,
+                            )
+                              ? true
+                              : false
+                          }
+                          onCheckedChange={(checked) =>
+                            updateChild(child.id, checked)
+                          }
+                        >
+                          {child.label}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+              <div className="flex gap-2 p-2 flex-wrap">
+                {level2Children.map((card, idx) => (
+                  <Card
+                    {...card}
+                    key={`Card${idx}`}
+                    presetColors={portfolioState.colorPresets}
+                  />
+                ))}
+              </div>
             </Container>
           </ScrollArea>
         </div>

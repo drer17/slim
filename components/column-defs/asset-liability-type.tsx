@@ -48,7 +48,7 @@ export const assetLiabilityTypeColumns: ColumnDef<AssetLiabilityType>[] = [
   {
     accessorKey: "icon",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Label" />
+      <DataTableColumnHeader column={column} title="Icon" />
     ),
     cell: ({ row }) => (
       <Select
@@ -75,6 +75,13 @@ export const assetLiabilityTypeColumns: ColumnDef<AssetLiabilityType>[] = [
         </SelectContent>
       </Select>
     ),
+  },
+  {
+    accessorKey: "asset",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Asset" />
+    ),
+    cell: ({ row }) => <p className="capitalize">{row.original.asset}</p>,
   },
   {
     accessorKey: "options",

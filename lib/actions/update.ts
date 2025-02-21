@@ -50,7 +50,7 @@ export async function upsertLevel7(
 
 export async function update(
   slug: Slug,
-  data: Record<string, string>,
+  data: Record<string, string | null>,
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   return model.update(data);

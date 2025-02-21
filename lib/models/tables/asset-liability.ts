@@ -41,7 +41,8 @@ export class AssetLiabilityModel<
             },
           },
         },
-        archivedAt: undefined,
+        archivedAt: null,
+        parentId: null,
       },
       include: {
         assetType: true,
@@ -66,7 +67,9 @@ export class AssetLiabilityModel<
         icon: asset.icon || asset.assetType.icon,
         title: asset.label,
         secondary: asset.assetType.label,
-        primary: asset.valuations[0]?.value.toLocaleString("en-AU", {
+        primary: (
+          (asset.assetType.asset ? 1 : -1) * asset.valuations[0]?.value || 0
+        ).toLocaleString("en-AU", {
           style: "currency",
           currency: "AUD",
         }),
@@ -151,6 +154,18 @@ export class AssetLiabilityModel<
       },
     });
 
+    const availableAssetLiabilities = await prisma.assetLiability.findMany({
+      where: {
+        portfolioId: this.portfolioId,
+        archivedAt: null,
+        NOT: { id: this.id },
+      },
+    });
+    const parsedAvailableAssets = availableAssetLiabilities.map((as) => ({
+      id: as.id,
+      label: as.label,
+    }));
+
     return assetLiabilityData.map((asset) => ({
       pathToResource: [
         { label: "portfolio", href: "/portfolio/dashboard" },
@@ -164,7 +179,12 @@ export class AssetLiabilityModel<
       tags: asset.TagLink.map((tag) => tag.tag),
       starred: asset.starred,
       color: asset.color,
-      primary: String(asset.valuations[0]?.value),
+      primary: (
+        (asset.assetType.asset ? 1 : -1) * asset.valuations[0]?.value || 0
+      ).toLocaleString("en-AU", {
+        style: "currency",
+        currency: "AUD",
+      }),
       description: asset.description ?? "",
       attributes: asset.attributes.map((attr) => attr.attribute),
       documents: asset.DocumentLink.map((doc) => doc.document),
@@ -191,10 +211,15 @@ export class AssetLiabilityModel<
         },
       ],
       level2Children: asset.children.map((child) => ({
-        icon: child.icon,
+        icon: child.icon || child.assetType.icon,
         title: child.label,
         secondary: child.assetType.label,
-        primary: child.valuations[0].value,
+        primary: (
+          (child.assetType.asset ? 1 : -1) * child.valuations[0]?.value || 0
+        ).toLocaleString("en-AU", {
+          style: "currency",
+          currency: "AUD",
+        }),
         tags: child.TagLink.map((tag) => tag.tag),
         color: String(child.color),
         starred: child.starred,
@@ -202,12 +227,12 @@ export class AssetLiabilityModel<
         slug: [
           "asset-liability",
           child.assetType.asset ? "asset" : "liability",
-          asset.id,
+          child.id,
         ],
-        href: "/portfolio/row/",
+        href: `/portfolio/row/`,
         getRowAsChild: true,
       })),
-      level3Children: [],
+      availableChildren: parsedAvailableAssets,
       menuOptions: ["archive"],
       modelKey: "assetLiability",
     }))[0] as Level2RowViewProps;

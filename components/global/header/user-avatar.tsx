@@ -9,13 +9,14 @@
  * [ ]- drop down for settings
  */
 
+import React from "react";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 
 const UserAvatar = () => {
   return (
     <div className="hidden md:flex">
       <Avatar className="w-8 h-8">
-        <AvatarFallback className="text-sm">AR</AvatarFallback>
+        <AvatarFallback className="text-sm"></AvatarFallback>
       </Avatar>
     </div>
   );

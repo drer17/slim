@@ -8,7 +8,7 @@ import { EntityModel } from "./tables/entity";
 import { ObligationModel } from "./tables/obligation";
 import { ObligationRuleModel } from "./tables/obligation-rule";
 import { OccurrenceModel } from "./tables/occurrence";
-import { PortfolioModel } from "./tables/portfolios";
+import { PortfolioModel } from "./tables/portfolio";
 import { TagModel } from "./tables/tag";
 import { TransactionModel } from "./tables/transaction";
 import { TransactionCategoryModel } from "./tables/transaction-category";

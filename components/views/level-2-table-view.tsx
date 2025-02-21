@@ -60,6 +60,24 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
     >,
   );
 
+  // Sort the keys by your preferred order
+  const sortedGroupedByStarredAndType = Object.keys(groupedByStarredAndType)
+    .sort((a, b) => {
+      // Custom sorting logic here:
+      // For example, always put "starred" first
+      if (a === "starred") return -1;
+      if (b === "starred") return 1;
+      // Sort the rest alphabetically (or by some other condition)
+      return a.localeCompare(b);
+    })
+    .reduce(
+      (acc, key) => {
+        acc[key] = groupedByStarredAndType[key];
+        return acc;
+      },
+      {} as typeof groupedByStarredAndType,
+    );
+
   const availableMenuOptions = {};
 
   return (
@@ -88,7 +106,7 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
       </div>
       <div className="mt-4"></div>
       <ScrollArea className="w-full" style={{ height: `calc(100vh - 105px)` }}>
-        {Object.values(groupedByStarredAndType).map((item, idx) => (
+        {Object.values(sortedGroupedByStarredAndType).map((item, idx) => (
           <div key={`Type${idx}`} className="">
             {idx > 0 && <div className="h-4" />}
             <div className="flex gap-3 mb-2 ml-2 items-center text-muted-foreground ">
