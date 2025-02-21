@@ -41,6 +41,7 @@ export class AssetLiabilityModel<
             },
           },
         },
+        archivedAt: undefined,
       },
       include: {
         assetType: true,
@@ -82,7 +83,7 @@ export class AssetLiabilityModel<
       })[],
       menuOptions: [
         {
-          label: "Types",
+          label: "types",
           href: "/portfolio/table/asset-liability-type",
         },
       ],

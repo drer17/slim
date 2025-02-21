@@ -28,7 +28,18 @@ export default async function Layout({
       tags={tags}
       assetLiabilityTypes={assetLiabilityTypes}
       transactionCategories={transactionCategories}
-      colorPresets={[]}
+      colorPresets={[
+        "#ec4899",
+        "#f43f5e",
+        "#f59e0b",
+        "#eab308",
+        "#10B981",
+        "#06B6D4",
+        "#3b82f6",
+        "#8b5cf6",
+        "#71717a",
+        "#ffffff",
+      ]}
     >
       <div
         className={cn(

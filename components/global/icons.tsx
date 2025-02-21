@@ -1,9 +1,13 @@
 import {
   IconArchive,
   IconBuildingBank,
+  IconCategory,
   IconChartLine,
   IconChecklist,
+  IconCoins,
   IconDatabaseDollar,
+  IconDiamond,
+  IconGraph,
   IconHome,
   IconSquare,
   IconStarFilled,
@@ -19,6 +23,11 @@ const icons: Record<string, React.ReactNode> = {
   starred: <IconStarFilled />,
   archive: <IconArchive />,
   trash: <IconTrash />,
+  shares: <IconGraph />,
+  jewellery: <IconDiamond />,
+  coins: <IconCoins />,
+  types: <IconCategory />,
+  categories: <IconCategory />,
 };
 
 export const iconOptions = Object.keys(icons).map((icon) => ({

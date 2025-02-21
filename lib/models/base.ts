@@ -2,8 +2,11 @@ import { revalidatePath } from "next/cache";
 import { Status, ToastProps } from "../definitions/response";
 import { prisma } from "../prisma";
 import { generateToast } from "../utilities/response";
+import { cookies } from "next/headers";
 
 export type TableNames =
+  | "user"
+  | "portfolio"
   | "assetLiabilityType"
   | "assetLiability"
   | "entity"
@@ -30,8 +33,12 @@ export abstract class BaseModel<T> {
   id?: string;
 
   constructor() {
-    this.userId = "732ec057-50bc-488f-ab6f-56f733ef2890";
-    this.portfolioId = "4e2fd80e-4233-4bbd-bd2c-355ab6072a2f";
+    const cookieStore = cookies();
+    this.userId =
+      cookieStore.get("user")?.value ?? "732ec057-50bc-488f-ab6f-56f733ef2890";
+    this.portfolioId =
+      cookieStore.get("portfolio")?.value ??
+      "4e2fd80e-4233-4bbd-bd2c-355ab6072a2f";
   }
 
   public async get(): Promise<T[] | ToastProps> {

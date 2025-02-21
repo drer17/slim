@@ -38,7 +38,7 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
   menuOptions,
   formDialog,
 }) => {
-  const { setOpenForm, setFormKwargs } = usePortfolioContext();
+  const { setOpenForm, setFormKwargs, portfolioState } = usePortfolioContext();
 
   const groupedByStarredAndType = items.reduce(
     (acc, item) => {
@@ -95,9 +95,13 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
               {getIcon(item.type.icon)}
               <h3 className="uppercase">{item.type.label}</h3>
             </div>
-            <div className="flex gap-2 p-2">
+            <div className="flex gap-2 p-2 flex-wrap">
               {item.cards.map((card, idx) => (
-                <Card {...card} key={`Card${idx}`} />
+                <Card
+                  {...card}
+                  key={`Card${idx}`}
+                  presetColors={portfolioState.colorPresets}
+                />
               ))}
             </div>
           </div>

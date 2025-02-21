@@ -65,6 +65,7 @@ import { archive, updateColor, updateStar } from "@/lib/actions/update";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "@/components/ui/toast";
 import { getIcon } from "@/components/global/icons";
+import { cn } from "@/lib/utils";
 
 export interface CardProps {
   icon?: string;
@@ -141,16 +142,17 @@ const Card: React.FC<CardProps> = ({
   useUpdateEffect(() => changeColor(newColor), [changeColor, newColor]);
 
   const cardContents = (
-    <div className="dark:bg-zinc-900 bg-zinc-100 rounded-md w-64 h-28 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105">
-      <div
-        className="flex items-center justify-center text-zinc-500"
-        style={{ color: newColor }}
-      >
-        {getIcon(icon)}
-      </div>
-      <div className="col-span-3 flex items-center ml-1 mt-1">
+    <div
+      style={{ backgroundColor: `${newColor}99` }}
+      className={cn(
+        "rounded-md w-64 h-28 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105 backdrop-blur border border-foreground/30",
+        color === "#ffffff" || color === undefined ? "!bg-card" : "",
+      )}
+    >
+      <div className="flex items-center justify-center">{getIcon(icon)}</div>
+      <div className="col-span-3 flex items-center ml-1 mt-1 h-full w-full relative">
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger className="absolute top-1">
             {href ? (
               <Link
                 href={href + slug?.join("/")}
@@ -171,6 +173,11 @@ const Card: React.FC<CardProps> = ({
         starred={starred}
         changeStarCallback={(star: boolean) => changeStar(star)}
       />
+
+      <div className="col-span-4"></div>
+      <div className="col-span-4 flex items-end text-lg font-mono font-medium absolute bottom-[5px] left-4 bg-card/60 px-1 rounded shadow">
+        {primary}
+      </div>
       <ScrollArea className="row-span-2 flex justify-start flex-col">
         {tags.map((tag) => (
           <React.Fragment key={tag.id}>
@@ -179,10 +186,6 @@ const Card: React.FC<CardProps> = ({
           </React.Fragment>
         ))}
       </ScrollArea>
-      <div className="col-span-4"></div>
-      <div className="col-span-4 flex items-end text-lg font-mono font-medium">
-        {primary}
-      </div>
     </div>
   );
 

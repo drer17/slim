@@ -8,9 +8,11 @@ import { EntityModel } from "./tables/entity";
 import { ObligationModel } from "./tables/obligation";
 import { ObligationRuleModel } from "./tables/obligation-rule";
 import { OccurrenceModel } from "./tables/occurrence";
+import { PortfolioModel } from "./tables/portfolios";
 import { TagModel } from "./tables/tag";
 import { TransactionModel } from "./tables/transaction";
 import { TransactionCategoryModel } from "./tables/transaction-category";
+import { UserModel } from "./tables/user";
 import { ValuationModel } from "./tables/valuation";
 
 export class ModelFactory {
@@ -19,6 +21,12 @@ export class ModelFactory {
 
     const model = slug[0];
     switch (model) {
+      case "user": {
+        return new UserModel();
+      }
+      case "portfolio": {
+        return new PortfolioModel();
+      }
       case "asset-liability-type": {
         const id = slug[1];
         return new AssetLiabilityTypeModel(id);

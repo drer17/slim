@@ -18,7 +18,7 @@ const Target = () => {
         items={[]}
         labelKey="label"
         valueKey="id"
-        placeholder="Root"
+        placeholder="Portfolio"
         buttonClassName="text-lg font-bold pl-2"
         commandPrompt="Search assets..."
       />

@@ -2,8 +2,8 @@
 
 import { AssetLiabilityType, Tag, TransactionCategory } from "@prisma/client";
 import { createContext, useContext, useState } from "react";
-import Forms, { FormDialog } from "./forms";
-import { FormKwargs } from "@/components/forms/types";
+import Forms from "./forms";
+import { FormDialog, FormKwargs } from "@/components/forms/types";
 
 export interface PortfolioState {
   tags: Tag[];
@@ -21,8 +21,8 @@ interface PortfolioContextProps {
 
   openForm: FormDialog | undefined;
   setOpenForm: React.Dispatch<React.SetStateAction<FormDialog | undefined>>;
-  formKwargs: FormKwargs;
-  setFormKwargs: React.Dispatch<React.SetStateAction<FormKwargs>>;
+  formKwargs: FormKwargs<any>;
+  setFormKwargs: React.Dispatch<React.SetStateAction<FormKwargs<any>>>;
 }
 
 const PortfolioContext = createContext<PortfolioContextProps | undefined>(
