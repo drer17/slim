@@ -146,7 +146,7 @@ const Card: React.FC<CardProps> = ({
       style={{ backgroundColor: `${newColor}99` }}
       className={cn(
         "rounded-md w-64 h-28 grid grid-cols-5 gap-2 p-4 pt-2 group transition-transform transform hover:scale-105 backdrop-blur border border-foreground/30",
-        color === "#ffffff" || color === undefined ? "!bg-card" : "",
+        color === "#ffffff" || !color ? "!bg-card" : "",
       )}
     >
       <div className="flex items-center justify-center">{getIcon(icon)}</div>
