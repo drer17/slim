@@ -18,20 +18,12 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
   }
 
   public async create(data: Partial<Transaction>): Promise<any | ToastProps> {
-    console.log(data);
     return super.create({ assetLiabilityId: this.assetLiabilityId, ...data });
   }
 
   public async importData(data: Record<string, string>[]): Promise<ToastProps> {
-    const capitalizedTableName =
-      this.tableName.charAt(0).toUpperCase() + this.tableName.slice(1);
-
-    const columns: string[] = Object.values(
-      Prisma[`${capitalizedTableName}ScalarFieldEnum`],
-    );
-
+    const columns: string[] = Object.values(Prisma.TransactionScalarFieldEnum);
     const transactionColumns = ["date", "amount", "label"];
-
     const extractedData = [];
 
     for (const row of data) {
@@ -44,7 +36,6 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
             key,
             transactionColumns.findIndex((i) => i === key),
           );
-        else extractedRow[key] = getPartial(row, key);
       }
 
       if (this.assetLiabilityId)
@@ -54,21 +45,25 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
       extractedRow["date"] = new Date(year, month - 1, day).toISOString();
 
       extractedRow["amount"] = parseFloat(
-        extractedRow["amount"].replace('"', ""),
+        extractedRow["amount"].replaceAll('"', ""),
       );
       extractedRow["label"] = extractedRow["label"].replaceAll('"', "");
 
       extractedData.push(extractedRow);
     }
 
-    prisma[this.tableName].createMany({
+    console.log(extractedData);
+
+    await prisma.transaction.createMany({
       data: extractedData,
     });
 
+    console.info(
+      `Imported ${Object.keys(extractedData).length} transactions for asset ${this.assetLiabilityId} in portfolio ${this.portfolioId}.`,
+    );
+
     return generateToast(Status.success);
   }
-
-  async getDataForRow(): Promise<Level3RowViewProps> {}
 
   async getDataForTable(
     limit: number,
@@ -113,7 +108,7 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
             ]
           : []),
       ],
-      rows: rows,
+      rows,
       formDialog: FormDialog.TRANSACTION,
       menuOptions: [
         {

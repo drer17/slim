@@ -154,7 +154,7 @@ const Level2RowView: React.FC<Level2RowViewProps> = ({
         <div className="flex items-center gap-2">
           <span style={{ color }}>{getIcon(icon)}</span>
 
-          <h1 className="font-bold text-3xl">{title}</h1>
+          <h1 className="font-bold">{title}</h1>
 
           <div className="w-2" />
 

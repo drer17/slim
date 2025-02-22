@@ -1,11 +1,11 @@
-import { getIcon } from "@/components/global/icons";
 import { prisma } from "@/lib/prisma";
 import { Level2RowViewProps } from "@/components/views/level-2-row-view";
 import { Level2Model } from "../levels/level-2";
 import { Level2TableViewProps } from "@/components/views/level-2-table-view";
 import { CardProps } from "@/components/core/card/card";
-import { ToastProps } from "@/lib/definitions/response";
+import { Status, ToastProps } from "@/lib/definitions/response";
 import { FormDialog } from "@/components/forms/types";
+import { generateToast } from "@/lib/utilities/response";
 
 export class AssetLiabilityModel<
   AssetLiability,
@@ -18,6 +18,23 @@ export class AssetLiabilityModel<
     this.asset = type === "liability" ? false : true;
     this.id = id;
     this.getDataForRow();
+  }
+
+  public async get(): Promise<ToastProps | AssetLiability[]> {
+    try {
+      const result = await prisma.assetLiability.findMany({
+        where: {
+          AND: [{ id: this.id }, { archivedAt: null }],
+        },
+      });
+      console.log(
+        `Found ${this.tableName} with this id ${this.id} and returned successfully`,
+      );
+      return result as AssetLiability[];
+    } catch (error) {
+      console.error(`Error getting ${this.tableName}:`, error);
+      return generateToast(Status.failed);
+    }
   }
 
   public async create(

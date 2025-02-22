@@ -11,7 +11,7 @@ export async function updateColor(
   color: string,
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
-  if (model instanceof Level2Model) return model.changeColor(color);
+  if (model instanceof Level2Model) return await model.changeColor(color);
   return generateToast(Status.failed);
 }
 
@@ -21,7 +21,7 @@ export async function updateStar(
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    return model.changeStar(star);
+    return await model.changeStar(star);
   }
   return generateToast(Status.failed);
 }
@@ -29,7 +29,7 @@ export async function updateStar(
 export async function archive(slug: Slug): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    return model.archive();
+    return await model.archive();
   }
   return generateToast(Status.failed);
 }
@@ -43,7 +43,7 @@ export async function upsertLevel7(
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    return model.upsertLevel7(targetTable, data, targetId, link);
+    return await model.upsertLevel7(targetTable, data, targetId, link);
   }
   return generateToast(Status.failed);
 }
@@ -53,7 +53,7 @@ export async function update(
   data: Record<string, string | null>,
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
-  return model.update(data);
+  return await model.update(data);
 }
 
 export async function createOrRemoveLink(
@@ -65,7 +65,12 @@ export async function createOrRemoveLink(
 ): Promise<void | ToastProps> {
   const model = ModelFactory.create(slug);
   if (model instanceof Level2Model) {
-    return model.createOrRemoveLink(linkingTable, linkedId, linkedKey, remove);
+    return await model.createOrRemoveLink(
+      linkingTable,
+      linkedId,
+      linkedKey,
+      remove,
+    );
   }
   return generateToast(Status.failed);
 }

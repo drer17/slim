@@ -150,7 +150,7 @@ export const transactionCategoryColumns: ColumnDef<TransactionCategory>[] = [
   {
     accessorKey: "assetId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Parent Category" />
+      <DataTableColumnHeader column={column} title="For Asset" />
     ),
     cell: ({ row }) => <AssetSelect assetId={row.original.assetId} />,
   },

@@ -5,8 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { RootModel } from "../levels/root";
 import { cookies } from "next/headers";
 import { monthNames } from "@/lib/utilities/date";
-import { color } from "framer-motion";
-import { DashboardViewProps } from "@/components/views/dashboard";
+import { BalanceSheetProps } from "@/components/views/balance-sheet";
+import { DashboardCardProps } from "@/components/core/card/dashboard-card";
 
 export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
   tableName: TableNames = "portfolio";
@@ -57,7 +57,7 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
   public async getDataForDashboard(
     periodFrom: string,
     periodTo: string,
-  ): Promise<DashboardViewProps> {
+  ): Promise<{ cards: DashboardCardProps[] }> {
     const assetsLiabilities = await prisma.assetLiability.findMany({
       where: {
         AND: [
@@ -366,5 +366,104 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
         },
       ],
     };
+  }
+
+  public static generateMonthCols() {
+    return [...monthNames, "Total"].reduce(
+      (months, name) => {
+        months[name] = 0;
+        return months;
+      },
+      {} as Record<string, any>,
+    );
+  }
+
+  /*
+   * for each asset
+   * split by category (down)
+   * month (across)
+   *
+   * total for each category, month
+   */
+  public async getDataForBalance(
+    periodFrom: string,
+    periodTo: string,
+  ): Promise<BalanceSheetProps> {
+    const transactions = await prisma.transaction.findMany({
+      where: {
+        AND: [
+          { assetLiability: { portfolioId: this.portfolioId } },
+          { createdAt: { gt: periodFrom } },
+          { createdAt: { lte: periodTo } },
+        ],
+      },
+      include: {
+        assetLiability: {
+          select: {
+            label: true,
+            assetType: { select: { asset: true, icon: true } },
+          },
+        },
+        category: { select: { label: true, expense: true } },
+      },
+    });
+
+    const balance = transactions.reduce(
+      (acc, trans) => {
+        const assetKey = trans.assetLiabilityId || "Portfolio";
+        const assetLabel = trans.assetLiability?.label || "Portfolio";
+        const asset = trans.assetLiability?.assetType?.asset || true;
+        const icon = trans.assetLiability?.assetType?.icon || "shares";
+
+        if (!(assetKey in acc))
+          acc[assetKey] = {
+            icon,
+            asset,
+            label: assetLabel,
+            expense: {
+              Total: {
+                label: "Total",
+                months: PortfolioModel.generateMonthCols(),
+              },
+            },
+            income: {
+              Total: {
+                label: "Total",
+                months: PortfolioModel.generateMonthCols(),
+              },
+            },
+          };
+
+        const expense = trans.category?.expense || false ? "expense" : "income";
+        const categoryId = trans.categoryId || "Uncategorised";
+        const label = trans.category?.label || "Uncategorised";
+
+        if (!(categoryId in acc[assetKey][expense]))
+          acc[assetKey][expense][categoryId] = {
+            label,
+            months: PortfolioModel.generateMonthCols(),
+          };
+
+        // cell for month and category
+        acc[assetKey][expense][categoryId].months[
+          monthNames[trans.createdAt.getMonth()]
+        ] += trans.amount;
+
+        // right most total for each category
+        acc[assetKey][expense][categoryId].months.Total += trans.amount;
+
+        // bottom most total for each month
+        acc[assetKey][expense].Total[monthNames[trans.createdAt.getMonth()]] +=
+          trans.amount;
+
+        // bottom right cell for overall total
+        acc[assetKey][expense].Total.months.Total += trans.amount;
+
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
+
+    return balance;
   }
 }

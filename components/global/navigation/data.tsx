@@ -5,6 +5,7 @@ import {
   IconCircleMinus2,
   IconCirclePlus2,
   IconLayoutDashboard,
+  IconLayoutRows,
   IconTable,
   IconUsers,
 } from "@tabler/icons-react";
@@ -19,28 +20,20 @@ export const links = [
     class: "",
   },
   {
+    label: "Balance Sheet",
+    href: "/portfolio/balance-sheet",
+    icon: (
+      <IconLayoutRows className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+    ),
+    class: "mb-4",
+  },
+  {
     label: "Cash Flow",
     href: "/portfolio/table/transaction",
     icon: (
       <IconTable className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
     class: "mb-4",
-  },
-  {
-    label: "Calendar",
-    href: "/portfolio/calendar",
-    icon: (
-      <IconCalendarMonth className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-    class: "",
-  },
-  {
-    label: "Graph",
-    href: "/portfolio/graph",
-    icon: (
-      <IconChartDots3 className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    ),
-    class: "",
   },
 ];
 

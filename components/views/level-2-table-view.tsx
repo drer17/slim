@@ -85,7 +85,7 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
       <PathToResource path={pathToResource} className="ml-2" />
       <div className="h-2" />
       <div className="flex w-full justify-between p-2">
-        <h1 className="font-bold text-3xl">{title}</h1>
+        <h1 className="font-bold">{title}</h1>
         <div className="flex gap-2 items-center">
           <Button
             className="h-8"

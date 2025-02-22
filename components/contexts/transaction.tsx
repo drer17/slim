@@ -23,6 +23,7 @@ export const TransactionProvider: React.FC<ModelContextProps> = ({
     AssetLiability[]
   >([]);
   const [categories, setCategories] = React.useState<TransactionCategory[]>([]);
+  console.log(assetLiabilities);
 
   React.useEffect(() => {
     const getData = async () => {

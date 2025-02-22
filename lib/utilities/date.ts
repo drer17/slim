@@ -13,6 +13,21 @@ export const monthNames = [
   "December",
 ];
 
+export const fyMonthNames = [
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+];
+
 export function getFinancialYearStart(date: Date = new Date()): Date {
   const currentYear = date.getFullYear();
   let financialYearStart: Date;

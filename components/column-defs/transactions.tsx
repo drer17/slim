@@ -47,11 +47,15 @@ const Description: React.FC<{
   );
 };
 
-const MoveTo: React.FC<{ transactionId: string }> = ({ transactionId }) => {
+const MoveTo: React.FC<{ transactionId: string; assetLiabilityId: string }> = ({
+  transactionId,
+  assetLiabilityId,
+}) => {
   const { assetLiabilities } = useTransactionContext();
   const { toast } = useToast();
 
-  const onMove = async (transactionId: string, newAlId: string) => {
+  const onMove = async (newAlId: string) => {
+    console.log(transactionId, newAlId);
     const result = await update(["transaction", undefined, transactionId], {
       assetLiabilityId: newAlId,
     });
@@ -59,23 +63,19 @@ const MoveTo: React.FC<{ transactionId: string }> = ({ transactionId }) => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="font-normal">
-          Select A/L
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
+    <Select
+      value={assetLiabilityId || undefined}
+      onValueChange={(id) => onMove(id)}
+    >
+      <SelectTrigger>Select A/L</SelectTrigger>
+      <SelectContent>
         {assetLiabilities.map((al) => (
-          <DropdownMenuItem
-            key={al.id}
-            onClick={() => onMove(transactionId, al.id)}
-          >
+          <SelectItem key={al.id} value={al.id}>
             {al.label}
-          </DropdownMenuItem>
+          </SelectItem>
         ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </SelectContent>
+    </Select>
   );
 };
 
@@ -211,7 +211,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     accessorKey: "move",
     header: () => "Move To",
     size: 10,
-    cell: ({ row }) => <MoveTo transactionId={row.id} />,
+    cell: ({ row }) => <MoveTo transactionId={row.original.id} />,
   },
 ];
 
