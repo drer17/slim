@@ -78,7 +78,9 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
       where: {
         AND: [
           { assetLiability: { portfolioId: this.portfolioId } },
-          { assetLiabilityId: this.assetLiabilityId },
+          ...(this.assetLiabilityId
+            ? [{ assetLiabilityId: this.assetLiabilityId }]
+            : []),
         ],
       },
       orderBy: { createdAt: "desc" },
@@ -86,10 +88,12 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
       take: limit,
     });
 
-    const assetLiability = await prisma.assetLiability.findUnique({
-      where: { id: this.assetLiabilityId },
-      include: { assetType: { select: { asset: true } } },
-    });
+    let assetLiability = undefined;
+    if (this.assetLiabilityId)
+      assetLiability = await prisma.assetLiability.findUnique({
+        where: { id: this.assetLiabilityId },
+        include: { assetType: { select: { asset: true } } },
+      });
 
     const transactions: Level3TableViewProps = {
       title: "Transactions",

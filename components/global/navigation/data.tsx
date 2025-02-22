@@ -20,7 +20,7 @@ export const links = [
   },
   {
     label: "Cash Flow",
-    href: "/portfolio/grid/{asset}",
+    href: "/portfolio/table/transaction",
     icon: (
       <IconTable className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -28,7 +28,7 @@ export const links = [
   },
   {
     label: "Calendar",
-    href: "/portfolio/calendar/{asset}",
+    href: "/portfolio/calendar",
     icon: (
       <IconCalendarMonth className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -36,7 +36,7 @@ export const links = [
   },
   {
     label: "Graph",
-    href: "/portfolio/graph/{asset}",
+    href: "/portfolio/graph",
     icon: (
       <IconChartDots3 className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -47,7 +47,7 @@ export const links = [
 export const coreLinks = [
   {
     label: "Assets",
-    href: "/portfolio/table/asset-liability/asset/{asset}",
+    href: "/portfolio/table/asset-liability/asset",
     icon: (
       <IconCirclePlus2 className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -55,7 +55,7 @@ export const coreLinks = [
   },
   {
     label: "Liabilities",
-    href: "/portfolio/table/asset-liability/liability/{asset}",
+    href: "/portfolio/table/asset-liability/liability",
     icon: (
       <IconCircleMinus2 className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -63,7 +63,7 @@ export const coreLinks = [
   },
   {
     label: "Obligations",
-    href: "/portfolio/table/obligation/{asset}",
+    href: "/portfolio/table/obligation",
     icon: (
       <IconChecklist className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),
@@ -71,7 +71,7 @@ export const coreLinks = [
   },
   {
     label: "Entities",
-    href: "/portfolio/table/entity/{asset}",
+    href: "/portfolio/table/entity",
     icon: (
       <IconUsers className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
     ),

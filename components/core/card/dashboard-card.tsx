@@ -20,7 +20,7 @@ export const DashboardCard: React.FC<
   return (
     <div
       className={cn(
-        "rounded-md backdrop-blur border border-foreground/30 bg-card p-3 relative",
+        "rounded-md backdrop-blur border border-foreground/30 p-3 relative shadow bg-gradient-to-r from-card to-card",
       )}
       style={{ gridColumn: `span ${colspan}` }}
     >

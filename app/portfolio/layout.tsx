@@ -7,6 +7,8 @@ import { PortfolioProvider } from "./portfolio-provider";
 import { get } from "@/lib/actions/get";
 import { AssetLiabilityType, Tag, TransactionCategory } from "@prisma/client";
 import { getUser } from "@/lib/actions/auth";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
 
 export default async function Layout({
   children,
@@ -21,6 +23,9 @@ export default async function Layout({
   const transactionCategories = (await get([
     "transaction-categories",
   ])) as TransactionCategory[];
+
+  const cookieStore = cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
     <PortfolioProvider
@@ -41,20 +46,24 @@ export default async function Layout({
         "#ffffff",
       ]}
     >
-      <div
-        className={cn(
-          "flex flex-col md:flex-row w-full flex-1 mx-auto overflow-hidden",
-          "h-svh",
-        )}
-      >
-        <Navigation mobileHeader={<Header />} />
-        <div className="w-full p-4">
-          <div className="hidden md:flex">
-            <Header />
-          </div>
-          <div className="mt-8">{children}</div>
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <div
+          className={cn(
+            "flex flex-col md:flex-row w-full flex-1 mx-auto overflow-hidden",
+            "h-svh",
+          )}
+        >
+          <Navigation />
+          <SidebarInset>
+            <div className="w-full p-4">
+              <div className="hidden md:flex">
+                <Header />
+              </div>
+              <div className="mt-4">{children}</div>
+            </div>
+          </SidebarInset>
         </div>
-      </div>
+      </SidebarProvider>
     </PortfolioProvider>
   );
 }

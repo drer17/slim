@@ -6,79 +6,81 @@
  *
  * Component Requirements
  * [x]- Side bar navigation
- * [x]- Mobile support
  */
 
 "use client";
 
-import React, { useState } from "react";
-import { Sidebar, SidebarBody, SidebarLink } from "../../ui/side-bar";
-import { IconPin } from "@tabler/icons-react";
+import React from "react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "../../ui/sidebar";
 import Link from "next/link";
 
 import { motion } from "framer-motion";
 import SlimIcon from "../slim-icon";
 import { coreLinks, links } from "./data";
-import { cn } from "@/lib/utils";
-import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
-import { format } from "@/lib/utilities/string";
+import { usePathname } from "next/navigation";
+import ThemeToggle from "@/app/theme/theme_toggle";
 
-interface NavigationProps {
-  mobileHeader?: React.ReactNode;
-}
-
-const Navigation: React.FC<NavigationProps> = ({ mobileHeader }) => {
-  const {
-    portfolioState: { target },
-  } = usePortfolioContext();
-  const [open, setOpen] = useState(false);
-  const [animate, setAnimate] = useState(true);
+const Navigation = () => {
+  const pathname = usePathname();
+  const { open } = useSidebar();
   return (
-    <Sidebar open={open} setOpen={setOpen} animate={animate}>
-      <SidebarBody
-        className="justify-between gap-7 h-svh bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur group"
-        mobileHeader={mobileHeader}
-      >
-        <div className="flex justify-between items-center">
-          {open || !animate ? <Logo /> : <LogoIcon />}
-          {open && (
-            <div
-              className="dark:hover:text-zinc-400 hover:text-zinc-600 text-zinc-500 invisible md:visible"
-              onClick={() => setAnimate(!animate)}
-            >
-              <IconPin className="w-4 h-4 " />
-            </div>
-          )}
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <div className="w-full flex items-center ml-1 mt-1">
+          {open ? <Logo /> : <SlimIcon />}
         </div>
-        <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-          <div className="flex flex-col gap-2">
-            {links.map((link, idx) => (
-              <SidebarLink
-                key={idx}
-                link={{ ...link, href: format(link.href, { asset: target }) }}
-                className={link.class}
-              />
-            ))}
-          </div>
-          <p
-            className={cn(
-              "uppercase font-medium text-zinc-500 text-sm mt-10 mb-4 group-hover:visible invisible duration-100 ease-in-out",
-              !animate ? "visible" : "invisible",
-            )}
-          >
-            core
-          </p>
-          <div className="flex flex-col gap-2">
-            {coreLinks.map((link, idx) => (
-              <SidebarLink
-                key={idx}
-                link={{ ...link, href: format(link.href, { asset: target }) }}
-                className={link.class}
-              />
-            ))}
-          </div>
-        </div>
-      </SidebarBody>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {links.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                  <SidebarMenuButton asChild isActive={pathname === item.href}>
+                    <a href={item.href}>
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Core</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {coreLinks.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                  <SidebarMenuButton asChild isActive={pathname === item.href}>
+                    <a href={item.href}>
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <ThemeToggle />
+      </SidebarFooter>
     </Sidebar>
   );
 };
@@ -88,7 +90,7 @@ export default Navigation;
 export const Logo = () => {
   return (
     <Link
-      href="#"
+      href="/"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20 h-8"
     >
       <SlimIcon />
@@ -106,7 +108,7 @@ export const Logo = () => {
 export const LogoIcon = () => {
   return (
     <Link
-      href="#"
+      href="/"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20 h-8"
     >
       <SlimIcon />

@@ -104,7 +104,6 @@ const Level2TableView: React.FC<Level2TableViewProps & { slug: Slug }> = ({
           />
         </div>
       </div>
-      <div className="mt-4"></div>
       <ScrollArea className="w-full" style={{ height: `calc(100vh - 105px)` }}>
         {Object.values(sortedGroupedByStarredAndType).map((item, idx) => (
           <div key={`Type${idx}`} className="">

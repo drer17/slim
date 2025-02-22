@@ -10,6 +10,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import ThemeToggle from "@/app/theme/theme_toggle";
 import { getDashboardData } from "@/lib/actions/get";
 import { getFinancialYearStart } from "@/lib/utilities/date";
+import { Label } from "../ui/label";
 
 export interface DashboardViewProps {
   cards: DashboardCardProps[];
@@ -38,13 +39,14 @@ const Dashboard: React.FC<DashboardViewProps> = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
-        <ThemeToggle />
+      <div className="flex gap-2 items-center">
+        <Label>From</Label>
         <DatePicker
           date={range.from}
           setDate={(date) => setRange((prev) => ({ ...prev, from: date }))}
           placeholder="Select Date From"
         />
+        <Label>To</Label>
         <DatePicker
           date={range.to}
           setDate={(date) => setRange((prev) => ({ ...prev, to: date }))}
