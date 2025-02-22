@@ -30,7 +30,7 @@ export class AssetLiabilityTypeModel<
     const data: Level1TableViewProps = {
       title: "Asset Liability Types",
       modelKey: "assetLiabilityTypes",
-      pathToResource: [{ label: "portfolio", href: "/portfolio/dashboard" }],
+      pathToResource: [{ label: "portfolio", href: "/portfolio" }],
       rows,
       formDialog: FormDialog.ASSET_LIABILITY_TYPE,
     };

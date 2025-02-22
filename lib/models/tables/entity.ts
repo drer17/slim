@@ -33,7 +33,7 @@ export class EntityModel<Entity> extends Level3Model<Entity> {
 
     const ents: Level3TableViewProps = {
       title: "Entities",
-      pathToResource: [{ label: "portfolio", href: "/portfolio/dashboard" }],
+      pathToResource: [{ label: "portfolio", href: "/portfolio" }],
       rows: rows,
       formDialog: FormDialog.ENTITY,
       menuOptions: [],

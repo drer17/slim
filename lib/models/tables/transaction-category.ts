@@ -35,7 +35,7 @@ export class TransactionCategoryModel<
     const data: Level1TableViewProps = {
       title: "Transaction Categories",
       modelKey: "transactionCategories",
-      pathToResource: [{ label: "portfolio", href: "/portfolio/dashboard" }],
+      pathToResource: [{ label: "portfolio", href: "/portfolio" }],
       rows,
       formDialog: FormDialog.TRANSACTION_CATEGORY,
     };

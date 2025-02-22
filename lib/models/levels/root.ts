@@ -1,3 +1,4 @@
+import { DashboardViewProps } from "@/components/views/dashboard";
 import { BaseModel } from "../base";
 
 export abstract class RootModel<T> extends BaseModel<T> {

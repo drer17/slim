@@ -4,6 +4,9 @@ import { generateToast } from "@/lib/utilities/response";
 import { prisma } from "@/lib/prisma";
 import { RootModel } from "../levels/root";
 import { cookies } from "next/headers";
+import { monthNames } from "@/lib/utilities/date";
+import { color } from "framer-motion";
+import { DashboardViewProps } from "@/components/views/dashboard";
 
 export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
   tableName: TableNames = "portfolio";
@@ -51,7 +54,10 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
    * - networth over time (period)
    *
    */
-  public async getDataForDashboard(periodFrom: string, periodTo: string) {
+  public async getDataForDashboard(
+    periodFrom: string,
+    periodTo: string,
+  ): Promise<DashboardViewProps> {
     const assetsLiabilities = await prisma.assetLiability.findMany({
       where: {
         AND: [
@@ -64,7 +70,7 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
       },
       include: {
         valuations: {
-          select: { value: true },
+          select: { value: true, createdAt: true },
           orderBy: { createdAt: "desc" },
           where: {
             AND: [
@@ -96,7 +102,10 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
               { createdAt: { lt: new Date(periodTo) } },
             ],
           },
-          select: { amount: true, category: { select: { expense: true } } },
+          select: {
+            amount: true,
+            category: { select: { expense: true, label: true } },
+          },
         },
         assetType: { select: { asset: true } },
       },
@@ -105,33 +114,75 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
     const stats = assetsLiabilities.reduce(
       (acc, asset) => {
         const amount = asset.assetType.asset
-          ? asset.valuations[0].value
-          : -1 * asset.valuations[0].value;
+          ? (asset.valuations[asset.valuations.length - 1]?.value ?? 0)
+          : (-1 * asset.valuations[asset.valuations.length - 1]?.value ?? 0);
 
-        acc.networth + amount;
+        acc.networth += amount;
 
-        if (asset.assetType.asset) acc.assetCount + 1;
-        if (asset.assetType.asset) acc.assetValue + amount;
+        asset.valuations.reduce((valAcc, val) => {
+          if (!val.createdAt) return valAcc;
+          const key = `${monthNames[val.createdAt.getMonth()]} ${val.createdAt.getFullYear()}`;
+          if (!(key in valAcc.networthTrend))
+            valAcc.networthTrend[key] = { ...val, asset: asset.id };
+          else if (valAcc.networthTrend[key].asset !== asset.id)
+            valAcc.networthTrend[key] = {
+              createdAt: val.createdAt,
+              prevValue: valAcc.networthTrend[key].value,
+              value: valAcc.networthTrend[key].value + val.value,
+              asset: asset.id,
+            };
+          else if (
+            valAcc.networthTrend[key].createdAt.getMonth() ===
+              val.createdAt.getMonth() &&
+            val.createdAt > valAcc.networthTrend[key].createdAt
+          )
+            valAcc.networthTrend[key] = {
+              ...valAcc.networthTrend[key],
+              createdAt: val.createdAt,
+              value: valAcc.networthTrend[key].prevValue + val.value,
+              asset: asset.id,
+            };
+          return valAcc;
+        }, acc);
 
-        if (!asset.assetType.asset) acc.liabilityCount + 1;
-        if (!asset.assetType.asset) acc.liabilityValue - amount;
+        if (asset.assetType.asset) acc.assetCount += 1;
+        if (asset.assetType.asset) acc.assetValue += amount;
+
+        if (!asset.assetType.asset) acc.liabilityCount += 1;
+        if (!asset.assetType.asset) acc.liabilityValue -= amount;
 
         asset.transactions.reduce((transAcc, trans) => {
-          if (trans.category?.expense) transAcc.expense + trans.amount;
-          if (trans.category?.expense) transAcc.expenseCount + 1;
+          if (trans.category?.expense) {
+            transAcc.expense += trans.amount;
+            transAcc.expenseCount += 1;
 
-          if (!trans.category?.expense) transAcc.income + trans.amount;
-          if (!trans.category?.expense) transAcc.incomeCount + 1;
+            if (!(trans.category.label in transAcc.expenseCategories))
+              transAcc.expenseCategories[trans.category.label] = 0;
+            transAcc.expenseCategories[trans.category.label] += trans.amount;
+          }
+
+          if (!trans.category?.expense) {
+            transAcc.income += trans.amount;
+            transAcc.incomeCount += 1;
+
+            if (
+              trans.category?.label &&
+              !(trans.category.label in transAcc.incomeCategories)
+            )
+              transAcc.incomeCategories[trans.category.label] = 0;
+            if (trans.category)
+              transAcc.incomeCategories[trans.category.label] += trans.amount;
+          }
           return transAcc;
         }, acc);
 
         asset.obligations.reduce((obAcc, ob) => {
           ob.Occurrence.reduce((occAcc, occ) => {
-            if (occ.amount > 0) occAcc.obligationsCount + 1;
-            if (occ.amount > 0) occAcc.obligations + occ.amount;
+            if (occ.amount > 0) occAcc.obligationsCount += 1;
+            if (occ.amount > 0) occAcc.obligations += occ.amount;
 
-            if (occ.amount < 0) occAcc.obligationsToCount + 1;
-            if (occ.amount < 0) occAcc.obligationsTo + occ.amount;
+            if (occ.amount < 0) occAcc.obligationsToCount += 1;
+            if (occ.amount < 0) occAcc.obligationsTo += occ.amount;
 
             return occAcc;
           }, obAcc);
@@ -143,14 +194,17 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
       },
       {
         networth: 0,
+        networthTrend: {} as Record<string, any>,
         assetValue: 0,
         assetCount: 0,
         liabilityCount: 0,
         liabilityValue: 0,
         income: 0,
         incomeCount: 0,
+        incomeCategories: {} as Record<string, number>,
         expense: 0,
         expenseCount: 0,
+        expenseCategories: {} as Record<string, number>,
         obligations: 0,
         obligationsCount: 0,
         obligationsTo: 0,
@@ -158,80 +212,159 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
       },
     );
 
-    return [
-      {
-        type: "card",
-        label: "Networth",
-        icon: "shares",
-        primary: stats.networth,
-        colspan: 2,
-      },
-      {
-        type: "card",
-        label: "Assets",
-        icon: "assets",
-        primary: stats.assetValue,
-        secondary: stats.assetCount,
-      },
-      {
-        type: "card",
-        label: "Liabilities",
-        icon: "liabilities",
-        primary: stats.liabilityValue,
-        secondary: stats.liabilityCount,
-      },
-      {
-        type: "card",
-        label: "Income",
-        icon: "income",
-        primary: stats.income,
-        secondary: stats.incomeCount,
-      },
-      {
-        type: "card",
-        label: "Expenses",
-        icon: "expense",
-        primary: stats.expense,
-        secondary: stats.expenseCount,
-      },
-      {
-        type: "card",
-        label: "Obligations",
-        icon: "obligation",
-        primary: stats.obligations,
-        secondary: stats.obligationsCount,
-      },
-      {
-        type: "card",
-        label: "Obligations To",
-        icon: "obligationTo",
-        primary: stats.obligationsTo,
-        secondary: stats.obligationsToCount,
-      },
-      {
-        type: "line",
-        label: "Net Worth Trend",
-        icon: "shares",
-        data: [],
-        colspan: 4,
-        rowspan: 2,
-      },
-      {
-        type: "pie",
-        label: "Income Categories",
-        icon: "",
-        data: [],
-        colspan: 2,
-        rowspan: 2,
-      },
-      {
-        type: "pie",
-        label: "Expense Categories",
-        icon: "",
-        data: [],
-        colspan: 2,
-        rowspan: 2,
-      },
-    ];
+    return {
+      cards: [
+        {
+          type: "card",
+          label: "Networth",
+          icon: "shares",
+          colspan: 4,
+          data: {
+            primary: stats.networth.toLocaleString("en-AU", {
+              style: "currency",
+              currency: "AUD",
+            }),
+            color: stats.networth > 0 ? "green" : "red",
+          },
+        },
+        {
+          type: "card",
+          label: "Assets",
+          icon: "asset",
+          colspan: 4,
+          data: {
+            color: "green",
+            primary: stats.assetValue.toLocaleString("en-AU", {
+              style: "currency",
+              currency: "AUD",
+            }),
+            secondary: stats.assetCount.toString(),
+          },
+        },
+        {
+          type: "card",
+          label: "Liabilities",
+          icon: "liability",
+          colspan: 4,
+          data: {
+            color: "red",
+            primary: (-1 * stats.liabilityValue).toLocaleString("en-AU", {
+              style: "currency",
+              currency: "AUD",
+            }),
+            secondary: stats.liabilityCount.toString(),
+          },
+        },
+        {
+          type: "card",
+          label: "Obligations",
+          icon: "obligation",
+          colspan: 4,
+          data: {
+            color: "red",
+            primary: stats.obligations.toLocaleString("en-AU", {
+              style: "currency",
+              currency: "AUD",
+            }),
+            secondary: stats.obligationsCount.toString(),
+          },
+        },
+        {
+          type: "card",
+          label: "Obligations To",
+          icon: "obligationTo",
+          colspan: 4,
+          data: {
+            color: "green",
+            primary: stats.obligationsTo.toLocaleString("en-AU", {
+              style: "currency",
+              currency: "AUD",
+            }),
+            secondary: stats.obligationsToCount.toString(),
+          },
+        },
+        {
+          type: "pad",
+          colspan: 4,
+        },
+        {
+          type: "line",
+          label: "Net Worth Trend",
+          icon: "shares",
+          colspan: 4,
+          data: {
+            config: {
+              networth: { label: "Networth", color: "hsl(var(--chart-1))" },
+            },
+            axis: { dataKey: "month", lineKey: "networth" },
+            data: Object.entries(stats.networthTrend).map(([key, value]) => ({
+              month: key,
+              networth: value.value,
+            })),
+          },
+        },
+        {
+          type: "pie",
+          label: "Income",
+          icon: "income",
+          colspan: 4,
+          data: {
+            total: stats.income,
+            config: Object.keys(stats.incomeCategories).reduce(
+              (acc, key, index) => {
+                acc[key] = {
+                  label: key,
+                  color: `hsl(var(--chart-${(index % 5) + 1}))`,
+                };
+                return acc;
+              },
+              {} as Record<string, any>,
+            ),
+            axis: { dataKey: "amount", nameKey: "category" },
+            data: Object.entries(stats.incomeCategories).map(
+              ([key, value], index) => ({
+                category: key,
+                amount: value.toLocaleString("en-AU", {
+                  style: "currency",
+                  currency: "AUD",
+                }),
+                fill: `hsl(var(--chart-${(index % 5) + 1}))`,
+              }),
+            ),
+          },
+        },
+        {
+          type: "pie",
+          label: "Expenses",
+          icon: "expense",
+          colspan: 4,
+          data: {
+            total: stats.expense,
+            color: "red",
+            config: Object.keys(stats.expenseCategories).reduce(
+              (acc, key, index) => {
+                acc[key] = {
+                  label: key,
+                  color: `hsl(var(--chart-${(index % 5) + 1}))`,
+                };
+                return acc;
+              },
+              {} as Record<string, any>,
+            ),
+            axis: { dataKey: "amount", nameKey: "category" },
+            data: Object.entries(stats.expenseCategories).map(
+              ([key, value], index) => ({
+                category: key,
+                amount: value.toLocaleString("en-AU", {
+                  style: "currency",
+                  currency: "AUD",
+                }),
+                fill: `hsl(var(--chart-${(index % 5) + 1}))`,
+              }),
+            ),
+          },
+        },
+      ],
+    };
   }
 }

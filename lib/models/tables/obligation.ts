@@ -55,7 +55,7 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
       title: "Obligations",
       modelKey: "obligations",
       pathToResource: [
-        { label: "portfolio", href: "/portfolio/dashboard" },
+        { label: "portfolio", href: "/portfolio" },
         ...(asset
           ? [
               {

@@ -44,7 +44,7 @@ export class ValuationModel<Valuation> extends Level5Model<Valuation> {
       title: "Valuations",
       modelKey: "valuations",
       pathToResource: [
-        { label: "portfolio", href: "/portfolio/dashboard" },
+        { label: "portfolio", href: "/portfolio" },
         ...(assetLiability
           ? [
               {

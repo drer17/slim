@@ -92,7 +92,7 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
       title: "Transactions",
       modelKey: "transactions",
       pathToResource: [
-        { label: "portfolio", href: "/portfolio/dashboard" },
+        { label: "portfolio", href: "/portfolio" },
         ...(assetLiability
           ? [
               {

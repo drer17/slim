@@ -44,7 +44,7 @@ export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
       title: "Occurences",
       modelKey: "occurrences",
       pathToResource: [
-        { label: "portfolio", href: "/portfolio/dashboard" },
+        { label: "portfolio", href: "/portfolio" },
         ...(obligation
           ? [
               {

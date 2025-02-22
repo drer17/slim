@@ -35,7 +35,7 @@ const SelectionPage: React.FC<{
       <div className="flex flex-col gap-2 w-full">
         <h2>Portfolios</h2>
         {portfolios.map((portfolio) => (
-          <Link key={portfolio.id} href="/portfolio/dashboard">
+          <Link key={portfolio.id} href="/portfolio">
             <Button
               onClick={() => setPortfolio(portfolio.id)}
               variant="secondary"

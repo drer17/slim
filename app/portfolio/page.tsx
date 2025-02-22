@@ -1,11 +1,18 @@
-"use client";
+"use server";
 
-import ThemeToggle from "../theme/theme_toggle";
+import Dashboard from "@/components/views/dashboard";
+import { getDashboardData } from "@/lib/actions/get";
+import { getFinancialYearStart } from "@/lib/utilities/date";
 
-export default function Page() {
+export default async function Page() {
+  const cards = await getDashboardData(
+    ["portfolio"],
+    getFinancialYearStart().toISOString(),
+    new Date().toISOString(),
+  );
   return (
-    <div className="space-y-9 w-full">
-      <ThemeToggle />
+    <div className="flex flex-col gap-2 w-full">
+      <Dashboard {...cards} />
     </div>
   );
 }

@@ -5,7 +5,11 @@ import {
   IconCategory,
   IconChartLine,
   IconChecklist,
+  IconCircleMinus2,
+  IconCirclePlus2,
   IconCoins,
+  IconCopyCheck,
+  IconCopyCheckFilled,
   IconDatabaseDollar,
   IconDiamond,
   IconGraph,
@@ -13,6 +17,8 @@ import {
   IconSquare,
   IconStarFilled,
   IconTrash,
+  IconTrendingDown,
+  IconTrendingUp,
 } from "@tabler/icons-react";
 
 const icons: Record<string, React.ReactNode> = {
@@ -30,6 +36,12 @@ const icons: Record<string, React.ReactNode> = {
   types: <IconCategory />,
   categories: <IconCategory />,
   employment: <IconBriefcase2 />,
+  asset: <IconCirclePlus2 />,
+  liability: <IconCircleMinus2 />,
+  income: <IconTrendingUp />,
+  obligation: <IconCopyCheck />,
+  obligationTo: <IconCopyCheckFilled />,
+  expense: <IconTrendingDown />,
 };
 
 export const iconOptions = Object.keys(icons).map((icon) => ({

@@ -56,7 +56,7 @@ export class AssetLiabilityModel<
     });
 
     const data: Level2TableViewProps = {
-      pathToResource: [{ label: "portfolio", href: "/portfolio/dashboard" }],
+      pathToResource: [{ label: "portfolio", href: "/portfolio" }],
       formDialog: FormDialog.ASSET_LIABILITY,
       title: this.asset ? "Assets" : "Liabilites",
       items: res.map((asset) => ({
@@ -168,7 +168,7 @@ export class AssetLiabilityModel<
 
     return assetLiabilityData.map((asset) => ({
       pathToResource: [
-        { label: "portfolio", href: "/portfolio/dashboard" },
+        { label: "portfolio", href: "/portfolio" },
         {
           label: "assets",
           href: `/portfolio/table/${this.asset ? "asset" : "liability"}`,
