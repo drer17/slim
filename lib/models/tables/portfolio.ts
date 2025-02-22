@@ -20,7 +20,7 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
 
   public async get(): Promise<Portfolio[] | ToastProps> {
     try {
-      const result = await prisma.portfolio.findMany({
+      const resulte = await prisma.portfolio.findMany({
         where: {
           id: this.id,
           PortfolioUsers: {
@@ -33,7 +33,7 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
       console.log(
         `Found ${this.tableName} with this id ${this.id} and returned successfully`,
       );
-      return result as Portfolio[] | ToastProps;
+      return resulte as Portfolio[] | ToastProps;
     } catch (error) {
       console.error(`Error getting ${this.tableName}:`, error);
       return generateToast(Status.failed);
@@ -63,8 +63,8 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
         AND: [
           { portfolioId: this.portfolioId },
           { OR: [{ parentId: this.target }, { id: this.target }] },
-          { createdAt: { gte: new Date(periodFrom) } },
-          { createdAt: { lt: new Date(periodTo) } },
+          { createdAt: { gt: new Date(periodFrom) } },
+          { createdAt: { lte: new Date(periodTo) } },
           { archivedAt: null },
         ],
       },
@@ -74,8 +74,8 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
           orderBy: { createdAt: "desc" },
           where: {
             AND: [
-              { createdAt: { gte: new Date(periodFrom) } },
-              { createdAt: { lt: new Date(periodTo) } },
+              { createdAt: { gt: new Date(periodFrom) } },
+              { createdAt: { lte: new Date(periodTo) } },
             ],
           },
         },
@@ -86,8 +86,8 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
             Occurrence: {
               where: {
                 AND: [
-                  { createdAt: { gte: new Date(periodFrom) } },
-                  { createdAt: { lt: new Date(periodTo) } },
+                  { createdAt: { gt: new Date(periodFrom) } },
+                  { createdAt: { lte: new Date(periodTo) } },
                 ],
               },
               select: { amount: true },
@@ -98,8 +98,8 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
         transactions: {
           where: {
             AND: [
-              { createdAt: { gte: new Date(periodFrom) } },
-              { createdAt: { lt: new Date(periodTo) } },
+              { createdAt: { gt: new Date(periodFrom) } },
+              { createdAt: { lte: new Date(periodTo) } },
             ],
           },
           select: {

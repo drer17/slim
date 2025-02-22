@@ -76,7 +76,10 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
   ): Promise<Level3TableViewProps> {
     const rows = await prisma.transaction.findMany({
       where: {
-        assetLiabilityId: this.assetLiabilityId,
+        AND: [
+          { assetLiability: { portfolioId: this.portfolioId } },
+          { assetLiabilityId: this.assetLiabilityId },
+        ],
       },
       orderBy: { createdAt: "desc" },
       skip: limit * page,
