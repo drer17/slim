@@ -75,102 +75,113 @@ const BalanceSheet: React.FC<BalanceSheetProps> = () => {
                 <h1 className="font-light">{asset.label}</h1>
               </div>
               <div className="flex gap-2 flex-col">
-                <h3 className="text-sm uppercase font-semibold">Income</h3>
-                <Table className="text-sm">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Categories</TableHead>
-                      {[...fyMonthNames, "Total"].map((colId) => (
-                        <TableHead key={colId}>{colId}</TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {Object.entries(asset.income)
-                      .sort((a, b) =>
-                        a[0] === "Total"
-                          ? 1
-                          : b[0] === "Total"
-                            ? -1
-                            : a[0] < b[0]
-                              ? 1
-                              : -1,
-                      )
-                      .map(([category, value]) => (
-                        <TableRow
-                          key={category}
-                          className={cn(
-                            value.label === "Total" &&
-                              "font-bold text-muted-foreground",
-                          )}
-                        >
-                          <TableCell>{value.label}</TableCell>
-                          {[...fyMonthNames, "Total"].map((month, idx) => (
-                            <TableCell
-                              key={idx}
-                              className={cn(
-                                month === "Total" &&
-                                  "font-bold text-muted-foreground",
-                              )}
-                            >
-                              {value.months[month].toLocaleString("en-Au", {
-                                style: "currency",
-                                currency: "AUD",
-                              })}
-                            </TableCell>
+                {Object.keys(asset.income).length > 1 && (
+                  <div>
+                    <h3 className="text-sm uppercase font-semibold">Income</h3>
+                    <Table className="text-sm">
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Categories</TableHead>
+                          {[...fyMonthNames, "Total"].map((colId) => (
+                            <TableHead key={colId}>{colId}</TableHead>
                           ))}
                         </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-                <h3 className="uppercase text-sm font-semibold">expenses</h3>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Categories</TableHead>
-                      {[...fyMonthNames, "Total"].map((colId) => (
-                        <TableHead key={colId}>{colId}</TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {Object.entries(asset.expense)
-                      .sort((a, b) =>
-                        a[0] === "Total"
-                          ? 1
-                          : b[0] === "Total"
-                            ? -1
-                            : a[0] < b[0]
+                      </TableHeader>
+                      <TableBody>
+                        {Object.entries(asset.income)
+                          .sort((a, b) =>
+                            a[0] === "Total"
                               ? 1
-                              : -1,
-                      )
-                      .map(([category, value]) => (
-                        <TableRow
-                          key={category}
-                          className={cn(
-                            value.label === "Total" &&
-                              "font-bold text-muted-foreground",
-                          )}
-                        >
-                          <TableCell>{value.label}</TableCell>
-                          {[...fyMonthNames, "Total"].map((month, idx) => (
-                            <TableCell
-                              key={idx}
+                              : b[0] === "Total"
+                                ? -1
+                                : a[0] < b[0]
+                                  ? 1
+                                  : -1,
+                          )
+                          .map(([category, value]) => (
+                            <TableRow
+                              key={category}
                               className={cn(
-                                month === "Total" &&
-                                  "font-bold text-muted-foreground",
+                                value.label === "Total" &&
+                                  "font-extrabold text-muted-foreground",
                               )}
                             >
-                              {value.months[month].toLocaleString("en-Au", {
-                                style: "currency",
-                                currency: "AUD",
-                              })}
-                            </TableCell>
+                              <TableCell>{value.label}</TableCell>
+                              {[...fyMonthNames, "Total"].map((month, idx) => (
+                                <TableCell
+                                  key={idx}
+                                  className={cn(
+                                    month === "Total" &&
+                                      "font-extrabold text-muted-foreground",
+                                  )}
+                                >
+                                  {value.months[month].toLocaleString("en-Au", {
+                                    style: "currency",
+                                    currency: "AUD",
+                                  })}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+
+                {Object.keys(asset.expense).length > 1 && (
+                  <div>
+                    <h3 className="uppercase text-sm font-semibold">
+                      expenses
+                    </h3>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Categories</TableHead>
+                          {[...fyMonthNames, "Total"].map((colId) => (
+                            <TableHead key={colId}>{colId}</TableHead>
                           ))}
                         </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {Object.entries(asset.expense)
+                          .sort((a, b) =>
+                            a[0] === "Total"
+                              ? 1
+                              : b[0] === "Total"
+                                ? -1
+                                : a[0] < b[0]
+                                  ? 1
+                                  : -1,
+                          )
+                          .map(([category, value]) => (
+                            <TableRow
+                              key={category}
+                              className={cn(
+                                value.label === "Total" &&
+                                  "font-extrabold text-muted-foreground",
+                              )}
+                            >
+                              <TableCell>{value.label}</TableCell>
+                              {[...fyMonthNames, "Total"].map((month, idx) => (
+                                <TableCell
+                                  key={idx}
+                                  className={cn(
+                                    month === "Total" &&
+                                      "font-extrabold text-muted-foreground",
+                                  )}
+                                >
+                                  {value.months[month].toLocaleString("en-Au", {
+                                    style: "currency",
+                                    currency: "AUD",
+                                  })}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
               </div>
               <div className="h-3" />
               <Separator className="w-full" orientation="horizontal" />
