@@ -235,11 +235,17 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  console.log(header.getSize());
                   return (
                     <TableHead
                       key={header.id}
                       className={cn(condensed && "h-8")}
-                      style={{ width: `${header.getSize()}px` }}
+                      style={{
+                        width:
+                          header.getSize() === 150
+                            ? undefined
+                            : header.getSize(),
+                      }}
                     >
                       {header.isPlaceholder
                         ? null

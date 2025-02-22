@@ -3,52 +3,7 @@
 import { Entity } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../core/data-table/data-table-column-header";
-import HiddenInput from "../core/other/hidden-input";
-import { update } from "@/lib/actions/update";
-import { useDebouncedCallback } from "use-debounce";
-import { useState } from "react";
-import { Checkbox } from "../ui/checkbox";
-
-const FieldEditor: React.FC<{
-  entityId: string;
-  field: string;
-  value: any;
-  type: "text" | "boolean";
-}> = ({ entityId, field, value, type }) => {
-  const [edit, setEdit] = useState(value);
-  const onChange = async (newValue: any) => {
-    await update(["entity", entityId], { [field]: newValue });
-  };
-
-  const debouncedChange = useDebouncedCallback(
-    async (update) => await onChange(update),
-    300,
-  );
-
-  switch (type) {
-    case "boolean":
-      return (
-        <Checkbox
-          checked={edit}
-          onCheckedChange={(e) => {
-            setEdit(e);
-            debouncedChange(e);
-          }}
-        />
-      );
-    default:
-      return (
-        <HiddenInput
-          value={edit}
-          placeholder="Edit"
-          onChange={(e) => {
-            setEdit(e.target.value);
-            debouncedChange(e.target.value);
-          }}
-        />
-      );
-  }
-};
+import { FieldEditor } from "../core/other/cell-edit";
 
 export const entitiesColumns: ColumnDef<Entity>[] = [
   {
@@ -80,7 +35,7 @@ export const entitiesColumns: ColumnDef<Entity>[] = [
       <FieldEditor
         field={"name"}
         value={row.original.name}
-        entityId={row.original.id}
+        slug={["entity", row.original.id]}
         type="text"
       />
     ),
@@ -94,7 +49,7 @@ export const entitiesColumns: ColumnDef<Entity>[] = [
       <FieldEditor
         field={"description"}
         value={row.original.description}
-        entityId={row.original.id}
+        slug={["entity", row.original.id]}
         type="text"
       />
     ),
@@ -108,10 +63,11 @@ export const entitiesColumns: ColumnDef<Entity>[] = [
       <FieldEditor
         field={"email"}
         value={row.original.email}
-        entityId={row.original.id}
+        slug={["entity", row.original.id]}
         type="text"
       />
     ),
+    size: 300,
   },
   {
     accessorKey: "phone",
@@ -122,10 +78,11 @@ export const entitiesColumns: ColumnDef<Entity>[] = [
       <FieldEditor
         field={"phone"}
         value={row.original.phone}
-        entityId={row.original.id}
+        slug={["entity", row.original.id]}
         type="text"
       />
     ),
+    size: 200,
   },
   {
     accessorKey: "isCompany",
@@ -136,10 +93,11 @@ export const entitiesColumns: ColumnDef<Entity>[] = [
       <FieldEditor
         field={"isCompany"}
         value={row.original.isCompany}
-        entityId={row.original.id}
+        slug={["entity", row.original.id]}
         type="boolean"
       />
     ),
+    size: 90,
   },
 ];
 

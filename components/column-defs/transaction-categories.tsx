@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { IconDots, IconTrash } from "@tabler/icons-react";
+import { FieldEditor } from "../core/other/cell-edit";
 
 const ParentSelect = ({ parentId }: { parentId: string | null }) => {
   const { categories } = useTransactionCategoryContext();
@@ -139,6 +140,14 @@ export const transactionCategoryColumns: ColumnDef<TransactionCategory>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Label" />
     ),
+    cell: ({ row }) => (
+      <FieldEditor
+        field={"label"}
+        value={row.original.label}
+        slug={["transaction-category", undefined, row.original.id]}
+        type="text"
+      />
+    ),
   },
   {
     accessorKey: "parentId",
@@ -146,6 +155,7 @@ export const transactionCategoryColumns: ColumnDef<TransactionCategory>[] = [
       <DataTableColumnHeader column={column} title="Parent Category" />
     ),
     cell: ({ row }) => <ParentSelect parentId={row.original.parentId} />,
+    size: 250,
   },
   {
     accessorKey: "assetId",
@@ -153,19 +163,29 @@ export const transactionCategoryColumns: ColumnDef<TransactionCategory>[] = [
       <DataTableColumnHeader column={column} title="For Asset" />
     ),
     cell: ({ row }) => <AssetSelect assetId={row.original.assetId} />,
+    size: 250,
   },
   {
     accessorKey: "expense",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Expense" />
     ),
+    cell: ({ row }) => (
+      <FieldEditor
+        field={"expense"}
+        value={row.original.expense}
+        slug={["transaction-category", undefined, row.original.id]}
+        type="boolean"
+      />
+    ),
+    size: 100,
   },
   {
     accessorKey: "options",
     header: () => <></>,
     enableResizing: true,
     cell: ({ row }) => <Options categoryId={row.original.id} />,
-    size: 290,
+    size: 10,
   },
 ];
 

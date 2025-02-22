@@ -185,6 +185,7 @@ export const obligationColumns: ColumnDef<
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Occurrences" />
     ),
+    size: 50,
     cell: ({ row }) => (
       <Link href={`/portfolio/table/occurrence/${row.original.id}`}>
         <Button className="w-full h-full" variant="outline">
@@ -215,7 +216,7 @@ export const obligationColumns: ColumnDef<
     header: () => <></>,
     enableResizing: true,
     cell: ({ row }) => <Options obligationId={row.original.id} />,
-    size: 290,
+    size: 10,
   },
   {
     accessorKey: "archivedAt",

@@ -15,6 +15,7 @@ import { AssetLiabilityType } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { iconOptions } from "../global/icons";
 import { update } from "@/lib/actions/update";
+import { FieldEditor } from "../core/other/cell-edit";
 
 const Options: React.FC<{ categoryId: string }> = ({ categoryId }) => {
   const deleteCategory = async () => {
@@ -50,6 +51,7 @@ export const assetLiabilityTypeColumns: ColumnDef<AssetLiabilityType>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Icon" />
     ),
+    size: 250,
     cell: ({ row }) => (
       <Select
         value={row.original.icon || undefined}
@@ -81,14 +83,22 @@ export const assetLiabilityTypeColumns: ColumnDef<AssetLiabilityType>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Asset" />
     ),
-    cell: ({ row }) => <p className="capitalize">{row.original.asset}</p>,
+    cell: ({ row }) => (
+      <FieldEditor
+        field={"asset"}
+        value={row.original.asset}
+        slug={["asset-liability-type", row.original.id]}
+        type="boolean"
+      />
+    ),
+    size: 10,
   },
   {
     accessorKey: "options",
     header: () => <></>,
     enableResizing: true,
     cell: ({ row }) => <Options categoryId={row.original.id} />,
-    size: 290,
+    size: 10,
   },
 ];
 

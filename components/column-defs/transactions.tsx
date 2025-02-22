@@ -17,7 +17,7 @@ const Description: React.FC<{
   initDescription: string | null;
   transactionId: string;
 }> = ({ initDescription, transactionId }) => {
-  const [description, setDescription] = React.useState(initDescription);
+  const [description, setDescription] = React.useState(initDescription || "");
 
   const updateData = async (description: string) => {
     update(["transaction", undefined, transactionId], {
@@ -29,7 +29,8 @@ const Description: React.FC<{
 
   return (
     <HiddenInput
-      value={description ?? "Add description"}
+      value={description}
+      placeholder="Edit"
       onChange={(e) => {
         setDescription(e.target.value);
         updateDataDebounced(e.target.value);
@@ -152,6 +153,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "label",
+    size: 230,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Label" />
     ),
@@ -193,6 +195,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
     ),
+    size: 230,
     cell: ({ row }) => (
       <CategorySelect
         categoryId={row.original.categoryId}
@@ -203,7 +206,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "move",
     header: () => "Move To",
-    size: 10,
+    size: 140,
     cell: ({ row }) => (
       <MoveTo
         transactionId={row.original.id}
