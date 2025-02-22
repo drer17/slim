@@ -11,13 +11,6 @@ import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "../ui/toast";
 import { useTransactionContext } from "../contexts/transaction";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
 const Description: React.FC<{
@@ -211,7 +204,12 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     accessorKey: "move",
     header: () => "Move To",
     size: 10,
-    cell: ({ row }) => <MoveTo transactionId={row.original.id} />,
+    cell: ({ row }) => (
+      <MoveTo
+        transactionId={row.original.id}
+        assetLiabilityId={row.original.assetLiabilityId}
+      />
+    ),
   },
 ];
 

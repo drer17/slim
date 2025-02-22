@@ -28,7 +28,7 @@ export const links = [
     class: "mb-4",
   },
   {
-    label: "Cash Flow",
+    label: "Transactions",
     href: "/portfolio/table/transaction",
     icon: (
       <IconTable className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />

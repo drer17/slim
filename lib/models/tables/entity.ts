@@ -12,11 +12,8 @@ export class EntityModel<Entity> extends Level3Model<Entity> {
   }
 
   public async create(data: Partial<Entity>): Promise<any | ToastProps> {
-    console.log(data);
     return super.create({ portfolioId: this.portfolioId, ...data });
   }
-
-  async getDataForRow(): Promise<Level3RowViewProps> {}
 
   async getDataForTable(): Promise<Level3TableViewProps> {
     const rows = await prisma.entity.findMany({
