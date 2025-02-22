@@ -168,6 +168,7 @@ model Obligation {
   TagLink       TagLink[]
   DocumentLink  DocumentLink[]
   Occurrence    Occurrence[]
+  Transaction   Transaction[]
 }
 
 model Entity {
@@ -217,16 +218,19 @@ model Transaction {
   // can select categories belonging to asset or undefined
   categoryId String?
 
+  // apply to obligation
+  obligationId String?
+
   createdAt  DateTime  @default(now())
   archivedAt DateTime?
 
   assetLiability AssetLiability       @relation(fields: [assetLiabilityId], references: [id])
   category       TransactionCategory? @relation(fields: [categoryId], references: [id])
+  obligation     Obligation?          @relation(fields: [obligationId], references: [id])
 
-  NoteLink              NoteLink[]
-  TagLink               TagLink[]
-  DocumentLink          DocumentLink[]
-  TransactionOccurrence TransactionOccurrence[]
+  NoteLink     NoteLink[]
+  TagLink      TagLink[]
+  DocumentLink DocumentLink[]
 }
 
 // Level 5
@@ -267,9 +271,9 @@ model Occurrence {
   description String?
 
   startDate DateTime
-  endDate   DateTime
-  startTime DateTime
-  endTime   DateTime
+  endDate   DateTime?
+  startTime DateTime?
+  endTime   DateTime?
   location  String?
 
   createdAt  DateTime  @default(now())
@@ -277,10 +281,9 @@ model Occurrence {
 
   obligation Obligation @relation(fields: [obligationId], references: [id])
 
-  NoteLink              NoteLink[]
-  TagLink               TagLink[]
-  DocumentLink          DocumentLink[]
-  TransactionOccurrence TransactionOccurrence[]
+  NoteLink     NoteLink[]
+  TagLink      TagLink[]
+  DocumentLink DocumentLink[]
 }
 
 // Level 6
@@ -445,13 +448,4 @@ model TagLink {
   valuation      Valuation?      @relation(fields: [valuationId], references: [id])
   document       Document?       @relation(fields: [documentId], references: [id])
   note           Note?           @relation(fields: [noteId], references: [id])
-}
-
-model TransactionOccurrence {
-  id            String @id @default(uuid())
-  transactionId String
-  occurrenceId  String
-
-  occurrence  Occurrence  @relation(fields: [occurrenceId], references: [id])
-  transaction Transaction @relation(fields: [transactionId], references: [id])
 }

@@ -56,10 +56,12 @@ export const Combobox: React.FC<AutoCompleteProps> = ({
             buttonClassName,
           )}
         >
-          {values?.reduce(
-            (string, value) => value.slice(0, 4) + "..., " + string,
-            "",
-          ) || placeholder}
+          {values
+            ?.reduce(
+              (string, value) => value.slice(0, 4) + "..., " + string,
+              "",
+            )
+            .slice(0, 20) || placeholder}
           <IconCaretUpDownFilled className="ml-2 h-4 w-4 shrink-0 opacity-50 invisible group-hover:visible" />
         </Button>
       </PopoverTrigger>

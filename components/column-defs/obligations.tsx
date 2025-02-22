@@ -188,11 +188,18 @@ export const obligationColumns: ColumnDef<
     ),
     size: 50,
     cell: ({ row }) => (
-      <Link href={`/portfolio/table/occurrence/${row.original.id}`}>
-        <Button className="w-full h-full" variant="outline">
-          See Occurrences
-        </Button>
-      </Link>
+      <div className="flex gap-2">
+        <Link href={`/portfolio/table/occurrence/${row.original.id}`}>
+          <Button className="w-full h-full" variant="outline">
+            Occurrences
+          </Button>
+        </Link>
+        <Link href={`/portfolio/ledger/${row.original.id}`}>
+          <Button className="w-full h-full" variant="outline">
+            Ledger
+          </Button>
+        </Link>
+      </div>
     ),
   },
   {

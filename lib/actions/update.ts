@@ -74,11 +74,3 @@ export async function createOrRemoveLink(
   }
   return generateToast(Status.failed);
 }
-
-export async function updateTransactionLink(props: {
-  occurrenceId: string;
-  newTransactions: string[];
-}) {
-  const model = ModelFactory.create(["occurrence"]);
-  await model.updateTransactionLink(props);
-}

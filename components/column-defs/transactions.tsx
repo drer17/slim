@@ -48,11 +48,19 @@ const MoveTo: React.FC<{ transactionId: string; assetLiabilityId: string }> = ({
   const { assetLiabilities } = useTransactionContext();
   const { toast } = useToast();
 
+  const [selectedAssetId, setSelectedAssetId] =
+    React.useState(assetLiabilityId);
+
+  const selectedAsset = React.useMemo(
+    () => assetLiabilities.find((al) => al.id === selectedAssetId),
+    [selectedAssetId, assetLiabilities],
+  );
+
   const onMove = async (newAlId: string) => {
-    console.log(transactionId, newAlId);
     const result = await update(["transaction", undefined, transactionId], {
       assetLiabilityId: newAlId,
     });
+    setSelectedAssetId(newAlId);
     if (result) toast(result as ToastProps);
   };
 
@@ -61,13 +69,59 @@ const MoveTo: React.FC<{ transactionId: string; assetLiabilityId: string }> = ({
       value={assetLiabilityId || undefined}
       onValueChange={(id) => onMove(id)}
     >
-      <SelectTrigger>Select A/L</SelectTrigger>
+      <SelectTrigger>
+        {selectedAsset?.label.slice(0, 9) +
+          (selectedAsset && selectedAsset?.label.length > 9 ? "..." : "")}
+      </SelectTrigger>
       <SelectContent>
         {assetLiabilities.map((al) => (
           <SelectItem key={al.id} value={al.id}>
             {al.label}
           </SelectItem>
         ))}
+      </SelectContent>
+    </Select>
+  );
+};
+
+const AssignToObligation: React.FC<{
+  transactionId: string;
+  assetLiabilityId: string;
+  obligationId?: string;
+}> = ({ transactionId, assetLiabilityId, obligationId }) => {
+  const { obligations } = useTransactionContext();
+  const { toast } = useToast();
+
+  const [selectedObligationId, setSelectedObligationId] =
+    React.useState(obligationId);
+
+  const selectedObligation = React.useMemo(
+    () => obligations.find((ob) => ob.id === selectedObligationId),
+    [selectedObligationId, obligations],
+  );
+
+  const onSelect = async (obligation: string) => {
+    const result = await update(["transaction", undefined, transactionId], {
+      obligationId: obligation,
+    });
+    setSelectedObligationId(obligation);
+    if (result) toast(result as ToastProps);
+  };
+
+  return (
+    <Select
+      value={assetLiabilityId || undefined}
+      onValueChange={(id) => onSelect(id)}
+    >
+      <SelectTrigger>{selectedObligation?.label || ""}</SelectTrigger>
+      <SelectContent>
+        {obligations
+          .filter((obl) => obl.assetLiabilityId === assetLiabilityId)
+          .map((al) => (
+            <SelectItem key={al.id} value={al.id}>
+              {al.label}
+            </SelectItem>
+          ))}
       </SelectContent>
     </Select>
   );
@@ -205,12 +259,24 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: "move",
-    header: () => "Move To",
+    header: () => "Asset",
     size: 140,
     cell: ({ row }) => (
       <MoveTo
         transactionId={row.original.id}
         assetLiabilityId={row.original.assetLiabilityId}
+      />
+    ),
+  },
+  {
+    accessorKey: "obligation",
+    header: () => "Obligation",
+    size: 140,
+    cell: ({ row }) => (
+      <AssignToObligation
+        transactionId={row.original.id}
+        assetLiabilityId={row.original.assetLiabilityId}
+        obligationId={row.original.obligationId || undefined}
       />
     ),
   },

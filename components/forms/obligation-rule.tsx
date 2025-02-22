@@ -82,8 +82,6 @@ const ObligationRuleForm: React.FC<
                 { label: "Day", id: "day" },
                 { label: "Week", id: "week" },
                 { label: "Fortnight", id: "fortnight" },
-                { label: "Month", id: "month" },
-                { label: "Year", id: "Year" },
               ],
               placeholder: "Select the duration",
               defaultValue: defaults && defaults.frequencyUnits,

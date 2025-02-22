@@ -46,3 +46,9 @@ export async function getBalanceData(
   }
   return undefined;
 }
+
+export async function getLedgerData(slug: Slug) {
+  console.log(slug[0]);
+  const model = ModelFactory.create(["obligation", undefined, slug[0]]);
+  return await model.getLedger();
+}

@@ -75,3 +75,8 @@ export async function importData(
   }
   return generateToast(Status.failed);
 }
+
+export async function createOccurrences() {
+  const model = ModelFactory.create(["obligation"]);
+  await model.createOccurrences();
+}

@@ -1,9 +1,10 @@
 "use client";
 
 import { AssetLiabilityType, Tag, TransactionCategory } from "@prisma/client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Forms from "./forms";
 import { FormDialog, FormKwargs } from "@/components/forms/types";
+import { createOccurrences } from "@/lib/actions/create";
 
 export interface PortfolioState {
   tags: Tag[];
@@ -49,6 +50,14 @@ export function PortfolioProvider({
   const [portfolioId, setPortfolioId] = useState<string | undefined>(undefined);
   const [formKwargs, setFormKwargs] = useState<Record<string, any>>({});
   const [openForm, setOpenForm] = useState<FormDialog | undefined>(undefined);
+
+  // todo add delay to this
+  useEffect(() => {
+    const updateOccurrences = async () => {
+      createOccurrences();
+    };
+    updateOccurrences();
+  }, []);
 
   return (
     <PortfolioContext.Provider
