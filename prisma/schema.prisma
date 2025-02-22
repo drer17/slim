@@ -223,10 +223,10 @@ model Transaction {
   assetLiability AssetLiability       @relation(fields: [assetLiabilityId], references: [id])
   category       TransactionCategory? @relation(fields: [categoryId], references: [id])
 
-  NoteLink     NoteLink[]
-  TagLink      TagLink[]
-  DocumentLink DocumentLink[]
-  Occurrence   Occurrence[]
+  NoteLink              NoteLink[]
+  TagLink               TagLink[]
+  DocumentLink          DocumentLink[]
+  TransactionOccurrence TransactionOccurrence[]
 }
 
 // Level 5
@@ -256,9 +256,8 @@ model Occurrence {
   obligationId String
   amount       Float
 
-  // is occurence obligation satisfying?
-  obligationSatisfying Boolean @default(false)
-  transactionId        String?
+  // is occurence satisfied?
+  satisfied Boolean @default(false)
 
   color String?
 
@@ -276,12 +275,12 @@ model Occurrence {
   createdAt  DateTime  @default(now())
   archivedAt DateTime?
 
-  obligation  Obligation   @relation(fields: [obligationId], references: [id])
-  transaction Transaction? @relation(fields: [transactionId], references: [id])
+  obligation Obligation @relation(fields: [obligationId], references: [id])
 
-  NoteLink     NoteLink[]
-  TagLink      TagLink[]
-  DocumentLink DocumentLink[]
+  NoteLink              NoteLink[]
+  TagLink               TagLink[]
+  DocumentLink          DocumentLink[]
+  TransactionOccurrence TransactionOccurrence[]
 }
 
 // Level 6
@@ -446,4 +445,13 @@ model TagLink {
   valuation      Valuation?      @relation(fields: [valuationId], references: [id])
   document       Document?       @relation(fields: [documentId], references: [id])
   note           Note?           @relation(fields: [noteId], references: [id])
+}
+
+model TransactionOccurrence {
+  id            String @id @default(uuid())
+  transactionId String
+  occurrenceId  String
+
+  occurrence  Occurrence  @relation(fields: [occurrenceId], references: [id])
+  transaction Transaction @relation(fields: [transactionId], references: [id])
 }

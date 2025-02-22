@@ -14,9 +14,15 @@ export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
     this.obligationId = obligationId;
   }
 
-  public async create(data: Partial<Occurrence>): Promise<any | ToastProps> {
-    console.log(data);
-    return super.create({ obligationId: this.obligationId, ...data });
+  public async create(data: Occurrence): Promise<any | ToastProps> {
+    return super.create({
+      obligationId: this.obligationId,
+      ...data,
+      startTime: new Date(data.startDate),
+      endDate: new Date(data.startDate),
+      endTime: new Date(data.startDate),
+      amount: parseFloat(data.amount),
+    });
   }
 
   async getDataForTable(
@@ -29,6 +35,7 @@ export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
       },
       include: {
         obligation: { select: { label: true } },
+        TransactionOccurrence: { select: { transaction: true } },
       },
       orderBy: { createdAt: "desc" },
       skip: limit * page,
@@ -64,5 +71,34 @@ export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
     };
 
     return obligations;
+  }
+
+  public async updateTransactionLink(props: {
+    occurrenceId: string;
+    newTransactions: string[];
+  }) {
+    const transactions = await prisma.transactionOccurrence.findMany({
+      where: { occurrenceId: props.occurrenceId },
+    });
+
+    // find new transaction in existing
+    props.newTransactions.forEach(async (id) => {
+      if (!transactions.find((trans) => trans.id === id)) {
+        await prisma.transactionOccurrence.create({
+          data: {
+            transactionId: id,
+            occurrenceId: props.occurrenceId,
+          },
+        });
+      }
+    });
+
+    // find existing transactions not in new
+    transactions.forEach(async (trans) => {
+      if (!props.newTransactions.find((id) => id === trans.id))
+        await prisma.transactionOccurrence.delete({
+          where: { id: trans.id },
+        });
+    });
   }
 }

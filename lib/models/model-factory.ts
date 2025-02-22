@@ -65,7 +65,14 @@ export class ModelFactory {
       case "transaction": {
         const assetLiabilityId = slug[1];
         const id = slug[2];
-        return new TransactionModel(assetLiabilityId, id);
+        const searchTerm = slug[3];
+        const limit = slug[4];
+        return new TransactionModel(
+          assetLiabilityId,
+          id,
+          searchTerm,
+          parseInt(limit || "0"),
+        );
       }
       case "transaction-category": {
         const parentId = slug[1];

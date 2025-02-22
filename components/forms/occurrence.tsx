@@ -1,11 +1,11 @@
-import { Occurrence } from "@prisma/client";
+import { Obligation } from "@prisma/client";
 import { FormDialog, FormProps } from "./types";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import DialogWrapper from "../core/other/dialog-wrapper";
 import { ScrollArea } from "../ui/scroll-area";
 import FormRenderer from "./form-renderer";
 
-const ObligationForm: React.FC<FormProps<Occurrence>> = ({
+const OccurrenceForm: React.FC<FormProps<Obligation>> = ({
   title,
   label,
   trigger,
@@ -29,40 +29,33 @@ const ObligationForm: React.FC<FormProps<Occurrence>> = ({
       invisible={invisible}
       tooltip={tooltip}
       disabled={disabled}
-      open={controlledOpen === FormDialog.OCCURRENCE || open}
+      open={controlledOpen === FormDialog.OBLIGATION || open}
       onOpenChange={() =>
         onOpenChanged(
-          controlledOpen === undefined ? FormDialog.OCCURRENCE : undefined,
+          controlledOpen === undefined ? FormDialog.OBLIGATION : undefined,
         )
       }
     >
       <ScrollArea className="max-h-[calc(100vh-100px)]">
         <FormRenderer
-          tableName="occurrence"
+          tableName="obligation"
           callback={callback}
           model={defaults}
           columns={[
             {
-              column: "amount",
-              label: "Amount",
-              type: "number",
-              placeholder: "Occurence amount",
-              defaultValue: defaults && defaults.amount,
+              column: "label",
+              label: "Label",
+              type: "string",
+              placeholder: "Name your Obligation",
+              defaultValue: defaults && defaults.label,
             },
             {
               column: "description",
               label: "Description",
               type: "string",
               optional: true,
-              placeholder: "Occurrence Description",
+              placeholder: "Add a description",
               defaultValue: defaults && defaults.description,
-            },
-            {
-              column: "startDate",
-              label: "Start Date",
-              type: "date",
-              placeholder: "Select the start date",
-              defaultValue: defaults && defaults.startDate,
             },
           ]}
         />
@@ -71,4 +64,4 @@ const ObligationForm: React.FC<FormProps<Occurrence>> = ({
   );
 };
 
-export default ObligationForm;
+export default OccurrenceForm;

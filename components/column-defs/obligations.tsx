@@ -179,6 +179,7 @@ export const obligationColumns: ColumnDef<
         obligationId={row.original.id}
       />
     ),
+    size: 280,
   },
   {
     accessorKey: "ocurrences",

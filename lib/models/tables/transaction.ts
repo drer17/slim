@@ -9,12 +9,45 @@ import { Prisma } from "@prisma/client";
 
 export class TransactionModel<Transaction> extends Level4Model<Transaction> {
   assetLiabilityId: string | undefined;
+  searchTerm?: string;
+  limit?: number;
 
-  constructor(assetLiabilityId?: string, id?: string) {
+  constructor(
+    assetLiabilityId?: string,
+    id?: string,
+    searchTerm?: string,
+    limit?: number,
+  ) {
     super();
     this.id = id;
     this.tableName = "transaction";
     this.assetLiabilityId = assetLiabilityId;
+    this.searchTerm = searchTerm;
+    this.limit = limit;
+  }
+
+  public async get(): Promise<ToastProps | Transaction[]> {
+    try {
+      const result = await prisma.transaction.findMany({
+        where: {
+          AND: [
+            { id: this.id },
+            ...(this.searchTerm
+              ? [{ label: { contains: this.searchTerm } }]
+              : [{}]),
+          ],
+        },
+        ...(this.limit ? { take: this.limit } : {}),
+        orderBy: { createdAt: "desc" },
+      });
+      console.log(
+        `Found ${this.tableName} with this id ${this.id} and returned successfully`,
+      );
+      return result as Transaction[];
+    } catch (error) {
+      console.error(`Error getting ${this.tableName}:`, error);
+      return generateToast(Status.failed);
+    }
   }
 
   public async create(data: Partial<Transaction>): Promise<any | ToastProps> {
