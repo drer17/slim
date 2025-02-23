@@ -125,48 +125,77 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
       include: { obligationRule: true },
     });
 
-    obligations.forEach(async (ob) => {
-      if (
-        !ob.obligationRule?.startDate ||
-        ob.obligationRule?.startDate > new Date()
-      )
-        return;
+    const frequencyMap: Record<string, number> = {
+      day: 1,
+      week: 7,
+      fortnight: 14,
+    };
 
-      // check if occurrence exists in period
-      // // TODO fix this
-      let periodDays = 0;
-      switch (ob.obligationRule.frequencyUnits) {
-        case "day":
-          periodDays = 1 * ob.obligationRule.frequency;
-          break;
-        case "week":
-          periodDays = 7 * ob.obligationRule.frequency;
-          break;
-        case "fortnight":
-          periodDays = 14 * ob.obligationRule.frequency;
-          break;
+    const createPromises = [];
+
+    for (const ob of obligations) {
+      if (!ob.obligationRule || !ob.obligationRule.startDate) continue;
+
+      const { startDate, frequencyUnits, frequency } = ob.obligationRule;
+
+      // Determine the interval in days for the frequency
+      let periodDays = frequencyMap[frequencyUnits] * frequency || 0;
+
+      // If no valid frequency is defined, skip this obligation
+      if (periodDays <= 0) continue;
+
+      // Find the most recent occurrence before now or the start date
+      const lastOccurrence = await prisma.occurrence.findFirst({
+        where: {
+          obligationId: ob.id,
+          startDate: {
+            // Ensure the occurrence date is in the past
+            lte: new Date(),
+          },
+        },
+        orderBy: {
+          startDate: "desc",
+        },
+      });
+
+      let nextOccurrenceDate;
+
+      if (lastOccurrence) {
+        // If there's a last occurrence, calculate the next one based on it
+        nextOccurrenceDate = new Date(lastOccurrence.startDate.getTime());
+        nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + periodDays);
+      } else {
+        // If there's no previous occurrence, start from the rule's start date
+        nextOccurrenceDate = new Date(startDate.getTime());
+        nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + periodDays);
       }
 
-      const fromDate = new Date();
-
-      const occurence = await prisma.occurrence.findMany({
+      // Check if the next occurrence has already been created
+      const existingOccurrences = await prisma.occurrence.findMany({
         where: {
-          AND: [
-            { startDate: { gt: fromDate } },
-            { startDate: { lt: new Date() } },
-          ],
+          obligationId: ob.id,
+          startDate: {
+            // Ensure we're looking at future occurrences
+            gte: new Date(),
+            // Check if the next occurrence already exists
+            lt: nextOccurrenceDate,
+          },
         },
       });
 
-      if (occurence.length > 0) return;
+      if (existingOccurrences.length > 0) continue;
 
-      await prisma.occurrence.create({
+      const createOccurrencePromise = prisma.occurrence.create({
         data: {
-          obligationId: this.id,
+          obligationId: ob.id,
           amount: ob.obligationRule.amount,
-          startDate: new Date(),
+          startDate: nextOccurrenceDate,
         },
       });
-    });
+
+      createPromises.push(createOccurrencePromise);
+    }
+
+    await Promise.all(createPromises);
   }
 }

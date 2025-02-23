@@ -51,11 +51,14 @@ export function PortfolioProvider({
   const [formKwargs, setFormKwargs] = useState<Record<string, any>>({});
   const [openForm, setOpenForm] = useState<FormDialog | undefined>(undefined);
 
-  // todo add delay to this
   useEffect(() => {
     const updateOccurrences = async () => {
-      createOccurrences();
+      await createOccurrences();
+      setTimeout(() => {
+        console.log("Refreshing occurrences");
+      }, 86400);
     };
+
     updateOccurrences();
   }, []);
 
