@@ -1,11 +1,11 @@
-import { Obligation } from "@prisma/client";
+import { Occurrence } from "@prisma/client";
 import { FormDialog, FormProps } from "./types";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import DialogWrapper from "../core/other/dialog-wrapper";
 import { ScrollArea } from "../ui/scroll-area";
 import FormRenderer from "./form-renderer";
 
-const OccurrenceForm: React.FC<FormProps<Obligation>> = ({
+const OccurrenceForm: React.FC<FormProps<Occurrence>> = ({
   title,
   label,
   trigger,
@@ -29,33 +29,40 @@ const OccurrenceForm: React.FC<FormProps<Obligation>> = ({
       invisible={invisible}
       tooltip={tooltip}
       disabled={disabled}
-      open={controlledOpen === FormDialog.OBLIGATION || open}
+      open={controlledOpen === FormDialog.OCCURRENCE || open}
       onOpenChange={() =>
         onOpenChanged(
-          controlledOpen === undefined ? FormDialog.OBLIGATION : undefined,
+          controlledOpen === undefined ? FormDialog.OCCURRENCE : undefined,
         )
       }
     >
       <ScrollArea className="max-h-[calc(100vh-100px)]">
         <FormRenderer
-          tableName="obligation"
+          tableName="occurrence"
           callback={callback}
           model={defaults}
           columns={[
             {
-              column: "label",
-              label: "Label",
-              type: "string",
-              placeholder: "Name your Obligation",
-              defaultValue: defaults && defaults.label,
+              column: "amount",
+              label: "Amount",
+              type: "number",
+              placeholder: "Occurence amount",
+              defaultValue: defaults && defaults.amount,
             },
             {
               column: "description",
               label: "Description",
               type: "string",
               optional: true,
-              placeholder: "Add a description",
+              placeholder: "Occurrence Description",
               defaultValue: defaults && defaults.description,
+            },
+            {
+              column: "startDate",
+              label: "Start Date",
+              type: "date",
+              placeholder: "Select the start date",
+              defaultValue: defaults && defaults.startDate,
             },
           ]}
         />

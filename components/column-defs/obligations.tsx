@@ -90,7 +90,8 @@ const Description: React.FC<{
 
   return (
     <HiddenInput
-      value={description || "Add description"}
+      value={description || undefined}
+      placeholder="Add description"
       onChange={(e) => {
         setDescription(e.target.value);
         updateDataDebounced(e.target.value);
