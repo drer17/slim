@@ -115,7 +115,7 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
       (acc, asset) => {
         const amount = asset.assetType.asset
           ? (asset.valuations[asset.valuations.length - 1]?.value ?? 0)
-          : (-1 * asset.valuations[asset.valuations.length - 1]?.value ?? 0);
+          : -1 * asset.valuations[asset.valuations.length - 1]?.value || 0;
 
         acc.networth += amount;
 
@@ -178,11 +178,11 @@ export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
 
         asset.obligations.reduce((obAcc, ob) => {
           ob.Occurrence.reduce((occAcc, occ) => {
-            if (occ.amount > 0) occAcc.obligationsCount += 1;
-            if (occ.amount > 0) occAcc.obligations += occ.amount;
+            if (occ.amount < 0) occAcc.obligationsCount += 1;
+            if (occ.amount < 0) occAcc.obligations += occ.amount;
 
-            if (occ.amount < 0) occAcc.obligationsToCount += 1;
-            if (occ.amount < 0) occAcc.obligationsTo += occ.amount;
+            if (occ.amount > 0) occAcc.obligationsToCount += 1;
+            if (occ.amount > 0) occAcc.obligationsTo += occ.amount;
 
             return occAcc;
           }, obAcc);

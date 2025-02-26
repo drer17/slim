@@ -14,13 +14,17 @@ export const occurrenceColumns: ColumnDef<
     header: "ID",
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "startDate",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created At" />
+      <DataTableColumnHeader column={column} title="Start Date" />
     ),
+    size: 200,
     cell: ({ row }) =>
-      row.original.createdAt.toLocaleString("en-AU", {
+      row.original.startDate.toLocaleString("en-AU", {
         timeZone: "Australia/Adelaide",
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
       }),
   },
   {
@@ -39,7 +43,7 @@ export const occurrenceColumns: ColumnDef<
       <FieldEditor
         field={"subject"}
         value={row.original.subject}
-        slug={["occurence", undefined, row.original.id]}
+        slug={["occurrence", undefined, row.original.id]}
         type="text"
       />
     ),
@@ -53,7 +57,7 @@ export const occurrenceColumns: ColumnDef<
       <FieldEditor
         field={"description"}
         value={row.original.description}
-        slug={["occurence", undefined, row.original.id]}
+        slug={["occurrence", undefined, row.original.id]}
         type="text"
       />
     ),
@@ -63,6 +67,7 @@ export const occurrenceColumns: ColumnDef<
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Amount" />
     ),
+    size: 300,
     cell: ({ row }) =>
       row.original.amount.toLocaleString("en-AU", {
         style: "currency",

@@ -77,7 +77,12 @@ export const Ledger: React.FC<{ slug: Slug; obligation: string }> = ({
   return (
     <div className="flex flex-col gap-2">
       <h1>{obligation} Ledger</h1>
-      <DataTable rows={data} columns={columns} hideFilterColumns />
+      <DataTable
+        rows={data}
+        columns={columns}
+        hideFilterColumns
+        initSortingState={[{ id: "date", desc: true }]}
+      />
     </div>
   );
 };

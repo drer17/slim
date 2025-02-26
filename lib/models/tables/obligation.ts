@@ -149,7 +149,6 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
         where: {
           obligationId: ob.id,
           startDate: {
-            // Ensure the occurrence date is in the past
             lte: new Date(),
           },
         },
@@ -166,8 +165,7 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
         nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + periodDays);
       } else {
         // If there's no previous occurrence, start from the rule's start date
-        nextOccurrenceDate = new Date(startDate.getTime());
-        nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + periodDays);
+        nextOccurrenceDate = new Date(startDate);
       }
 
       // Check if the next occurrence has already been created
@@ -178,7 +176,7 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
             // Ensure we're looking at future occurrences
             gte: new Date(),
             // Check if the next occurrence already exists
-            lt: nextOccurrenceDate,
+            lte: nextOccurrenceDate,
           },
         },
       });
