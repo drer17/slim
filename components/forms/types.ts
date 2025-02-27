@@ -3,6 +3,7 @@ import { DialogWrapperProps } from "../core/other/dialog-wrapper";
 
 export type FormKwargs<T> = {
   callback?: (data: T) => void;
+  preCallback?: (data: T) => Slug;
   defaults?: T;
   disabled?: boolean;
   slug?: Slug;

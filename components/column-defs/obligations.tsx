@@ -212,11 +212,12 @@ export const obligationColumns: ColumnDef<
       <ObligationRuleForm
         label="Edit Rule"
         title="Edit Rule"
-        defaults={{
-          ...row.original.obligationRule,
-          obligationRuleId: row.original.obligationRuleId || undefined,
-          obligationId: row.original.id || undefined,
-        }}
+        preCallback={() => [
+          "obligation-rule",
+          row.original.id || undefined,
+          row.original.obligationRuleId || undefined,
+        ]}
+        defaults={row.original.obligationRule}
       />
     ),
   },

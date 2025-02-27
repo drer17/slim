@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { BaseModel } from "../base";
-import { Status } from "@/lib/definitions/response";
+import { Status, ToastProps } from "@/lib/definitions/response";
+import { revalidatePath } from "next/cache";
+import { generateToast } from "@/lib/utilities/response";
 
 export class ObligationRuleModel<
   ObligationRule,
@@ -12,6 +14,27 @@ export class ObligationRuleModel<
     this.id = obligationRuleId;
     this.obligationId = obligationId;
     this.tableName = "obligationRule";
+  }
+
+  public async update(
+    data: Partial<ObligationRule>,
+  ): Promise<void | ToastProps> {
+    try {
+      await prisma.obligationRule.update({
+        where: { id: this.id },
+        data: {
+          ...data,
+          amount: parseFloat(data?.amount || "0"),
+          frequency: parseInt(data?.frequency || "0"),
+        },
+      });
+      console.log(`${this.tableName} with ID ${this.id} updated successfully`);
+      revalidatePath("/portfolio/");
+      return generateToast(Status.success);
+    } catch (error) {
+      console.error("Error archiving asset:", error);
+      return generateToast(Status.failed);
+    }
   }
 
   public async create(

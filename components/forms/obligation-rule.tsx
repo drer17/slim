@@ -19,23 +19,11 @@ const ObligationRuleForm: React.FC<
   open,
   disabled,
   callback,
+  preCallback,
   defaults,
 }) => {
-  const {
-    openForm: controlledOpen,
-    setOpenForm: onOpenChanged,
-    setFormKwargs,
-  } = usePortfolioContext();
-
-  React.useEffect(() => {
-    setFormKwargs({
-      slug: [
-        "obligation-rule",
-        defaults?.obligationId,
-        defaults?.obligationRuleId,
-      ],
-    });
-  }, [setFormKwargs, defaults?.obligationRuleId, defaults?.obligationId]);
+  const { openForm: controlledOpen, setOpenForm: onOpenChanged } =
+    usePortfolioContext();
 
   return (
     <DialogWrapper
@@ -57,6 +45,7 @@ const ObligationRuleForm: React.FC<
       <ScrollArea className="max-h-[calc(100vh-100px)]">
         <FormRenderer
           tableName="obligationRule"
+          preCallback={preCallback}
           callback={callback}
           model={defaults}
           columns={[

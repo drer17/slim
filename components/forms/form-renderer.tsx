@@ -32,12 +32,13 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { IconCalendar } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
-import { Status } from "@/lib/definitions/response";
+import { Slug, Status } from "@/lib/definitions/response";
 import { Calendar } from "../ui/calendar";
 import { create } from "@/lib/actions/create";
 import { update } from "@/lib/actions/update";
 import { usePortfolioContext } from "@/app/portfolio/portfolio-provider";
 import { Checkbox } from "../ui/checkbox";
+import { Record } from "@prisma/client/runtime/library";
 
 const generateZodSchema = <T,>(
   columns: { column: keyof T; type: string; optional?: boolean }[],
@@ -84,6 +85,7 @@ interface UpsertRowFormProps<T> {
     optional?: boolean;
     disabled?: boolean;
   }[];
+  preCallback?: (data: any) => Slug;
   callback?: (data: any) => void;
   model?: T;
 }
@@ -92,6 +94,7 @@ const FormRenderer = <T,>({
   tableName,
   columns,
   callback,
+  preCallback,
   model,
 }: UpsertRowFormProps<T>) => {
   const { toast } = useToast();
@@ -123,15 +126,20 @@ const FormRenderer = <T,>({
   const onSubmit = async (data: FormSchemaType) => {
     setLoading(true);
     const filteredData = filterValues(data);
-    const response = !data.id
-      ? await create(formKwargs.slug ?? [tableName], {
-          ...model,
-          ...filteredData,
-        })
-      : await update(formKwargs.slug ?? [tableName], {
-          ...model,
-          ...filteredData,
-        });
+    const upsertedData = { ...model, ...filteredData };
+
+    const slug = preCallback
+      ? preCallback(upsertedData)
+      : Object.keys(formKwargs).includes("slug") && formKwargs?.slug
+        ? formKwargs?.slug
+        : [tableName];
+
+    console.log(slug, upsertedData);
+
+    const response = !Object.keys(upsertedData).includes("id")
+      ? await create(slug, upsertedData)
+      : await update(slug, upsertedData);
+
     if (response && response.title === Status.success)
       callback && callback(response.data);
 
