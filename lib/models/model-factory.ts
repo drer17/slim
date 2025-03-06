@@ -2,8 +2,8 @@ import { Slug } from "../definitions/response";
 import { BaseModel } from "./base";
 import { AssetLiabilityModel } from "./tables/asset-liability";
 import { AssetLiabilityTypeModel } from "./tables/asset-liability-type";
-import { Attribute } from "./tables/attribute";
-import { Document } from "./tables/document";
+import { AttributeModel } from "./tables/attribute";
+import { DocumentModel } from "./tables/document";
 import { EntityModel } from "./tables/entity";
 import { ObligationModel } from "./tables/obligation";
 import { ObligationRuleModel } from "./tables/obligation-rule";
@@ -16,7 +16,7 @@ import { UserModel } from "./tables/user";
 import { ValuationModel } from "./tables/valuation";
 
 export class ModelFactory {
-  public static create(slug: Slug): BaseModel {
+  public static create(slug: Slug): BaseModel<any> {
     if (!slug) return new AssetLiabilityModel();
 
     const model = slug[0];
@@ -42,11 +42,11 @@ export class ModelFactory {
       }
       case "attribute": {
         const id = slug[1];
-        return new Attribute(id);
+        return new AttributeModel(id);
       }
       case "document": {
         const id = slug[1];
-        return new Document(id);
+        return new DocumentModel(id);
       }
       case "obligation": {
         const assetLiabilityId = slug[1];

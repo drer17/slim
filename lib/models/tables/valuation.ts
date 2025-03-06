@@ -3,8 +3,9 @@ import { Level5TableViewProps } from "@/components/views/level-5-table-view";
 import { FormDialog } from "@/components/forms/types";
 import { prisma } from "@/lib/prisma";
 import { ToastProps } from "@/lib/definitions/response";
+import { Valuation } from "@prisma/client";
 
-export class ValuationModel<Valuation> extends Level5Model<Valuation> {
+export class ValuationModel extends Level5Model<Valuation> {
   assetLiabilityId?: string;
 
   constructor(assetLiabilityId?: string, id?: string) {
@@ -18,7 +19,7 @@ export class ValuationModel<Valuation> extends Level5Model<Valuation> {
     return super.create({
       assetLiabilityId: this.assetLiabilityId,
       ...data,
-      value: parseFloat(data.value),
+      value: parseFloat(data.value as unknown as string),
     });
   }
 

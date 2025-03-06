@@ -7,8 +7,9 @@ import { cookies } from "next/headers";
 import { monthNames } from "@/lib/utilities/date";
 import { BalanceSheetProps } from "@/components/views/balance-sheet";
 import { DashboardCardProps } from "@/components/core/card/dashboard-card";
+import { Portfolio } from "@prisma/client";
 
-export class PortfolioModel<Portfolio> extends RootModel<Portfolio> {
+export class PortfolioModel extends RootModel<Portfolio> {
   tableName: TableNames = "portfolio";
   target?: string;
 

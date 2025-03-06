@@ -3,10 +3,9 @@ import { BaseModel } from "../base";
 import { Status, ToastProps } from "@/lib/definitions/response";
 import { revalidatePath } from "next/cache";
 import { generateToast } from "@/lib/utilities/response";
+import { ObligationRule } from "@prisma/client";
 
-export class ObligationRuleModel<
-  ObligationRule,
-> extends BaseModel<ObligationRule> {
+export class ObligationRuleModel extends BaseModel<ObligationRule> {
   obligationId?: string;
 
   constructor(obligationId?: string, obligationRuleId?: string) {
@@ -24,8 +23,8 @@ export class ObligationRuleModel<
         where: { id: this.id },
         data: {
           ...data,
-          amount: parseFloat(data?.amount || "0"),
-          frequency: parseInt(data?.frequency || "0"),
+          amount: parseFloat((data?.amount as unknown as string) || "0"),
+          frequency: parseInt((data?.frequency as unknown as string) || "0"),
         },
       });
       console.log(`${this.tableName} with ID ${this.id} updated successfully`);
@@ -44,8 +43,8 @@ export class ObligationRuleModel<
   ): Promise<any> {
     data = {
       ...data,
-      amount: parseFloat(data?.amount || "0"),
-      frequency: parseInt(data?.frequency || "0"),
+      amount: parseFloat((data?.amount as unknown as string) || "0"),
+      frequency: parseInt((data?.frequency as unknown as string) || "0"),
     };
 
     delete data?.obligationId;

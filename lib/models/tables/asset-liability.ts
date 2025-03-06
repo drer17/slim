@@ -6,10 +6,9 @@ import { CardProps } from "@/components/core/card/card";
 import { Status, ToastProps } from "@/lib/definitions/response";
 import { FormDialog } from "@/components/forms/types";
 import { generateToast } from "@/lib/utilities/response";
+import { AssetLiability } from "@prisma/client";
 
-export class AssetLiabilityModel<
-  AssetLiability,
-> extends Level2Model<AssetLiability> {
+export class AssetLiabilityModel extends Level2Model<AssetLiability> {
   private asset?: boolean;
 
   constructor(type?: string, id?: string) {

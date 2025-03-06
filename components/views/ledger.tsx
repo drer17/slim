@@ -68,7 +68,7 @@ export const Ledger: React.FC<{ slug: Slug; obligation: string }> = ({
 
   useEffect(() => {
     const getData = async () => {
-      const res = await getLedgerData(slug);
+      const res = (await getLedgerData(slug)) as LedgerRowProps[];
       setData(res);
     };
     getData();

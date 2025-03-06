@@ -1,12 +1,13 @@
 import { Level3TableViewProps } from "@/components/views/level-3-table-view";
 import { Level3Model } from "../levels/level-3";
 import { prisma } from "@/lib/prisma";
+import { Entity } from "@prisma/client";
 import { FormDialog } from "@/components/forms/types";
 import { Status, ToastProps } from "@/lib/definitions/response";
 import { revalidatePath } from "next/cache";
 import { generateToast } from "@/lib/utilities/response";
 
-export class EntityModel<Entity> extends Level3Model<Entity> {
+export class EntityModel extends Level3Model<Entity> {
   constructor(id?: string) {
     super();
     this.tableName = "entity";
@@ -17,7 +18,7 @@ export class EntityModel<Entity> extends Level3Model<Entity> {
     return super.create({
       portfolioId: this.portfolioId,
       ...data,
-      phone: parseInt(data.phone),
+      phone: parseInt(data.phone as unknown as string),
     });
   }
 
@@ -25,7 +26,7 @@ export class EntityModel<Entity> extends Level3Model<Entity> {
     try {
       await prisma.entity.update({
         where: { id: this.id },
-        data: { ...data, phone: parseInt(data?.phone) },
+        data: { ...data, phone: parseInt(data?.phone as unknown as string) },
       });
       console.log(`${this.tableName} with ID ${this.id} updated successfully`);
       revalidatePath("/portfolio/");

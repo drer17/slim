@@ -2,16 +2,6 @@
 
 import AssetLiabilityForm from "@/components/forms/asset-liability";
 import { usePortfolioContext } from "./portfolio-provider";
-import { FormProps } from "react-hook-form";
-import {
-  AssetLiability,
-  AssetLiabilityType,
-  Entity,
-  Obligation,
-  Transaction,
-  TransactionCategory,
-  Valuation,
-} from "@prisma/client";
 import ObligationForm from "@/components/forms/obligations";
 import EntityForm from "@/components/forms/entities";
 import TransactionForm from "@/components/forms/transaction";
@@ -23,31 +13,13 @@ const Forms: React.FC = () => {
   const { formKwargs } = usePortfolioContext();
   return (
     <>
-      <AssetLiabilityForm
-        invisible={true}
-        {...(formKwargs as FormProps<AssetLiability>)}
-      />
-      <ObligationForm
-        invisible={true}
-        {...(formKwargs as FormProps<Obligation>)}
-      />
-      <EntityForm invisible={true} {...(formKwargs as FormProps<Entity>)} />
-      <TransactionForm
-        invisible={true}
-        {...(formKwargs as FormProps<Transaction>)}
-      />
-      <TransactionCategoryForm
-        invisible={true}
-        {...(formKwargs as FormProps<TransactionCategory>)}
-      />
-      <ValuationForm
-        invisible={true}
-        {...(formKwargs as FormProps<Valuation>)}
-      />
-      <AssetLiabilityTypeForm
-        invisible={true}
-        {...(formKwargs as FormProps<AssetLiabilityType>)}
-      />
+      <AssetLiabilityForm invisible={true} {...(formKwargs as any)} />
+      <ObligationForm invisible={true} {...(formKwargs as any)} />
+      <EntityForm invisible={true} {...(formKwargs as any)} />
+      <TransactionForm invisible={true} {...(formKwargs as any)} />
+      <TransactionCategoryForm invisible={true} {...(formKwargs as any)} />
+      <ValuationForm invisible={true} {...(formKwargs as any)} />
+      <AssetLiabilityTypeForm invisible={true} {...(formKwargs as any)} />
     </>
   );
 };

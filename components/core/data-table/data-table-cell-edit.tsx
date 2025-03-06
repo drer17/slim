@@ -3,7 +3,7 @@
 import * as React from "react";
 
 export const defaultColumn = {
-  cell: ({ getValue, row, column, table }) => {
+  cell: ({ getValue, row, column, table }: any) => {
     const initialValue = getValue();
 
     const [value, setValue] = React.useState<unknown>(initialValue);
@@ -47,7 +47,7 @@ export const defaultColumn = {
         }
       >
         {isEditMode && column.columnDef.meta?.renderEditCell
-          ? column.columnDef.meta?.renderEditCell(row, onBlur, (value) =>
+          ? column.columnDef.meta?.renderEditCell(row, onBlur, (value: any) =>
               setValue(value),
             )
           : column.columnDef.meta?.renderCell(row) || String(value)}

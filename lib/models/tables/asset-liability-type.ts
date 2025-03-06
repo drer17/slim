@@ -3,10 +3,9 @@ import { TableNames } from "../base";
 import { Level1Model } from "../levels/level-1";
 import { FormDialog } from "@/components/forms/types";
 import { prisma } from "@/lib/prisma";
+import { AssetLiabilityType } from "@prisma/client";
 
-export class AssetLiabilityTypeModel<
-  AssetLiabilityType,
-> extends Level1Model<AssetLiabilityType> {
+export class AssetLiabilityTypeModel extends Level1Model<AssetLiabilityType> {
   tableName: TableNames = "assetLiabilityType";
 
   constructor(id?: string) {

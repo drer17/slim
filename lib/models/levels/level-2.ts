@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { generateToast } from "@/lib/utilities/response";
 import { Status } from "@/lib/definitions/response";
 import { revalidatePath } from "next/cache";
-import { CardProps } from "@/components/core/card/card";
+import { Prisma } from "@prisma/client";
 
 export abstract class Level2Model<T> extends BaseModel<T> {
   viewClass = "level-2";
@@ -14,11 +14,9 @@ export abstract class Level2Model<T> extends BaseModel<T> {
   public abstract getDataForRow(): Promise<Level2RowViewProps>;
   public abstract getDataForTable(): Promise<Level2TableViewProps>;
 
-  public abstract getCards(): Promise<CardProps[]>;
-
   public async changeColor(newColor: string) {
     try {
-      await prisma[this.tableName].update({
+      await (prisma[this.tableName] as Prisma.ObligationDelegate).update({
         where: { id: this.id },
         data: { color: newColor },
       });
@@ -33,7 +31,7 @@ export abstract class Level2Model<T> extends BaseModel<T> {
 
   public async changeStar(starred: boolean) {
     try {
-      await prisma[this.tableName].update({
+      await (prisma[this.tableName] as Prisma.ObligationDelegate).update({
         where: { id: this.id },
         data: { starred },
       });
@@ -48,7 +46,7 @@ export abstract class Level2Model<T> extends BaseModel<T> {
 
   public async archive() {
     try {
-      await prisma[this.tableName].update({
+      await (prisma[this.tableName] as Prisma.ObligationDelegate).update({
         where: { id: this.id },
         data: { archivedAt: new Date() },
       });
@@ -67,12 +65,15 @@ export abstract class Level2Model<T> extends BaseModel<T> {
   ) {
     try {
       if (remove) {
-        await prisma[linkingTable].delete({
-          where: { [linkedKey]: linkedId },
+        await (prisma[linkingTable] as Prisma.ObligationDelegate).delete({
+          where: { [linkedKey]: linkedId } as any,
         });
       } else {
-        await prisma[linkingTable].create({
-          data: { [linkedKey]: linkedId, [this.tableName + "Id"]: this.id },
+        await (prisma[linkingTable] as Prisma.ObligationDelegate).create({
+          data: {
+            [linkedKey]: linkedId,
+            [this.tableName + "Id"]: this.id,
+          } as any,
         });
       }
       revalidatePath("/portfolio/");
@@ -91,20 +92,24 @@ export abstract class Level2Model<T> extends BaseModel<T> {
     console.log(targetTable, data, targetId, link);
     try {
       if (targetId) {
-        await prisma[targetTable].update({
+        await (prisma[targetTable] as Prisma.ObligationDelegate).update({
           where: { id: targetId },
           data: data,
         });
         console.log(`Updated ${this.tableName} with ID ${this.id}`);
       } else if (link) {
-        const newRecord = await prisma[targetTable].create({
-          data: { ...data, portfolioId: this.portfolioId },
+        const newRecord = await (
+          prisma[targetTable] as Prisma.ObligationDelegate
+        ).create({
+          data: { ...data, portfolioId: this.portfolioId } as any,
         });
-        const linkingRecord = await prisma[link.linkingTable].create({
+        const linkingRecord = await (
+          prisma[link.linkingTable] as Prisma.ObligationDelegate
+        ).create({
           data: {
             [link.key]: newRecord.id,
             [this.tableName + "Id"]: this.id,
-          },
+          } as any,
         });
         this.id = newRecord.id;
         console.log(

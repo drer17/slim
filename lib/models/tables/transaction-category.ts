@@ -3,10 +3,9 @@ import { TableNames } from "../base";
 import { Level1Model } from "../levels/level-1";
 import { FormDialog } from "@/components/forms/types";
 import { Level1TableViewProps } from "@/components/views/level-1-table-view";
+import { TransactionCategory } from "@prisma/client";
 
-export class TransactionCategoryModel<
-  TransactionCategory,
-> extends Level1Model<TransactionCategory> {
+export class TransactionCategoryModel extends Level1Model<TransactionCategory> {
   tableName: TableNames = "transactionCategory";
   parentId?: string;
 

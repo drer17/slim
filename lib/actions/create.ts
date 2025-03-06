@@ -8,6 +8,7 @@ import path from "path";
 import { upsertLevel7 } from "./update";
 import { Document } from "@prisma/client";
 import { Level4Model } from "../models/levels/level-4";
+import { ObligationModel } from "../models/tables/obligation";
 
 export async function create(slug: Slug, data: Record<string, any>) {
   console.log("CREATING", slug);
@@ -77,6 +78,6 @@ export async function importData(
 }
 
 export async function createOccurrences() {
-  const model = ModelFactory.create(["obligation"]);
+  const model = ModelFactory.create(["obligation"]) as ObligationModel;
   await model.createOccurrences();
 }

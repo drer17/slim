@@ -7,6 +7,7 @@ import { Slug, ToastProps } from "../definitions/response";
 import { RootModel } from "../models/levels/root";
 import { BalanceSheetProps } from "@/components/views/balance-sheet";
 import { DashboardCardProps } from "@/components/core/card/dashboard-card";
+import { ObligationModel } from "../models/tables/obligation";
 
 export async function getRowData(
   slug: Slug,
@@ -49,6 +50,10 @@ export async function getBalanceData(
 
 export async function getLedgerData(slug: Slug) {
   console.log(slug[0]);
-  const model = ModelFactory.create(["obligation", undefined, slug[0]]);
+  const model = ModelFactory.create([
+    "obligation",
+    undefined,
+    slug[0],
+  ]) as ObligationModel;
   return await model.getLedger();
 }

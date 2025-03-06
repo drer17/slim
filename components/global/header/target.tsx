@@ -20,6 +20,9 @@ const Target = () => {
         items={[]}
         labelKey="label"
         valueKey="id"
+        idKey="id"
+        values={[]}
+        onValueChange={() => {}}
         placeholder="Portfolio"
         buttonClassName="text-lg font-bold pl-2"
         commandPrompt="Search assets..."

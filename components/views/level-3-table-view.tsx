@@ -37,7 +37,6 @@ const Level3TableView: React.FC<Level3TableViewProps & { slug: Slug }> = ({
   title,
   rows,
   slug,
-  columns,
   menuOptions,
   formDialog,
   modelKey,

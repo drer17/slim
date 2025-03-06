@@ -3,6 +3,7 @@ import { Status, ToastProps } from "../definitions/response";
 import { prisma } from "../prisma";
 import { generateToast } from "../utilities/response";
 import { cookies } from "next/headers";
+import { Prisma } from "@prisma/client";
 
 export type TableNames =
   | "user"
@@ -43,13 +44,15 @@ export abstract class BaseModel<T> {
 
   public async get(): Promise<T[] | ToastProps> {
     try {
-      const result = await prisma[this.tableName].findMany({
+      const result = await (
+        prisma[this.tableName] as Prisma.ObligationDelegate
+      ).findMany({
         where: { id: this.id },
       });
       console.log(
         `Found ${this.tableName} with this id ${this.id} and returned successfully`,
       );
-      return result;
+      return result as T[];
     } catch (error) {
       console.error(`Error getting ${this.tableName}:`, error);
       return generateToast(Status.failed);
@@ -58,7 +61,7 @@ export abstract class BaseModel<T> {
 
   public async update(data: Partial<T>): Promise<void | ToastProps> {
     try {
-      await prisma[this.tableName].update({
+      await (prisma[this.tableName] as Prisma.ObligationDelegate).update({
         where: { id: this.id },
         data,
       });
@@ -73,8 +76,10 @@ export abstract class BaseModel<T> {
 
   public async create(data: Partial<T>): Promise<any | ToastProps> {
     try {
-      const newRow = await prisma[this.tableName].create({
-        data,
+      const newRow = await (
+        prisma[this.tableName] as Prisma.ObligationDelegate
+      ).create({
+        data: data as any,
       });
       console.log(`An entry to ${this.tableName} was created successfully`);
       revalidatePath("/portfolio/");
@@ -89,7 +94,7 @@ export abstract class BaseModel<T> {
     // to avoid deleting everything
     if (!this.id) return;
     try {
-      await prisma[this.tableName].delete({
+      await (prisma[this.tableName] as Prisma.ObligationDelegate).delete({
         where: { id: this.id },
       });
       console.log(

@@ -9,8 +9,6 @@ import { Level5TableViewProps } from "@/components/views/level-5-table-view";
 export abstract class Level5Model<T> extends BaseModel<T> {
   public viewClass = "level-5";
 
-  public abstract getDataForRow(): Promise<Level5RowViewProps>;
-
   public abstract getDataForTable(
     limit: number,
     page: number,
@@ -21,7 +19,7 @@ export abstract class Level5Model<T> extends BaseModel<T> {
       this.tableName.charAt(0).toUpperCase() + this.tableName.slice(1);
 
     const columns: string[] = Object.values(
-      Prisma[`${capitalizedTableName}ScalarFieldEnum`],
+      Prisma[`${capitalizedTableName}ScalarFieldEnum` as keyof typeof Prisma],
     );
 
     const extractedData = [];
@@ -34,7 +32,9 @@ export abstract class Level5Model<T> extends BaseModel<T> {
       extractedData.push(extractedRow);
     }
 
-    prisma[this.tableName].createMany({ data: extractedData });
+    await (prisma[this.tableName] as Prisma.ObligationDelegate).createMany({
+      data: extractedData as any,
+    });
 
     return generateToast(Status.success);
   }

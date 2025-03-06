@@ -3,8 +3,9 @@ import { Level3Model } from "../levels/level-3";
 import { prisma } from "@/lib/prisma";
 import { FormDialog } from "@/components/forms/types";
 import { ToastProps } from "@/lib/definitions/response";
+import { Obligation } from "@prisma/client";
 
-export class ObligationModel<Obligation> extends Level3Model<Obligation> {
+export class ObligationModel extends Level3Model<Obligation> {
   assetLiabilityId?: string;
 
   constructor(assetLiabilityId?: string, id?: string) {
@@ -21,8 +22,6 @@ export class ObligationModel<Obligation> extends Level3Model<Obligation> {
       ...data,
     });
   }
-
-  async getDataForRow(): Promise<Level3RowViewProps> {}
 
   async getDataForTable(): Promise<Level3TableViewProps> {
     const rows = await prisma.obligation.findMany({

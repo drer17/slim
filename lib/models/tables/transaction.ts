@@ -5,9 +5,9 @@ import { Level4Model } from "../levels/level-4";
 import { Status, ToastProps } from "@/lib/definitions/response";
 import { generateToast } from "@/lib/utilities/response";
 import { getPartial } from "@/lib/utilities/object";
-import { Prisma } from "@prisma/client";
+import { Prisma, Transaction } from "@prisma/client";
 
-export class TransactionModel<Transaction> extends Level4Model<Transaction> {
+export class TransactionModel extends Level4Model<Transaction> {
   assetLiabilityId: string | undefined;
   searchTerm?: string;
   limit?: number;
@@ -88,7 +88,7 @@ export class TransactionModel<Transaction> extends Level4Model<Transaction> {
     console.log(extractedData);
 
     await prisma.transaction.createMany({
-      data: extractedData,
+      data: extractedData as any,
     });
 
     console.info(

@@ -5,8 +5,6 @@ import { ToastProps } from "@/lib/definitions/response";
 export abstract class Level4Model<T> extends BaseModel<T> {
   public viewClass = "level-4";
 
-  public abstract getDataForRow(): Promise<Level4RowViewProps>;
-
   public abstract getDataForTable(
     limit: number,
     page: number,

@@ -3,8 +3,9 @@ import { Level5TableViewProps } from "@/components/views/level-5-table-view";
 import { FormDialog } from "@/components/forms/types";
 import { prisma } from "@/lib/prisma";
 import { ToastProps } from "@/lib/definitions/response";
+import { Occurrence } from "@prisma/client";
 
-export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
+export class OccurrenceModel extends Level5Model<Occurrence> {
   obligationId?: string;
 
   constructor(obligationId?: string, id?: string) {
@@ -16,9 +17,9 @@ export class OccurrenceModel<Occurrence> extends Level5Model<Occurrence> {
 
   public async create(data: Occurrence): Promise<any | ToastProps> {
     return super.create({
-      obligationId: this.obligationId,
       ...data,
-      amount: parseFloat(data.amount),
+      obligationId: this.obligationId,
+      amount: parseFloat(data.amount as unknown as string),
     });
   }
 

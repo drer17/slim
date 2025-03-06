@@ -21,4 +21,5 @@ export enum FormDialog {
   VALUATION,
   OCCURRENCE,
   OBLIGATION_RULE,
+  ATTRIBUTE,
 }

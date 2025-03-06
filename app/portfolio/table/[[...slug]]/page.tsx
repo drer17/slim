@@ -1,5 +1,12 @@
 "use server";
 
+/*
+ * Table Page
+ *
+ * A route for a database table view
+ * NOTE: Supports table categories from 1-5
+ */
+
 import { ModelContext } from "@/components/contexts/model-contexts";
 import Level1TableView from "@/components/views/level-1-table-view";
 import Level2TableView from "@/components/views/level-2-table-view";
