@@ -22,6 +22,7 @@ import {
 } from "../column-defs/model-column-defs";
 import { Slug } from "@/lib/definitions/response";
 import ViewOptions, { MenuOption } from "../core/other/view-options";
+import { getTableData } from "@/lib/actions/get";
 
 export interface Level3TableViewProps {
   pathToResource: PathSlug[];
@@ -68,6 +69,9 @@ const Level3TableView: React.FC<Level3TableViewProps & { slug: Slug }> = ({
         rows={rows}
         columns={modelColumnDefs[modelKey]}
         initColumnVisibility={modelColumnVisibilities[modelKey]}
+        dataRetriever={(numRows, forPage) =>
+          getTableData(slug, forPage, numRows)
+        }
       />
     </div>
   );

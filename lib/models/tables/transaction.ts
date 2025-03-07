@@ -87,9 +87,36 @@ export class TransactionModel extends Level4Model<Transaction> {
 
     console.log(extractedData);
 
-    await prisma.transaction.createMany({
-      data: extractedData as any,
+    const existingTransactions = await prisma.transaction.findMany({
+      where: {
+        OR: extractedData.map((txn) => ({
+          name: txn.name,
+          date: txn.date,
+          amount: txn.amount,
+        })),
+      },
+      select: { label: true, date: true, amount: true },
     });
+
+    // Filter out transactions that already exist
+    const newTransactions = extractedData.filter(
+      (txn) =>
+        !existingTransactions.some(
+          (existing) =>
+            existing.label === txn.label &&
+            existing.date === txn.date &&
+            existing.amount === txn.amount,
+        ),
+    );
+
+    // Insert only new transactions
+    if (newTransactions.length > 0) {
+      await prisma.transaction.createMany({
+        data: newTransactions as any,
+      });
+    } else {
+      console.log("No new transactions to insert.");
+    }
 
     console.info(
       `Imported ${Object.keys(extractedData).length} transactions for asset ${this.assetLiabilityId} in portfolio ${this.portfolioId}.`,

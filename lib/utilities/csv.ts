@@ -9,7 +9,7 @@ export const parseCSVToJSON = (csvText: string) => {
 
   // Function to check if the first row seems like a header (contains non-numeric text)
   const isHeader = firstRow.some(
-    (value) => !(isNaN(Date.parse(value)) && isNaN(Number(value))),
+    (value) => isNaN(Date.parse(value)) && isNaN(Number(value)),
   );
 
   let headers: string[];

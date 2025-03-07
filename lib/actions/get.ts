@@ -8,6 +8,10 @@ import { RootModel } from "../models/levels/root";
 import { BalanceSheetProps } from "@/components/views/balance-sheet";
 import { DashboardCardProps } from "@/components/core/card/dashboard-card";
 import { ObligationModel } from "../models/tables/obligation";
+import { Level1Model } from "../models/levels/level-1";
+import { Level3Model } from "../models/levels/level-3";
+import { Level4Model } from "../models/levels/level-4";
+import { Level5Model } from "../models/levels/level-5";
 
 export async function getRowData(
   slug: Slug,
@@ -17,6 +21,23 @@ export async function getRowData(
     return { viewLevel: "level-2", data: await model.getDataForRow() };
   }
   return undefined;
+}
+
+export async function getTableData(
+  slug: Slug,
+  page: number,
+  limit: number,
+): Promise<any[]> {
+  const model = ModelFactory.create(slug);
+  if (
+    model instanceof Level1Model ||
+    model instanceof Level3Model ||
+    model instanceof Level4Model ||
+    model instanceof Level5Model
+  ) {
+    const data = await model.getDataForTable(page, limit);
+    return data.rows;
+  }
 }
 
 export async function get(slug: Slug): Promise<any[] | ToastProps> {

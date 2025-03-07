@@ -26,6 +26,7 @@ import { importData } from "@/lib/actions/create";
 import React from "react";
 import { parseCSVToJSON } from "@/lib/utilities/csv";
 import ViewOptions, { MenuOption } from "../core/other/view-options";
+import { getTableData } from "@/lib/actions/get";
 
 export interface Level5TableViewProps {
   pathToResource: PathSlug[];
@@ -105,6 +106,9 @@ const Level5TableView: React.FC<Level5TableViewProps & { slug: Slug }> = ({
         initColumnVisibility={modelColumnVisibilities[modelKey]}
         initFilterState={modelColumnFilters[modelKey]}
         heightOffset="220px"
+        dataRetriever={(numRows, forPage) =>
+          getTableData(slug, forPage, numRows)
+        }
       />
     </div>
   );

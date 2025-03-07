@@ -25,6 +25,7 @@ import { Slug } from "@/lib/definitions/response";
 import React from "react";
 import { parseCSVToJSON } from "@/lib/utilities/csv";
 import { importData } from "@/lib/actions/create";
+import { getTableData } from "@/lib/actions/get";
 
 export interface Level1TableViewProps {
   pathToResource: PathSlug[];
@@ -99,6 +100,9 @@ const Level1TableView: React.FC<Level1TableViewProps & { slug: Slug }> = ({
         initColumnVisibility={modelColumnVisibilities[modelKey]}
         initFilterState={modelColumnFilters[modelKey]}
         heightOffset="220px"
+        dataRetriever={(numRows, forPage) =>
+          getTableData(slug, forPage, numRows)
+        }
       />
     </div>
   );
