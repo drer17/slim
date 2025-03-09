@@ -66,7 +66,6 @@ export abstract class BaseModel<T> {
         data,
       });
       console.log(`${this.tableName} with ID ${this.id} updated successfully`);
-      revalidatePath("/portfolio/");
       return generateToast(Status.success);
     } catch (error) {
       console.error("Error archiving asset:", error);

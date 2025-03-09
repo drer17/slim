@@ -30,6 +30,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { IconPlus, IconX } from "@tabler/icons-react";
 import { useExpandedContext } from "../expanded-content/expanded-content";
+import { deleteItem } from "@/lib/actions/delete";
 
 interface AttributeComponentProps extends Partial<Attribute> {
   save: (data: Record<string, any>, id?: string) => void;
@@ -46,6 +47,11 @@ const AttributeComponent: React.FC<AttributeComponentProps> = ({
   const [newAttribute, setNewAttribute] =
     React.useState<Partial<Attribute>>(props);
   const [editing, setEditing] = React.useState<boolean>(false);
+
+  const deleteAttribute = async () => {
+    const res = await deleteItem(["attribute", props.id]);
+    if (res) toast(res as ToastProps);
+  };
 
   const updateAttribute = useDebouncedCallback(() => {
     const updateItem = async () => {
@@ -131,17 +137,30 @@ const AttributeComponent: React.FC<AttributeComponentProps> = ({
               />
             </div>
           ) : (
-            <p
+            <div
               onClick={() => setEditing(true)}
-              className="w-1/2 text-right my-1 items-center"
+              className="w-1/2 text-right my-1 items-center p-1"
             >
-              {props.value}
-            </p>
+              {props.type === InputSwitcherType.string ? (
+                <p>{props.value}</p>
+              ) : props.type === InputSwitcherType.link ? (
+                <a href={props.value} target="_blank" rel="noopener noreferrer">
+                  {props.label}
+                </a>
+              ) : (
+                <p>{props.value}</p>
+              )}
+            </div>
           )}
           {expanded !== undefined && (
             <>
               <div className="w-16">
-                <Button variant="ghost" size="icon" className="h-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8"
+                  onClick={deleteAttribute}
+                >
                   <IconX className="w-4 h-4 text-zinc-500" />
                 </Button>
               </div>

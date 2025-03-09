@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ToastProps } from "../ui/toast";
 import { useTransactionContext } from "../contexts/transaction";
 import { cn } from "@/lib/utils";
+import Options from "../core/other/cell-options";
 
 const Description: React.FC<{
   initDescription: string | null;
@@ -86,7 +87,7 @@ const MoveTo: React.FC<{ transactionId: string; assetLiabilityId: string }> = ({
 
 const AssignToObligation: React.FC<{
   transactionId: string;
-  assetLiabilityId: string;
+  assetLiabilityId?: string;
   obligationId?: string;
 }> = ({ transactionId, assetLiabilityId, obligationId }) => {
   const { obligations } = useTransactionContext();
@@ -100,9 +101,10 @@ const AssignToObligation: React.FC<{
     [selectedObligationId, obligations],
   );
 
-  const onSelect = async (obligation: string) => {
+  const onSelect = async (obligation?: string) => {
+    console.log(obligation);
     const result = await update(["transaction", undefined, transactionId], {
-      obligationId: obligation,
+      obligationId: obligation ? obligation : null,
     });
     setSelectedObligationId(obligation);
     if (result) toast(result as ToastProps);
@@ -115,6 +117,9 @@ const AssignToObligation: React.FC<{
     >
       <SelectTrigger>{selectedObligation?.label || ""}</SelectTrigger>
       <SelectContent>
+        <SelectItem key="none" value={undefined as unknown as string}>
+          None
+        </SelectItem>
         {obligations
           .filter((obl) => obl.assetLiabilityId === assetLiabilityId)
           .map((al) => (
@@ -279,6 +284,15 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
         obligationId={row.original.obligationId || undefined}
       />
     ),
+  },
+  {
+    accessorKey: "options",
+    header: () => <></>,
+    enableResizing: true,
+    cell: ({ row }) => (
+      <Options slug={["transaction", undefined, row.original.id]} />
+    ),
+    size: 10,
   },
 ];
 

@@ -83,7 +83,7 @@ export const occurrenceColumns: ColumnDef<
       <FieldEditor
         field={"satisfied"}
         value={row.original.satisfied}
-        slug={["occurrence", row.original.id]}
+        slug={["occurrence", undefined, row.original.id]}
         type="boolean"
       />
     ),

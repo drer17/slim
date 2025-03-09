@@ -13,13 +13,13 @@ export class TagModel extends Level1Model<Tag> {
 
   // not used
   async getDataForTable(
-    limit: number,
-    page: number,
+    limit?: number,
+    page?: number,
   ): Promise<Level1TableViewProps> {
     const rows = await prisma.tag.findMany({
       where: { portfolioId: this.portfolioId },
-      skip: limit * page,
-      take: limit,
+      ...(page && limit ? { skip: limit * page } : {}),
+      ...(limit ? { take: limit } : {}),
     });
     const data: Level1TableViewProps = {
       title: "Tags",

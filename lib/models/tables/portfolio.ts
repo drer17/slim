@@ -64,7 +64,6 @@ export class PortfolioModel extends RootModel<Portfolio> {
         AND: [
           { portfolioId: this.portfolioId },
           { OR: [{ parentId: this.target }, { id: this.target }] },
-          { createdAt: { gt: new Date(periodFrom) } },
           { createdAt: { lte: new Date(periodTo) } },
           { archivedAt: null },
         ],
@@ -74,10 +73,7 @@ export class PortfolioModel extends RootModel<Portfolio> {
           select: { value: true, createdAt: true },
           orderBy: { createdAt: "desc" },
           where: {
-            AND: [
-              { createdAt: { gt: new Date(periodFrom) } },
-              { createdAt: { lte: new Date(periodTo) } },
-            ],
+            AND: [{ createdAt: { lte: new Date(periodTo) } }],
           },
         },
         obligations: {
@@ -86,10 +82,7 @@ export class PortfolioModel extends RootModel<Portfolio> {
             id: true,
             Occurrence: {
               where: {
-                AND: [
-                  { createdAt: { gt: new Date(periodFrom) } },
-                  { createdAt: { lte: new Date(periodTo) } },
-                ],
+                AND: [{ createdAt: { lte: new Date(periodTo) } }],
               },
               select: { amount: true },
               orderBy: { createdAt: "desc" },
@@ -99,8 +92,8 @@ export class PortfolioModel extends RootModel<Portfolio> {
         transactions: {
           where: {
             AND: [
-              { createdAt: { gt: new Date(periodFrom) } },
-              { createdAt: { lte: new Date(periodTo) } },
+              { date: { gt: new Date(periodFrom) } },
+              { date: { lte: new Date(periodTo) } },
             ],
           },
           select: {
@@ -394,8 +387,8 @@ export class PortfolioModel extends RootModel<Portfolio> {
       where: {
         AND: [
           { assetLiability: { portfolioId: this.portfolioId } },
-          { createdAt: { gt: periodFrom } },
-          { createdAt: { lte: periodTo } },
+          { date: { gt: periodFrom } },
+          { date: { lte: periodTo } },
         ],
       },
       include: {
@@ -447,14 +440,14 @@ export class PortfolioModel extends RootModel<Portfolio> {
 
         // cell for month and category
         acc[assetKey][expense][categoryId].months[
-          monthNames[trans.createdAt.getMonth()]
+          monthNames[trans.date.getMonth()]
         ] += trans.amount;
 
         // right most total for each category
         acc[assetKey][expense][categoryId].months.Total += trans.amount;
 
         // bottom most total for each month
-        acc[assetKey][expense].Total[monthNames[trans.createdAt.getMonth()]] +=
+        acc[assetKey][expense].Total[monthNames[trans.date.getMonth()]] +=
           trans.amount;
 
         // bottom right cell for overall total

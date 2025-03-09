@@ -6,7 +6,7 @@ export enum Status {
 export interface ToastProps {
   title: Status;
   description: string;
-  variant?: "defualt" | "destructive";
+  variant?: "default" | "destructive";
   data?: any;
 }
 

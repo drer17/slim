@@ -36,6 +36,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -57,6 +58,7 @@ import { Status } from "@/lib/definitions/response";
 import { generateToast } from "@/lib/utilities/response";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DataTablePagination } from "./data-table-pagination";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -75,6 +77,7 @@ declare module "@tanstack/react-table" {
 }
 
 export interface DataTableProps<TData, TValue> {
+  tableId?: string;
   columns: ColumnDef<TData, TValue>[];
   rows: TData[];
 
@@ -108,6 +111,7 @@ export interface DataTableProps<TData, TValue> {
 const ROW_LIMIT = 50;
 
 export function DataTable<TData, TValue>({
+  tableId,
   columns,
   rows,
   dataModifier,
@@ -144,8 +148,18 @@ export function DataTable<TData, TValue>({
     setData(rows);
   }, [rows]);
 
+  // for scrolling
   const [page, setPage] = React.useState(1);
   const [isDone, setIsDone] = React.useState(false);
+
+  // for pagination
+  const [pagination, setPagination] = React.useState(() => {
+    if (tableId) {
+      const savedPage = localStorage.getItem(`${tableId}-table`);
+      return { pageIndex: savedPage ? Number(savedPage) : 0, pageSize: 10 };
+    }
+    return { pageIndex: 0, pageSize: 10 };
+  });
 
   const [expandedRows, setExpandedRows] = React.useState(new Set());
   const toggleRow = (rowId: string) => {
@@ -168,7 +182,17 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: (updater) => {
+      const newState =
+        typeof updater === "function"
+          ? updater({ pageIndex: pagination.pageIndex, pageSize: 10 })
+          : updater;
+      localStorage.setItem(`${tableId}-table`, String(newState.pageIndex));
+      setPagination(newState);
+    },
     state: {
+      pagination,
       sorting,
       columnFilters,
       columnVisibility,
@@ -218,17 +242,16 @@ export function DataTable<TData, TValue>({
     <div className="max-w-full">
       {!hideToolbar && toolbar}
       <ScrollArea
-        className="rounded-md border relative"
+        className="rounded-md border overflow-auto relative"
         style={{
-          maxWidth: "100%",
           height: `calc(100vh - ${heightOffset})`,
           maxHeight: height,
         }}
       >
-        <Table className="border-zinc-500" style={{ tableLayout: "auto" }}>
+        <Table className="border-zinc-500">
           <TableHeader
             className={cn(
-              "bg-background/50 backdrop-blur",
+              "bg-background/50 backdrop-blur sticky top-0",
               dominantHeader && "z-50",
             )}
           >
@@ -321,6 +344,8 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </ScrollArea>
+      <div className="h-2" />
+      <DataTablePagination table={table} />
     </div>
   );
 }

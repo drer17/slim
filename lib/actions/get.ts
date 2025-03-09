@@ -35,9 +35,10 @@ export async function getTableData(
     model instanceof Level4Model ||
     model instanceof Level5Model
   ) {
-    const data = await model.getDataForTable(page, limit);
+    const data = await model.getDataForTable(limit, page);
     return data.rows;
   }
+  return [];
 }
 
 export async function get(slug: Slug): Promise<any[] | ToastProps> {

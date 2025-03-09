@@ -6,5 +6,5 @@ export const generateToast = (status: Status): ToastProps => ({
     status === Status.success
       ? "Action was successful"
       : "Action was unsuccessful",
-  variant: status === Status.failed ? "destructive" : "defualt",
+  variant: status === Status.failed ? "destructive" : "default",
 });

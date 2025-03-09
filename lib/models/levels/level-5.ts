@@ -10,8 +10,8 @@ export abstract class Level5Model<T> extends BaseModel<T> {
   public viewClass = "level-5";
 
   public abstract getDataForTable(
-    limit: number,
-    page: number,
+    limit?: number,
+    page?: number,
   ): Promise<Level5TableViewProps>;
 
   public async importData(data: Record<string, string>[]): Promise<ToastProps> {

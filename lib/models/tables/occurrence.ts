@@ -24,8 +24,8 @@ export class OccurrenceModel extends Level5Model<Occurrence> {
   }
 
   async getDataForTable(
-    limit: number,
-    page: number,
+    limit?: number,
+    page?: number,
   ): Promise<Level5TableViewProps> {
     const rows = await prisma.occurrence.findMany({
       where: {
@@ -35,8 +35,8 @@ export class OccurrenceModel extends Level5Model<Occurrence> {
         obligation: { select: { label: true } },
       },
       orderBy: { createdAt: "desc" },
-      skip: limit * page,
-      take: limit,
+      ...(page && limit ? { skip: limit * page } : {}),
+      ...(limit ? { take: limit } : {}),
     });
 
     const obligation = await prisma.obligation.findUnique({

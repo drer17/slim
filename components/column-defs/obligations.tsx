@@ -27,6 +27,7 @@ import {
 import { IconArchive, IconDots, IconTrash } from "@tabler/icons-react";
 import { deleteItem } from "@/lib/actions/delete";
 import { useObligationContext } from "../contexts/obligations";
+import { FieldEditor } from "../core/other/cell-edit";
 
 const EntitySelection: React.FC<{
   entityId: string | null;
@@ -155,6 +156,14 @@ export const obligationColumns: ColumnDef<
     accessorKey: "label",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Label" />
+    ),
+    cell: ({ row }) => (
+      <FieldEditor
+        field={"label"}
+        value={row.original.label}
+        slug={["obligation", undefined, row.original.id]}
+        type="text"
+      />
     ),
   },
   {

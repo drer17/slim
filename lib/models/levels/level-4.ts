@@ -6,8 +6,8 @@ export abstract class Level4Model<T> extends BaseModel<T> {
   public viewClass = "level-4";
 
   public abstract getDataForTable(
-    limit: number,
-    page: number,
+    limit?: number,
+    page?: number,
   ): Promise<Level4TableViewProps>;
 
   public abstract importData(

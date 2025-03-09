@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   const model = ModelFactory.create(params.slug);
 
   if (model instanceof Level1Model) {
-    const data = await model.getDataForTable(20, 0);
+    const data = await model.getDataForTable();
     return (
       <ModelContext modelKey={data.modelKey}>
         <Level1TableView {...data} slug={params.slug} />
@@ -48,7 +48,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     );
   }
   if (model instanceof Level4Model) {
-    const data = await model.getDataForTable(20, 0);
+    const data = await model.getDataForTable();
     return (
       <ModelContext modelKey={data.modelKey}>
         <Level4TableView {...data} slug={params.slug} />
@@ -56,7 +56,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     );
   }
   if (model instanceof Level5Model) {
-    const data = await model.getDataForTable(20, 0);
+    const data = await model.getDataForTable();
     return (
       <ModelContext modelKey={data.modelKey}>
         <Level5TableView {...data} slug={params.slug} />

@@ -24,16 +24,16 @@ export class ValuationModel extends Level5Model<Valuation> {
   }
 
   async getDataForTable(
-    limit: number,
-    page: number,
+    limit?: number,
+    page?: number,
   ): Promise<Level5TableViewProps> {
     const rows = await prisma.valuation.findMany({
       where: {
         assetLiabilityId: this.assetLiabilityId,
       },
       orderBy: { createdAt: "desc" },
-      skip: limit * page,
-      take: limit,
+      ...(page && limit ? { skip: limit * page } : {}),
+      ...(limit ? { take: limit } : {}),
     });
 
     const assetLiability = await prisma.assetLiability.findUnique({

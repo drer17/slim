@@ -112,9 +112,9 @@ export class ObligationModel extends Level3Model<Obligation> {
 
     return data
       ?.sort((a, b) => (a.date < b.date ? -1 : 1))
-      .reduce((acc, row) => {
-        const prev = acc[acc.length - 1] ?? { amount: 0 };
-        acc.push({ ...row, balance: prev.amount + row.amount });
+      .reduce((acc, row, i) => {
+        const prevBalance = acc[i - 1]?.balance ?? 0;
+        acc.push({ ...row, balance: prevBalance + row.amount });
         return acc;
       }, []);
   }

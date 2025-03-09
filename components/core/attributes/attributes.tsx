@@ -29,16 +29,14 @@ const Attributes: React.FC<AttributesProps> = ({
   const { expanded } = useExpandedContext();
   return (
     <div className="flex flex-col w-full h-[calc(100%-40px)]">
-      <ScrollArea className="flex-1 pr-3">
-        {attributes.map((attribute) => (
-          <AttributeComponent
-            key={attribute.id}
-            {...attribute}
-            save={save}
-            disabled={readOnly}
-          />
-        ))}
-      </ScrollArea>
+      {attributes.map((attribute) => (
+        <AttributeComponent
+          key={attribute.id}
+          {...attribute}
+          save={save}
+          disabled={readOnly}
+        />
+      ))}
       {expanded && !readOnly && (
         <AttributeComponent save={save} disabled={readOnly} />
       )}

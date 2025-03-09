@@ -126,8 +126,8 @@ export class TransactionModel extends Level4Model<Transaction> {
   }
 
   async getDataForTable(
-    limit: number,
-    page: number,
+    limit?: number,
+    page?: number,
   ): Promise<Level3TableViewProps> {
     const rows = await prisma.transaction.findMany({
       where: {
@@ -139,8 +139,8 @@ export class TransactionModel extends Level4Model<Transaction> {
         ],
       },
       orderBy: { createdAt: "desc" },
-      skip: limit * page,
-      take: limit,
+      ...(page && limit ? { skip: limit * page } : {}),
+      ...(limit ? { take: limit } : {}),
     });
 
     let assetLiability = undefined;

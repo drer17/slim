@@ -22,14 +22,14 @@ export class TransactionCategoryModel extends Level1Model<TransactionCategory> {
   }
 
   async getDataForTable(
-    limit: number,
-    page: number,
+    limit?: number,
+    page?: number,
   ): Promise<Level1TableViewProps> {
     const rows = await prisma.transactionCategory.findMany({
       where: { portfolioId: this.portfolioId },
       include: { parent: true, asset: { select: { label: true, id: true } } },
-      skip: limit * page,
-      take: limit,
+      ...(page && limit ? { skip: limit * page } : {}),
+      ...(limit ? { take: limit } : {}),
     });
     const data: Level1TableViewProps = {
       title: "Transaction Categories",

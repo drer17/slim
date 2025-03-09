@@ -25,7 +25,7 @@ const TransactionCategoryForm: React.FC<FormProps<TransactionCategory>> = ({
 
   React.useEffect(() => {
     const getData = async () => {
-      const cats = await get(["transaction-categories"]);
+      const cats = await get(["transaction-category"]);
       const als = await get(["asset-liability"]);
       if (Array.isArray(cats)) setCategories(cats);
       if (Array.isArray(als)) setAssets(als);

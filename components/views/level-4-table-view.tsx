@@ -100,16 +100,17 @@ const Level4TableView: React.FC<Level4TableViewProps & { slug: Slug }> = ({
           <ViewOptions menuOptions={menuOptions} availableMenuOptions={{}} />
         </div>
       </div>
-      <DataTable
-        rows={rows}
-        columns={modelColumnDefs[modelKey]}
-        initColumnVisibility={modelColumnVisibilities[modelKey]}
-        initFilterState={modelColumnFilters[modelKey]}
-        heightOffset="220px"
-        dataRetriever={(numRows, forPage) =>
-          getTableData(slug, forPage, numRows)
-        }
-      />
+      <div>
+        <DataTable
+          tableId={slug.join(".")}
+          rows={rows}
+          columns={modelColumnDefs[modelKey]}
+          initColumnVisibility={modelColumnVisibilities[modelKey]}
+          initFilterState={modelColumnFilters[modelKey]}
+          dominantHeader={true}
+          heightOffset="240px"
+        />
+      </div>
     </div>
   );
 };
