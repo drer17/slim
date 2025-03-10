@@ -312,16 +312,13 @@ export class PortfolioModel extends RootModel<Portfolio> {
                 };
                 return acc;
               },
-              {} as Record<string, any>,
+              { amount: { label: "Amount" } } as Record<string, any>,
             ),
             axis: { dataKey: "amount", nameKey: "category" },
             data: Object.entries(stats.incomeCategories).map(
               ([key, value], index) => ({
                 category: key,
-                amount: value.toLocaleString("en-AU", {
-                  style: "currency",
-                  currency: "AUD",
-                }),
+                amount: value,
                 fill: `hsl(var(--chart-${(index % 5) + 1}))`,
               }),
             ),
@@ -343,16 +340,13 @@ export class PortfolioModel extends RootModel<Portfolio> {
                 };
                 return acc;
               },
-              {} as Record<string, any>,
+              { amount: { label: "Amount" } } as Record<string, any>,
             ),
             axis: { dataKey: "amount", nameKey: "category" },
             data: Object.entries(stats.expenseCategories).map(
               ([key, value], index) => ({
                 category: key,
-                amount: value.toLocaleString("en-AU", {
-                  style: "currency",
-                  currency: "AUD",
-                }),
+                amount: -value,
                 fill: `hsl(var(--chart-${(index % 5) + 1}))`,
               }),
             ),

@@ -28,7 +28,7 @@ export const PieChartCard: React.FC<PieChartCardProps> = ({
     <div className="h-64">
       <ChartContainer
         config={config}
-        className="mx-auto aspect-square h-58 min-w-60"
+        className="mx-auto aspect-square h-64 min-w-60"
       >
         <PieChart>
           <ChartTooltip
@@ -55,7 +55,7 @@ export const PieChartCard: React.FC<PieChartCardProps> = ({
                       <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        className="fill-foreground text-3xl font-bold"
+                        className="fill-foreground text-xl font-mono"
                       >
                         {total.toLocaleString()}
                       </tspan>

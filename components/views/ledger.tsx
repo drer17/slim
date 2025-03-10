@@ -11,7 +11,7 @@ export interface LedgerRowProps {
   label: string;
   description?: string;
   amount: number;
-  date: string;
+  date: Date;
   balance: number;
 }
 
@@ -21,6 +21,7 @@ const columns: ColumnDef<LedgerRowProps>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Date" />
     ),
+    cell: ({ row }) => row.original.date.toLocaleDateString(),
   },
   {
     accessorKey: "label",

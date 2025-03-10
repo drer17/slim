@@ -86,7 +86,7 @@ export class ObligationModel extends Level3Model<Obligation> {
       (acc, trans) => {
         acc.push({
           label: trans.label,
-          date: trans.date.toLocaleDateString(),
+          date: trans.date,
           amount: trans.amount,
           description: trans.description,
         });
@@ -99,7 +99,7 @@ export class ObligationModel extends Level3Model<Obligation> {
       (acc, occurrence) => {
         acc.push({
           label: occurrence.subject,
-          date: occurrence.startDate.toLocaleDateString(),
+          date: occurrence.startDate,
           amount: -1 * occurrence.amount,
           description: occurrence.description,
         });
@@ -114,6 +114,7 @@ export class ObligationModel extends Level3Model<Obligation> {
       ?.sort((a, b) => (a.date < b.date ? -1 : 1))
       .reduce((acc, row, i) => {
         const prevBalance = acc[i - 1]?.balance ?? 0;
+        console.log(row.amount);
         acc.push({ ...row, balance: prevBalance + row.amount });
         return acc;
       }, []);
@@ -135,7 +136,8 @@ export class ObligationModel extends Level3Model<Obligation> {
     for (const ob of obligations) {
       if (!ob.obligationRule || !ob.obligationRule.startDate) continue;
 
-      const { startDate, frequencyUnits, frequency } = ob.obligationRule;
+      const { startDate, endDate, frequencyUnits, frequency } =
+        ob.obligationRule;
 
       // Determine the interval in days for the frequency
       let periodDays = frequencyMap[frequencyUnits] * frequency || 0;
@@ -156,41 +158,40 @@ export class ObligationModel extends Level3Model<Obligation> {
         },
       });
 
-      let nextOccurrenceDate;
+      let nextOccurrenceDate = lastOccurrence
+        ? new Date(lastOccurrence.startDate.getTime() + periodDays * 86400000)
+        : new Date(startDate);
 
-      if (lastOccurrence) {
-        // If there's a last occurrence, calculate the next one based on it
-        nextOccurrenceDate = new Date(lastOccurrence.startDate.getTime());
-        nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + periodDays);
-      } else {
-        // If there's no previous occurrence, start from the rule's start date
-        nextOccurrenceDate = new Date(startDate);
-      }
-
-      // Check if the next occurrence has already been created
-      const existingOccurrences = await prisma.occurrence.findMany({
-        where: {
-          obligationId: ob.id,
-          startDate: {
-            // Ensure we're looking at future occurrences
-            gte: new Date(),
-            // Check if the next occurrence already exists
-            lte: nextOccurrenceDate,
+      //Keep creating occurrences until we reach the endDate or current date
+      while (
+        nextOccurrenceDate <= new Date() &&
+        (!endDate || nextOccurrenceDate <= new Date(endDate))
+      ) {
+        // Check if the occurrence already exists
+        const existingOccurrence = await prisma.occurrence.findFirst({
+          where: {
+            obligationId: ob.id,
+            startDate: nextOccurrenceDate,
           },
-        },
-      });
+        });
 
-      if (existingOccurrences.length > 0) continue;
+        if (!existingOccurrence) {
+          createPromises.push(
+            prisma.occurrence.create({
+              data: {
+                obligationId: ob.id,
+                amount: ob.obligationRule.amount,
+                startDate: nextOccurrenceDate,
+              },
+            }),
+          );
+        }
 
-      const createOccurrencePromise = prisma.occurrence.create({
-        data: {
-          obligationId: ob.id,
-          amount: ob.obligationRule.amount,
-          startDate: nextOccurrenceDate,
-        },
-      });
-
-      createPromises.push(createOccurrencePromise);
+        // Move to the next occurrence
+        nextOccurrenceDate = new Date(
+          nextOccurrenceDate.getTime() + periodDays * 86400000,
+        );
+      }
     }
 
     await Promise.all(createPromises);

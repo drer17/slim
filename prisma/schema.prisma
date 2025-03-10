@@ -279,7 +279,7 @@ model Occurrence {
   createdAt  DateTime  @default(now())
   archivedAt DateTime?
 
-  obligation Obligation @relation(fields: [obligationId], references: [id])
+  obligation Obligation @relation(fields: [obligationId], references: [id], onDelete: Cascade)
 
   NoteLink     NoteLink[]
   TagLink      TagLink[]
