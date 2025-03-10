@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Label } from "../ui/label";
 import { DatePicker } from "../ui/date-picker";
 import { fyMonthNames, getFinancialYearStart } from "@/lib/utilities/date";
@@ -17,6 +17,7 @@ import React, { useEffect } from "react";
 import { getBalanceData } from "@/lib/actions/get";
 import { Separator } from "../ui/separator";
 import { cn } from "@/lib/utils";
+import { useSidebar } from "../ui/sidebar";
 
 export type BalanceSheetProps = Record<
   string,
@@ -30,6 +31,7 @@ export type BalanceSheetProps = Record<
 >;
 
 const BalanceSheet: React.FC<BalanceSheetProps> = () => {
+  const { open: sidebarOpen } = useSidebar();
   const [data, setData] = React.useState<BalanceSheetProps | undefined>(
     undefined,
   );
@@ -66,7 +68,12 @@ const BalanceSheet: React.FC<BalanceSheetProps> = () => {
           placeholder="Select Date To"
         />
       </div>
-      <ScrollArea style={{ height: `calc(100vh - 150px)` }}>
+      <ScrollArea
+        style={{
+          height: `calc(100vh - 150px)`,
+          width: `calc(100vw - ${sidebarOpen ? 256 : 80}px)`,
+        }}
+      >
         {data &&
           Object.entries(data).map(([id, asset]) => (
             <div key={id} className="flex flex-col gap-3 mt-2">
@@ -188,6 +195,7 @@ const BalanceSheet: React.FC<BalanceSheetProps> = () => {
               <div className="h-2" />
             </div>
           ))}
+        <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </div>
   );
