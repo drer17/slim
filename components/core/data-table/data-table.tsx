@@ -28,26 +28,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import * as React from "react";
 import "@tanstack/react-table";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  RowData,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+	ColumnDef,
+	ColumnFiltersState,
+	RowData,
+	SortingState,
+	VisibilityState,
+	flexRender,
+	getCoreRowModel,
+	getFilteredRowModel,
+	getPaginationRowModel,
+	getSortedRowModel,
+	useReactTable,
 } from "@tanstack/react-table";
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
 } from "@/components/ui/table";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { defaultColumn } from "./data-table-cell-edit";
@@ -61,291 +61,291 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTablePagination } from "./data-table-pagination";
 
 declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData extends RowData, TValue> {
-    type?: string;
-    renderCell?: (row: RowData) => React.ReactNode;
-    renderEditCell?: (
-      row: RowData,
-      onBlur: () => void,
-      onChange: (value: unknown) => void,
-    ) => React.ReactNode;
-  }
-  interface TableMeta<TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-    dataModifier?: (rowIdx: number, colKey: string, value: any) => void;
-  }
+	interface ColumnMeta<TData extends RowData, TValue> {
+		type?: string;
+		renderCell?: (row: RowData) => React.ReactNode;
+		renderEditCell?: (
+			row: RowData,
+			onBlur: () => void,
+			onChange: (value: unknown) => void,
+		) => React.ReactNode;
+	}
+	interface TableMeta<TData extends RowData> {
+		updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+		dataModifier?: (rowIdx: number, colKey: string, value: any) => void;
+	}
 }
 
 export interface DataTableProps<TData, TValue> {
-  tableId?: string;
-  columns: ColumnDef<TData, TValue>[];
-  rows: TData[];
+	tableId?: string;
+	columns: ColumnDef<TData, TValue>[];
+	rows: TData[];
 
-  dataModifier?: (
-    rowIdx: number,
-    colKey: string,
-    value: any,
-  ) => Promise<Status>;
-  dataRetriever?: (numOfRows: number, forPage: number) => Promise<TData[]>;
+	dataModifier?: (
+		rowIdx: number,
+		colKey: string,
+		value: any,
+	) => Promise<Status>;
+	dataRetriever?: (numOfRows: number, forPage: number) => Promise<TData[]>;
 
-  setFocussedRow?: (row: TData) => void;
-  onRowClick?: (row: TData) => void;
-  expandingRowContent?: (data: TData) => React.ReactNode;
+	setFocussedRow?: (row: TData) => void;
+	onRowClick?: (row: TData) => void;
+	expandingRowContent?: (data: TData) => React.ReactNode;
 
-  hideToolbar?: boolean;
-  hideManageColumns?: boolean;
-  hideFilterColumns?: boolean;
-  hideExportOptions?: boolean;
+	hideToolbar?: boolean;
+	hideManageColumns?: boolean;
+	hideFilterColumns?: boolean;
+	hideExportOptions?: boolean;
 
-  initColumnVisibility?: Partial<Record<keyof TData, boolean>>;
-  initSortingState?: SortingState;
-  initFilterState?: ColumnFiltersState;
+	initColumnVisibility?: Partial<Record<keyof TData, boolean>>;
+	initSortingState?: SortingState;
+	initFilterState?: ColumnFiltersState;
 
-  condensed?: boolean;
-  height?: string; // to take up height. If both height and height offset are defined, height will be used
-  heightOffset?: string; // to take up full height - offset
+	condensed?: boolean;
+	height?: string; // to take up height. If both height and height offset are defined, height will be used
+	heightOffset?: string; // to take up full height - offset
 
-  dominantHeader?: boolean;
+	dominantHeader?: boolean;
 }
 
 const ROW_LIMIT = 50;
 
 export function DataTable<TData, TValue>({
-  tableId,
-  columns,
-  rows,
-  dataModifier,
-  dataRetriever,
-  setFocussedRow,
-  onRowClick,
-  expandingRowContent,
-  hideManageColumns,
-  hideFilterColumns,
-  initSortingState,
-  hideExportOptions,
-  hideToolbar,
-  initColumnVisibility,
-  initFilterState,
-  condensed,
-  heightOffset,
-  height,
-  dominantHeader,
+	tableId,
+	columns,
+	rows,
+	dataModifier,
+	dataRetriever,
+	setFocussedRow,
+	onRowClick,
+	expandingRowContent,
+	hideManageColumns,
+	hideFilterColumns,
+	initSortingState,
+	hideExportOptions,
+	hideToolbar,
+	initColumnVisibility,
+	initFilterState,
+	condensed,
+	heightOffset,
+	height,
+	dominantHeader,
 }: DataTableProps<TData, TValue>) {
-  const { toast } = useToast();
-  const [sorting, setSorting] = React.useState<SortingState>(
-    initSortingState || [],
-  );
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    initFilterState || [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>(
-      (initColumnVisibility as unknown as VisibilityState) || {},
-    );
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [data, setData] = React.useState<TData[]>(rows);
-  React.useEffect(() => {
-    setData(rows);
-  }, [rows]);
+	const { toast } = useToast();
+	const [sorting, setSorting] = React.useState<SortingState>(
+		initSortingState || [],
+	);
+	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+		initFilterState || [],
+	);
+	const [columnVisibility, setColumnVisibility] =
+		React.useState<VisibilityState>(
+			(initColumnVisibility as unknown as VisibilityState) || {},
+		);
+	const [rowSelection, setRowSelection] = React.useState({});
+	const [data, setData] = React.useState<TData[]>(rows);
+	React.useEffect(() => {
+		setData(rows);
+	}, [rows]);
 
-  // for scrolling
-  const [page, setPage] = React.useState(1);
-  const [isDone, setIsDone] = React.useState(false);
+	// for scrolling
+	const [page, setPage] = React.useState(1);
+	const [isDone, setIsDone] = React.useState(false);
 
-  // for pagination
-  const [pagination, setPagination] = React.useState(() => {
-    if (tableId) {
-      const savedPage = localStorage.getItem(`${tableId}-table`);
-      return { pageIndex: savedPage ? Number(savedPage) : 0, pageSize: 10 };
-    }
-    return { pageIndex: 0, pageSize: 10 };
-  });
+	// for pagination
+	const [pagination, setPagination] = React.useState(() => {
+		if (tableId) {
+			const savedPage = localStorage?.getItem(`${tableId}-table`);
+			return { pageIndex: savedPage ? Number(savedPage) : 0, pageSize: 10 };
+		}
+		return { pageIndex: 0, pageSize: 10 };
+	});
 
-  const [expandedRows, setExpandedRows] = React.useState(new Set());
-  const toggleRow = (rowId: string) => {
-    setExpandedRows((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(rowId)) newSet.delete(rowId);
-      else newSet.add(rowId);
-      return newSet;
-    });
-  };
+	const [expandedRows, setExpandedRows] = React.useState(new Set());
+	const toggleRow = (rowId: string) => {
+		setExpandedRows((prev) => {
+			const newSet = new Set(prev);
+			if (newSet.has(rowId)) newSet.delete(rowId);
+			else newSet.add(rowId);
+			return newSet;
+		});
+	};
 
-  const table = useReactTable({
-    data,
-    columns,
-    defaultColumn,
-    getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: (updater) => {
-      const newState =
-        typeof updater === "function"
-          ? updater({ pageIndex: pagination.pageIndex, pageSize: 10 })
-          : updater;
-      localStorage.setItem(`${tableId}-table`, String(newState.pageIndex));
-      setPagination(newState);
-    },
-    state: {
-      pagination,
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-    meta: {
-      updateData: async (rowIndex: number, columnId: string, value: any) => {
-        setData((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex]!,
-                [columnId]: value,
-              };
-            }
-            return row;
-          }),
-        );
-        if (dataModifier) {
-          const response = await dataModifier(rowIndex, columnId, value);
-          toast(generateToast(response) as ToastProps);
-        }
-      },
-      dataModifier,
-    },
-  });
+	const table = useReactTable({
+		data,
+		columns,
+		defaultColumn,
+		getCoreRowModel: getCoreRowModel(),
+		onSortingChange: setSorting,
+		getSortedRowModel: getSortedRowModel(),
+		onColumnFiltersChange: setColumnFilters,
+		getFilteredRowModel: getFilteredRowModel(),
+		onColumnVisibilityChange: setColumnVisibility,
+		onRowSelectionChange: setRowSelection,
+		getPaginationRowModel: getPaginationRowModel(),
+		onPaginationChange: (updater) => {
+			const newState =
+				typeof updater === "function"
+					? updater({ pageIndex: pagination.pageIndex, pageSize: 10 })
+					: updater;
+			localStorage?.setItem(`${tableId}-table`, String(newState.pageIndex));
+			setPagination(newState);
+		},
+		state: {
+			pagination,
+			sorting,
+			columnFilters,
+			columnVisibility,
+			rowSelection,
+		},
+		meta: {
+			updateData: async (rowIndex: number, columnId: string, value: any) => {
+				setData((old) =>
+					old.map((row, index) => {
+						if (index === rowIndex) {
+							return {
+								...old[rowIndex]!,
+								[columnId]: value,
+							};
+						}
+						return row;
+					}),
+				);
+				if (dataModifier) {
+					const response = await dataModifier(rowIndex, columnId, value);
+					toast(generateToast(response) as ToastProps);
+				}
+			},
+			dataModifier,
+		},
+	});
 
-  const getMoreData = async () => {
-    if (isDone || !dataRetriever) return;
-    const newRows = await dataRetriever(ROW_LIMIT, page);
+	const getMoreData = async () => {
+		if (isDone || !dataRetriever) return;
+		const newRows = await dataRetriever(ROW_LIMIT, page);
 
-    if (newRows.length === 0) setIsDone(true);
-    setData((prevData) => [...prevData, ...newRows]);
-    setPage(page + 1);
-  };
+		if (newRows.length === 0) setIsDone(true);
+		setData((prevData) => [...prevData, ...newRows]);
+		setPage(page + 1);
+	};
 
-  const toolbar = (
-    <DataTableToolbar
-      table={table}
-      hideManageColumns={hideManageColumns}
-      hideFilterColumns={hideFilterColumns}
-      hideExportOptions={hideExportOptions}
-    />
-  );
+	const toolbar = (
+		<DataTableToolbar
+			table={table}
+			hideManageColumns={hideManageColumns}
+			hideFilterColumns={hideFilterColumns}
+			hideExportOptions={hideExportOptions}
+		/>
+	);
 
-  return (
-    <div className="max-w-full">
-      {!hideToolbar && toolbar}
-      <ScrollArea
-        className="rounded-md border overflow-auto relative"
-        style={{
-          height: `calc(100vh - ${heightOffset})`,
-          maxHeight: height,
-        }}
-      >
-        <Table className="border-zinc-500">
-          <TableHeader
-            className={cn(
-              "bg-background/50 backdrop-blur sticky top-0",
-              dominantHeader && "z-50",
-            )}
-          >
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className={cn(condensed && "h-8")}
-                      style={{
-                        width:
-                          header.getSize() === 150
-                            ? undefined
-                            : header.getSize(),
-                      }}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <React.Fragment key={row.id}>
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onClick={() => {
-                      setFocussedRow && setFocussedRow(row.original as TData);
-                      onRowClick && onRowClick(row.original as TData);
-                      expandingRowContent && toggleRow(row.id);
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(condensed && "h-8")}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
+	return (
+		<div className="max-w-full">
+			{!hideToolbar && toolbar}
+			<ScrollArea
+				className="rounded-md border overflow-auto relative"
+				style={{
+					height: `calc(100vh - ${heightOffset})`,
+					maxHeight: height,
+				}}
+			>
+				<Table className="border-zinc-500">
+					<TableHeader
+						className={cn(
+							"bg-background/50 backdrop-blur sticky top-0",
+							dominantHeader && "z-50",
+						)}
+					>
+						{table.getHeaderGroups().map((headerGroup) => (
+							<TableRow key={headerGroup.id}>
+								{headerGroup.headers.map((header) => {
+									return (
+										<TableHead
+											key={header.id}
+											className={cn(condensed && "h-8")}
+											style={{
+												width:
+													header.getSize() === 150
+														? undefined
+														: header.getSize(),
+											}}
+										>
+											{header.isPlaceholder
+												? null
+												: flexRender(
+														header.column.columnDef.header,
+														header.getContext(),
+													)}
+										</TableHead>
+									);
+								})}
+							</TableRow>
+						))}
+					</TableHeader>
+					<TableBody>
+						{table.getRowModel().rows?.length ? (
+							table.getRowModel().rows.map((row) => (
+								<React.Fragment key={row.id}>
+									<TableRow
+										key={row.id}
+										data-state={row.getIsSelected() && "selected"}
+										onClick={() => {
+											setFocussedRow && setFocussedRow(row.original as TData);
+											onRowClick && onRowClick(row.original as TData);
+											expandingRowContent && toggleRow(row.id);
+										}}
+									>
+										{row.getVisibleCells().map((cell) => (
+											<TableCell
+												key={cell.id}
+												className={cn(condensed && "h-8")}
+											>
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext(),
+												)}
+											</TableCell>
+										))}
+									</TableRow>
 
-                  {/* Collapsible Content */}
-                  <AnimatePresence>
-                    {expandedRows.has(row.id) && (
-                      <motion.tr
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="w-full bg-card/50"
-                      >
-                        <TableCell colSpan={columns.length} className="p-4">
-                          {expandingRowContent &&
-                            expandingRowContent(row.original)}
-                        </TableCell>
-                      </motion.tr>
-                    )}
-                  </AnimatePresence>
-                </React.Fragment>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-            <TableRow className="hidden border-0">
-              <TableCell colSpan={columns.length} className="border-0">
-                <InViewPort callback={() => getMoreData()} />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </ScrollArea>
-      <div className="h-2" />
-      <DataTablePagination table={table} />
-    </div>
-  );
+									{/* Collapsible Content */}
+									<AnimatePresence>
+										{expandedRows.has(row.id) && (
+											<motion.tr
+												initial={{ height: 0, opacity: 0 }}
+												animate={{ height: "auto", opacity: 1 }}
+												exit={{ height: 0, opacity: 0 }}
+												transition={{ duration: 0.2 }}
+												className="w-full bg-card/50"
+											>
+												<TableCell colSpan={columns.length} className="p-4">
+													{expandingRowContent &&
+														expandingRowContent(row.original)}
+												</TableCell>
+											</motion.tr>
+										)}
+									</AnimatePresence>
+								</React.Fragment>
+							))
+						) : (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-24 text-center"
+								>
+									No results.
+								</TableCell>
+							</TableRow>
+						)}
+						<TableRow className="hidden border-0">
+							<TableCell colSpan={columns.length} className="border-0">
+								<InViewPort callback={() => getMoreData()} />
+							</TableCell>
+						</TableRow>
+					</TableBody>
+				</Table>
+			</ScrollArea>
+			<div className="h-2" />
+			<DataTablePagination table={table} />
+		</div>
+	);
 }
